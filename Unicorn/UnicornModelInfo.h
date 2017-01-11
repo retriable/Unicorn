@@ -46,28 +46,28 @@ extern NSString *const uni_on_update_timestamp;
 
 @end
 
-typedef NS_ENUM (NSInteger, UNPropertyEncodingType) {
-    UNPropertyEncodingTypeUnsupportedCType = 0,
-    UNPropertyEncodingTypeBool = 1 << 1,
-    UNPropertyEncodingTypeInt8 = 1 << 2,
-    UNPropertyEncodingTypeUInt8 = 1 << 3,
-    UNPropertyEncodingTypeInt16 = 1 << 4,
-    UNPropertyEncodingTypeUInt16 = 1 << 5,
-    UNPropertyEncodingTypeInt32 = 1 << 6,
-    UNPropertyEncodingTypeUInt32 = 1 << 7,
-    UNPropertyEncodingTypeInt64 = 1 << 8,
-    UNPropertyEncodingTypeUInt64 = 1 << 9,
-    UNPropertyEncodingTypeFloat = 1 << 10,
-    UNPropertyEncodingTypeDouble = 1 << 11,
-    UNPropertyEncodingTypeSupportedCType = UNPropertyEncodingTypeBool | UNPropertyEncodingTypeInt8 | UNPropertyEncodingTypeUInt8 | UNPropertyEncodingTypeInt16 | UNPropertyEncodingTypeUInt16 | UNPropertyEncodingTypeInt32 | UNPropertyEncodingTypeUInt32 | UNPropertyEncodingTypeInt64 | UNPropertyEncodingTypeUInt64 | UNPropertyEncodingTypeFloat | UNPropertyEncodingTypeDouble,
+typedef NS_ENUM (NSInteger, UnicornPropertyEncodingType) {
+    UnicornPropertyEncodingTypeUnsupportedCType = 0,
+    UnicornPropertyEncodingTypeBool = 1 << 1,
+    UnicornPropertyEncodingTypeInt8 = 1 << 2,
+    UnicornPropertyEncodingTypeUInt8 = 1 << 3,
+    UnicornPropertyEncodingTypeInt16 = 1 << 4,
+    UnicornPropertyEncodingTypeUInt16 = 1 << 5,
+    UnicornPropertyEncodingTypeInt32 = 1 << 6,
+    UnicornPropertyEncodingTypeUInt32 = 1 << 7,
+    UnicornPropertyEncodingTypeInt64 = 1 << 8,
+    UnicornPropertyEncodingTypeUInt64 = 1 << 9,
+    UnicornPropertyEncodingTypeFloat = 1 << 10,
+    UnicornPropertyEncodingTypeDouble = 1 << 11,
+    UnicornPropertyEncodingTypeSupportedCType = UnicornPropertyEncodingTypeBool | UnicornPropertyEncodingTypeInt8 | UnicornPropertyEncodingTypeUInt8 | UnicornPropertyEncodingTypeInt16 | UnicornPropertyEncodingTypeUInt16 | UnicornPropertyEncodingTypeInt32 | UnicornPropertyEncodingTypeUInt32 | UnicornPropertyEncodingTypeInt64 | UnicornPropertyEncodingTypeUInt64 | UnicornPropertyEncodingTypeFloat | UnicornPropertyEncodingTypeDouble,
 
-    UNPropertyEncodingTypeUnsupportedObject = 1 <<12,
-    UNPropertyEncodingTypeNSString = 1 << 13,
-    UNPropertyEncodingTypeNSNumber = 1 << 14,
-    UNPropertyEncodingTypeNSURL = 1 << 15,
-    UNPropertyEncodingTypeNSData = 1 << 16,
-    UNPropertyEncodingTypeSupportedObject = UNPropertyEncodingTypeNSString | UNPropertyEncodingTypeNSNumber | UNPropertyEncodingTypeNSURL|UNPropertyEncodingTypeNSData,
-    UNPropertyEncodingTypeObject = UNPropertyEncodingTypeSupportedObject|UNPropertyEncodingTypeUnsupportedObject
+    UnicornPropertyEncodingTypeUnsupportedObject = 1 <<12,
+    UnicornPropertyEncodingTypeNSString = 1 << 13,
+    UnicornPropertyEncodingTypeNSNumber = 1 << 14,
+    UnicornPropertyEncodingTypeNSURL = 1 << 15,
+    UnicornPropertyEncodingTypeNSData = 1 << 16,
+    UnicornPropertyEncodingTypeSupportedObject = UnicornPropertyEncodingTypeNSString | UnicornPropertyEncodingTypeNSNumber | UnicornPropertyEncodingTypeNSURL|UnicornPropertyEncodingTypeNSData,
+    UnicornPropertyEncodingTypeObject = UnicornPropertyEncodingTypeSupportedObject|UnicornPropertyEncodingTypeUnsupportedObject
 };
 
 @class UNPropertyInfo;
@@ -100,7 +100,7 @@ typedef NS_ENUM (NSInteger, UNPropertyEncodingType) {
 @property (nonatomic, copy, readonly) NSString *ivarName;
 @property (nonatomic, assign, readonly) Class cls;
 @property (nonatomic, assign, readonly) Class parentClass;
-@property (nonatomic, assign, readonly) UNPropertyEncodingType encodingType;
+@property (nonatomic, assign, readonly) UnicornPropertyEncodingType encodingType;
 @property (nonatomic, assign, readonly) SEL setter;
 @property (nonatomic, assign, readonly) SEL getter;
 @property (nonatomic, assign, readonly) bool isConformingToUnicornJSONModel;

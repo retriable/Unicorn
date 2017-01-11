@@ -68,9 +68,9 @@ static inline void uni_model_set_double(__unsafe_unretained id model, SEL setter
 }
 
 static inline void uni_model_set_value(__unsafe_unretained id model, __unsafe_unretained UNPropertyInfo *propertyInfo, __unsafe_unretained id value){
-    UNPropertyEncodingType encodingType = propertyInfo.encodingType;
+    UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
     SEL setter = propertyInfo.setter;
-    if (encodingType & UNPropertyEncodingTypeObject) {
+    if (encodingType & UnicornPropertyEncodingTypeObject) {
         if (value == (id)kCFNull) {
             value = nil;
         }
@@ -82,41 +82,41 @@ static inline void uni_model_set_value(__unsafe_unretained id model, __unsafe_un
             value = [propertyInfo.numberFormatter numberFromString:value];
         }
         switch (encodingType) {
-            case UNPropertyEncodingTypeBool:
+            case UnicornPropertyEncodingTypeBool:
                 uni_model_set_bool(model, setter, [value boolValue]);
                 break;
-            case UNPropertyEncodingTypeInt8:
+            case UnicornPropertyEncodingTypeInt8:
                 uni_model_set_int8(model, setter, [value charValue]);
                 break;
-            case UNPropertyEncodingTypeUInt8:
+            case UnicornPropertyEncodingTypeUInt8:
                 uni_model_set_uint8(model, setter, [value unsignedCharValue]);
                 break;
-            case UNPropertyEncodingTypeInt16:
+            case UnicornPropertyEncodingTypeInt16:
                 uni_model_set_int16(model, setter, [value shortValue]);
                 break;
-            case UNPropertyEncodingTypeUInt16:
+            case UnicornPropertyEncodingTypeUInt16:
                 uni_model_set_uint16(model, setter, [value unsignedShortValue]);
                 break;
-            case UNPropertyEncodingTypeInt32:
+            case UnicornPropertyEncodingTypeInt32:
                 uni_model_set_int32(model, setter, [value intValue]);
                 break;
-            case UNPropertyEncodingTypeUInt32:
+            case UnicornPropertyEncodingTypeUInt32:
                 uni_model_set_uint32(model, setter, [value unsignedIntValue]);
                 break;
-            case UNPropertyEncodingTypeInt64:
+            case UnicornPropertyEncodingTypeInt64:
                 uni_model_set_int64(model, setter, [value longLongValue]);
                 break;
-            case UNPropertyEncodingTypeUInt64:
+            case UnicornPropertyEncodingTypeUInt64:
                 uni_model_set_uint64(model, setter, [value unsignedLongLongValue]);
                 break;
-            case UNPropertyEncodingTypeFloat:
+            case UnicornPropertyEncodingTypeFloat:
                 uni_model_set_float(model, setter, [value floatValue]);
                 break;
-            case UNPropertyEncodingTypeDouble:
+            case UnicornPropertyEncodingTypeDouble:
                 uni_model_set_double(model, setter, [value doubleValue]);
                 break;
             default:
-                NSCParameterAssert(encodingType != UNPropertyEncodingTypeUnsupportedCType);
+                NSCParameterAssert(encodingType != UnicornPropertyEncodingTypeUnsupportedCType);
                 break;
         }
     }
@@ -178,47 +178,47 @@ static inline double uni_model_get_double(__unsafe_unretained id model, SEL gett
 
 static inline id uni_model_get_value(__unsafe_unretained id model, __unsafe_unretained UNPropertyInfo *propertyInfo){
     id value = nil;
-    UNPropertyEncodingType encodingType = propertyInfo.encodingType;
+    UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
     SEL getter = propertyInfo.getter;
-    if (encodingType & UNPropertyEncodingTypeObject) {
+    if (encodingType & UnicornPropertyEncodingTypeObject) {
         value = ((id (*)(id, SEL))(void *) objc_msgSend)(model, getter);
     } else {
         switch (encodingType) {
-            case UNPropertyEncodingTypeBool:
+            case UnicornPropertyEncodingTypeBool:
                 value = @(uni_model_get_bool(model, getter));
                 break;
-            case UNPropertyEncodingTypeInt8:
+            case UnicornPropertyEncodingTypeInt8:
                 value = @(uni_model_get_int8(model, getter));
                 break;
-            case UNPropertyEncodingTypeUInt8:
+            case UnicornPropertyEncodingTypeUInt8:
                 value = @(uni_model_get_uint8(model, getter));
                 break;
-            case UNPropertyEncodingTypeInt16:
+            case UnicornPropertyEncodingTypeInt16:
                 value = @(uni_model_get_int16(model, getter));
                 break;
-            case UNPropertyEncodingTypeUInt16:
+            case UnicornPropertyEncodingTypeUInt16:
                 value = @(uni_model_get_uint16(model, getter));
                 break;
-            case UNPropertyEncodingTypeInt32:
+            case UnicornPropertyEncodingTypeInt32:
                 value = @(uni_model_get_int32(model, getter));
                 break;
-            case UNPropertyEncodingTypeUInt32:
+            case UnicornPropertyEncodingTypeUInt32:
                 value = @(uni_model_get_uint32(model, getter));
                 break;
-            case UNPropertyEncodingTypeInt64:
+            case UnicornPropertyEncodingTypeInt64:
                 value = @(uni_model_get_int64(model, getter));
                 break;
-            case UNPropertyEncodingTypeUInt64:
+            case UnicornPropertyEncodingTypeUInt64:
                 value = @(uni_model_get_uint64(model, getter));
                 break;
-            case UNPropertyEncodingTypeFloat:
+            case UnicornPropertyEncodingTypeFloat:
                 value = @(uni_model_get_float(model, getter));
                 break;
-            case UNPropertyEncodingTypeDouble:
+            case UnicornPropertyEncodingTypeDouble:
                 value = @(uni_model_get_double(model, getter));
                 break;
             default:
-                NSCParameterAssert(encodingType != UNPropertyEncodingTypeUnsupportedCType);
+                NSCParameterAssert(encodingType != UnicornPropertyEncodingTypeUnsupportedCType);
                 break;
         }
     }
@@ -233,10 +233,10 @@ static inline void uni_model_merge(__unsafe_unretained id target_model, __unsafe
         return;
     }
     for (UNPropertyInfo *propertyInfo in classInfo.propertyInfos) {
-        UNPropertyEncodingType encodingType = propertyInfo.encodingType;
+        UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
         SEL getter = propertyInfo.getter;
         SEL setter = propertyInfo.setter;
-        if (encodingType&UNPropertyEncodingTypeObject) {
+        if (encodingType&UnicornPropertyEncodingTypeObject) {
             id value = uni_model_get_id(source_model, getter);
             if (value == (id)kCFNull) {
                 value = nil;
@@ -246,41 +246,41 @@ static inline void uni_model_merge(__unsafe_unretained id target_model, __unsafe
             }
         } else {
             switch (encodingType) {
-                case UNPropertyEncodingTypeBool:
+                case UnicornPropertyEncodingTypeBool:
                     uni_model_set_bool(target_model, setter, uni_model_get_bool(source_model, getter));
                     break;
-                case UNPropertyEncodingTypeInt8:
+                case UnicornPropertyEncodingTypeInt8:
                     uni_model_set_int8(target_model, setter, uni_model_get_int8(source_model, getter));
                     break;
-                case UNPropertyEncodingTypeUInt8:
+                case UnicornPropertyEncodingTypeUInt8:
                     uni_model_set_uint8(target_model, setter, uni_model_get_uint8(source_model, getter));
                     break;
-                case UNPropertyEncodingTypeInt16:
+                case UnicornPropertyEncodingTypeInt16:
                     uni_model_set_int16(target_model, setter, uni_model_get_int16(source_model, getter));
                     break;
-                case UNPropertyEncodingTypeUInt16:
+                case UnicornPropertyEncodingTypeUInt16:
                     uni_model_set_uint16(target_model, setter, uni_model_get_uint16(source_model, getter));
                     break;
-                case UNPropertyEncodingTypeInt32:
+                case UnicornPropertyEncodingTypeInt32:
                     uni_model_set_int32(target_model, setter, uni_model_get_int32(source_model, getter));
                     break;
-                case UNPropertyEncodingTypeUInt32:
+                case UnicornPropertyEncodingTypeUInt32:
                     uni_model_set_uint32(target_model, setter, uni_model_get_uint32(source_model, getter));
                     break;
-                case UNPropertyEncodingTypeInt64:
+                case UnicornPropertyEncodingTypeInt64:
                     uni_model_set_int64(target_model, setter, uni_model_get_int64(source_model, getter));
                     break;
-                case UNPropertyEncodingTypeUInt64:
+                case UnicornPropertyEncodingTypeUInt64:
                     uni_model_set_uint64(target_model, setter, uni_model_get_uint64(source_model, getter));
                     break;
-                case UNPropertyEncodingTypeFloat:
+                case UnicornPropertyEncodingTypeFloat:
                     uni_model_set_float(target_model, setter, uni_model_get_float(source_model, getter));
                     break;
-                case UNPropertyEncodingTypeDouble:
+                case UnicornPropertyEncodingTypeDouble:
                     uni_model_set_double(target_model, setter, uni_model_get_double(source_model, getter));
                     break;
                 default:
-                    NSCParameterAssert(encodingType != UNPropertyEncodingTypeUnsupportedCType);
+                    NSCParameterAssert(encodingType != UnicornPropertyEncodingTypeUnsupportedCType);
                     break;
             }
         }
@@ -327,7 +327,7 @@ static void forward_applier(const void *_value, void *_context){
     if (valueTransformer) {
         value = [valueTransformer transformedValue:value];
     }
-    if (propertyInfo.encodingType == UNPropertyEncodingTypeUnsupportedObject) {
+    if (propertyInfo.encodingType == UnicornPropertyEncodingTypeUnsupportedObject) {
         if (propertyInfo.isConformingToUnicornMT) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -344,13 +344,13 @@ static void forward_applier(const void *_value, void *_context){
 
 static inline id uni_model_get_unique_value(__unsafe_unretained id model, __unsafe_unretained UnicornClassInfo *classInfo){
     __unsafe_unretained UNPropertyInfo *propertyInfo = classInfo.mtUniquePropertyInfo;
-    UNPropertyEncodingType encodingType = propertyInfo.encodingType;
-    NSCParameterAssert(encodingType != UNPropertyEncodingTypeNSData && encodingType != UNPropertyEncodingTypeUnsupportedCType);
+    UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
+    NSCParameterAssert(encodingType != UnicornPropertyEncodingTypeNSData && encodingType != UnicornPropertyEncodingTypeUnsupportedCType);
     id value = uni_model_get_value(model, propertyInfo);
     if (value == nil) {
         return value;
     }
-    if (encodingType&UNPropertyEncodingTypeUnsupportedObject) {
+    if (encodingType&UnicornPropertyEncodingTypeUnsupportedObject) {
         return uni_model_get_unique_value(value, classInfo);
     }
     return value;
@@ -378,25 +378,25 @@ static inline void uni_bind_value_to_stmt_with_column_type(__unsafe_unretained i
 }
 
 static inline void uni_bind_value_to_stmt_with_property(__unsafe_unretained id model, __unsafe_unretained UNPropertyInfo *propertyInfo, sqlite3_stmt *stmt, int idx) {
-    UNPropertyEncodingType encodingType = propertyInfo.encodingType;
+    UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
     __unsafe_unretained NSValueTransformer *valueTransformer = propertyInfo.dbValueTransformer;
     if (valueTransformer) {
         id value = [valueTransformer reverseTransformedValue:((id (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter)];
         uni_bind_value_to_stmt_with_column_type(value, propertyInfo.dbColumnType, stmt, idx);
         return;
     }
-    if (encodingType & UNPropertyEncodingTypeObject) {
+    if (encodingType & UnicornPropertyEncodingTypeObject) {
         switch (encodingType) {
-            case UNPropertyEncodingTypeNSString:
+            case UnicornPropertyEncodingTypeNSString:
                 sqlite3_bind_text(stmt, idx, [((NSString * (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter) UTF8String], -1, SQLITE_STATIC);
                 break;
-            case UNPropertyEncodingTypeNSNumber:
+            case UnicornPropertyEncodingTypeNSNumber:
                 sqlite3_bind_text(stmt, idx, [[NSString stringWithFormat:@"%@", ((NSNumber * (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter)] UTF8String], -1, SQLITE_STATIC);
                 break;
-            case UNPropertyEncodingTypeNSURL:
+            case UnicornPropertyEncodingTypeNSURL:
                 sqlite3_bind_text(stmt, idx, [[((NSURL * (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter) absoluteString] UTF8String], -1, SQLITE_STATIC);
                 break;
-            case UNPropertyEncodingTypeNSData: {
+            case UnicornPropertyEncodingTypeNSData: {
                 NSData *value = ((NSData * (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter);
                 sqlite3_bind_blob(stmt, idx, [value bytes], (int)[value length], SQLITE_STATIC);
                 break;
@@ -408,45 +408,45 @@ static inline void uni_bind_value_to_stmt_with_property(__unsafe_unretained id m
         }
     } else {
         switch (encodingType) {
-            case UNPropertyEncodingTypeBool:
+            case UnicornPropertyEncodingTypeBool:
                 sqlite3_bind_int64(stmt, idx, (long long)((bool (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter));
                 break;
-            case UNPropertyEncodingTypeInt8:
+            case UnicornPropertyEncodingTypeInt8:
                 sqlite3_bind_int64(stmt, idx, (long long)((char (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter));
                 break;
-            case UNPropertyEncodingTypeUInt8:
+            case UnicornPropertyEncodingTypeUInt8:
                 sqlite3_bind_int64(stmt, idx, (long long)((unsigned char (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter));
                 break;
-            case UNPropertyEncodingTypeInt16:
+            case UnicornPropertyEncodingTypeInt16:
                 sqlite3_bind_int64(stmt, idx, (long long)((short (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter));
                 break;
-            case UNPropertyEncodingTypeUInt16:
+            case UnicornPropertyEncodingTypeUInt16:
                 sqlite3_bind_int64(stmt, idx, (long long)((UInt16 (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter));
                 break;
-            case UNPropertyEncodingTypeInt32:
+            case UnicornPropertyEncodingTypeInt32:
                 sqlite3_bind_int64(stmt, idx, (long long)((int (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter));
                 break;
-            case UNPropertyEncodingTypeUInt32:
+            case UnicornPropertyEncodingTypeUInt32:
                 sqlite3_bind_int64(stmt, idx, (long long)((UInt32 (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter));
                 break;
-            case UNPropertyEncodingTypeInt64:
+            case UnicornPropertyEncodingTypeInt64:
                 sqlite3_bind_int64(stmt, idx, ((long long (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter));
                 break;
-            case UNPropertyEncodingTypeUInt64: {
+            case UnicornPropertyEncodingTypeUInt64: {
                 unsigned long long v = ((unsigned long long (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter);
                 long long dst;
                 memcpy(&dst, &v, sizeof(long long));
                 sqlite3_bind_int64(stmt, idx, dst);
                 break;
             }
-            case UNPropertyEncodingTypeFloat:
+            case UnicornPropertyEncodingTypeFloat:
                 sqlite3_bind_double(stmt, idx, (double)((float (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter));
                 break;
-            case UNPropertyEncodingTypeDouble:
+            case UnicornPropertyEncodingTypeDouble:
                 sqlite3_bind_double(stmt, idx, ((double (*)(id, SEL))(void *) objc_msgSend)(model, propertyInfo.getter));
                 break;
             default:
-                NSCParameterAssert(encodingType != UNPropertyEncodingTypeUnsupportedCType);
+                NSCParameterAssert(encodingType != UnicornPropertyEncodingTypeUnsupportedCType);
                 sqlite3_bind_null(stmt, idx);
                 break;
         }
@@ -586,7 +586,7 @@ static inline NSArray *uni_select(__unsafe_unretained NSString *afterWhereSql, _
 
 //static inline void uni_model_set_stmt(__unsafe_unretained id model, __unsafe_unretained UNPropertyInfo *propertyInfo, sqlite3_stmt *stmt, int idx) {
 //    int type = sqlite3_column_type(stmt, idx);
-//    UNPropertyEncodingType encodingType = propertyInfo.encodingType;
+//    UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
 //    SEL setter = propertyInfo.setter;
 //    __unsafe_unretained NSValueTransformer *valueTransformer = propertyInfo.dbValueTransformer;
 //    if (valueTransformer) {
@@ -600,19 +600,19 @@ static inline NSArray *uni_select(__unsafe_unretained NSString *afterWhereSql, _
 //    if (type == SQLITE_NULL) {
 //        return;
 //    }
-//    if (encodingType & UNPropertyEncodingTypeObject) {
+//    if (encodingType & UnicornPropertyEncodingTypeObject) {
 //        id value = nil;
 //        switch (encodingType) {
-//            case UNPropertyEncodingTypeNSString:
+//            case UnicornPropertyEncodingTypeNSString:
 //                value = [NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, idx)];
 //                break;
-//            case UNPropertyEncodingTypeNSNumber:
+//            case UnicornPropertyEncodingTypeNSNumber:
 //                value = [propertyInfo.numberFormatter numberFromString:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, idx)]];
 //                break;
-//            case UNPropertyEncodingTypeNSURL:
+//            case UnicornPropertyEncodingTypeNSURL:
 //                value = [NSURL URLWithString:[NSString stringWithUTF8String:(const char *)sqlite3_column_text(stmt, idx)]];
 //                break;
-//            case UNPropertyEncodingTypeNSData: {
+//            case UnicornPropertyEncodingTypeNSData: {
 //                int length = sqlite3_column_bytes(stmt, idx);
 //                const void *bytes = sqlite3_column_blob(stmt, idx);
 //                value = [NSData dataWithBytes:bytes length:length];
@@ -634,52 +634,52 @@ static inline NSArray *uni_select(__unsafe_unretained NSString *afterWhereSql, _
 //        }
 //    } else {
 //        switch (encodingType) {
-//            case UNPropertyEncodingTypeBool: {
+//            case UnicornPropertyEncodingTypeBool: {
 //                uni_model_set_bool(model, setter, (bool)sqlite3_column_int64(stmt, idx));
 //                break;
 //            }
-//            case UNPropertyEncodingTypeInt8: {
+//            case UnicornPropertyEncodingTypeInt8: {
 //                uni_model_set_int8(model, setter, (Int8)sqlite3_column_int64(stmt, idx));
 //                break;
 //            }
-//            case UNPropertyEncodingTypeUInt8: {
+//            case UnicornPropertyEncodingTypeUInt8: {
 //                uni_model_set_uint8(model, setter, (UInt8)sqlite3_column_int64(stmt, idx));
 //                break;
 //            }
-//            case UNPropertyEncodingTypeInt16: {
+//            case UnicornPropertyEncodingTypeInt16: {
 //                uni_model_set_int16(model, setter, (Int16)sqlite3_column_int64(stmt, idx));
 //                break;
 //            }
-//            case UNPropertyEncodingTypeUInt16: {
+//            case UnicornPropertyEncodingTypeUInt16: {
 //                uni_model_set_uint16(model, setter, (UInt16)sqlite3_column_int64(stmt, idx));
 //                break;
 //            }
-//            case UNPropertyEncodingTypeInt32: {
+//            case UnicornPropertyEncodingTypeInt32: {
 //                uni_model_set_int32(model, setter, (Int32)sqlite3_column_int64(stmt, idx));
 //                break;
 //            }
-//            case UNPropertyEncodingTypeUInt32: {
+//            case UnicornPropertyEncodingTypeUInt32: {
 //                uni_model_set_uint32(model, setter, (UInt32)sqlite3_column_int64(stmt, idx));
 //                break;
 //            }
-//            case UNPropertyEncodingTypeInt64: {
+//            case UnicornPropertyEncodingTypeInt64: {
 //                uni_model_set_int64(model, setter, sqlite3_column_int64(stmt, idx));
 //                break;
 //            }
-//            case UNPropertyEncodingTypeUInt64: {
+//            case UnicornPropertyEncodingTypeUInt64: {
 //                uni_model_set_uint64(model, setter, (UInt64)sqlite3_column_int64(stmt, idx));
 //                break;
 //            }
-//            case UNPropertyEncodingTypeFloat: {
+//            case UnicornPropertyEncodingTypeFloat: {
 //                uni_model_set_float(model, setter, (float)sqlite3_column_double(stmt, idx));
 //                break;
 //            }
-//            case UNPropertyEncodingTypeDouble: {
+//            case UnicornPropertyEncodingTypeDouble: {
 //                uni_model_set_double(model, setter, sqlite3_column_double(stmt, idx));
 //                break;
 //            }
 //            default:
-//                NSCParameterAssert(encodingType != UNPropertyEncodingTypeUnsupportedCType);
+//                NSCParameterAssert(encodingType != UnicornPropertyEncodingTypeUnsupportedCType);
 //                break;
 //        }
 //    }

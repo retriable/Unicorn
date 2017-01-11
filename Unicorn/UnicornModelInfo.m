@@ -8,11 +8,11 @@
 #import "UnicornModelInfo.h"
 #import "UnicornFuctions.h"
 
-typedef NS_ENUM (NSInteger, UNPropertyPropertyType) {
-    UNPropertyPropertyTypeUnknow = 0,
-    UNPropertyPropertyTypeNonatomic = 1 << 0,
-    UNPropertyPropertyTypeDynamic = 1 << 1,
-    UNPropertyPropertyTypeReadonly = 1 << 2
+typedef NS_ENUM (NSInteger, UnicornPropertyPropertyType) {
+    UnicornPropertyPropertyTypeUnknow = 0,
+    UnicornPropertyPropertyTypeNonatomic = 1 << 0,
+    UnicornPropertyPropertyTypeDynamic = 1 << 1,
+    UnicornPropertyPropertyTypeReadonly = 1 << 2
 };
 
 static UnicornDatabase *global_database = nil;
@@ -150,7 +150,7 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
 @property (nonatomic, copy) NSString *ivarName;
 @property (nonatomic, assign) Class cls;
 @property (nonatomic, assign) Class parentClass;
-@property (nonatomic, assign) UNPropertyEncodingType encodingType;
+@property (nonatomic, assign) UnicornPropertyEncodingType encodingType;
 @property (nonatomic, assign) SEL setter;
 @property (nonatomic, assign) SEL getter;
 @property (nonatomic, assign) bool isConformingToUnicornJSONModel;
@@ -200,7 +200,7 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
             self.mtUniquePropertyName = [self.cls uni_mtUniquePropertyName];
             self.mtUniquePropertyInfo = self.propertyInfosByPropertyName[self.mtUniquePropertyName];
             UNPropertyInfo *mtUniquePropertyInfo = self.propertyInfosByPropertyName[self.mtUniquePropertyName];
-            NSAssert(mtUniquePropertyInfo && (mtUniquePropertyInfo.encodingType & UNPropertyEncodingTypeSupportedCType || mtUniquePropertyInfo.encodingType&UNPropertyEncodingTypeNSString || mtUniquePropertyInfo.encodingType&UNPropertyEncodingTypeNSURL || mtUniquePropertyInfo.encodingType&UNPropertyEncodingTypeNSNumber), @"[class:%@,propertyName:%@] [property class do not supported for unique constraint]", NSStringFromClass(cls), mtUniquePropertyInfo.propertyName);
+            NSAssert(mtUniquePropertyInfo && (mtUniquePropertyInfo.encodingType & UnicornPropertyEncodingTypeSupportedCType || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSString || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSURL || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSNumber), @"[class:%@,propertyName:%@] [property class do not supported for unique constraint]", NSStringFromClass(cls), mtUniquePropertyInfo.propertyName);
             self.mt = [UnicornMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:0];
         }
         if ([cls conformsToProtocol:@protocol(UnicornDB)]) {
@@ -220,14 +220,14 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
                     propertyInfo.dbColumnType = dataBaseTransformer.columnType;
                     propertyInfo.dbValueTransformer = dataBaseTransformer.valueTransformer;
                 } else {
-                    NSParameterAssert(propertyInfo.encodingType != UNPropertyEncodingTypeUnsupportedCType);
-                    if (propertyInfo.encodingType >= UNPropertyEncodingTypeBool && propertyInfo.encodingType <= UNPropertyEncodingTypeUInt64) {
+                    NSParameterAssert(propertyInfo.encodingType != UnicornPropertyEncodingTypeUnsupportedCType);
+                    if (propertyInfo.encodingType >= UnicornPropertyEncodingTypeBool && propertyInfo.encodingType <= UnicornPropertyEncodingTypeUInt64) {
                         propertyInfo.dbColumnType = UnicornDatabaseColumnTypeInteger;
-                    } else if (propertyInfo.encodingType == UNPropertyEncodingTypeFloat || propertyInfo.encodingType == UNPropertyEncodingTypeDouble) {
+                    } else if (propertyInfo.encodingType == UnicornPropertyEncodingTypeFloat || propertyInfo.encodingType == UnicornPropertyEncodingTypeDouble) {
                         propertyInfo.dbColumnType = UnicornDatabaseColumnTypeReal;
-                    } else if (propertyInfo.encodingType & UNPropertyEncodingTypeNSData) {
+                    } else if (propertyInfo.encodingType & UnicornPropertyEncodingTypeNSData) {
                         propertyInfo.dbColumnType = UnicornDatabaseColumnTypeBlob;
-                    } else if (propertyInfo.encodingType == UNPropertyEncodingTypeNSString || propertyInfo.encodingType == UNPropertyEncodingTypeNSURL || propertyInfo.encodingType == UNPropertyEncodingTypeNSNumber) {
+                    } else if (propertyInfo.encodingType == UnicornPropertyEncodingTypeNSString || propertyInfo.encodingType == UnicornPropertyEncodingTypeNSURL || propertyInfo.encodingType == UnicornPropertyEncodingTypeNSNumber) {
                         propertyInfo.dbColumnType = UnicornDatabaseColumnTypeText;
                     } else {
                         if ([propertyInfo.cls conformsToProtocol:@protocol(UnicornDB)]) {
@@ -332,7 +332,7 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
         self.parentClass = parentClass;
         self.propertyName = [NSString stringWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
         NSString *attributes = [NSString stringWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
-        UNPropertyPropertyType propertyType = 0;
+        UnicornPropertyPropertyType propertyType = 0;
         for (NSString *attr in [attributes componentsSeparatedByString:@","]) {
             const char *attribute = [attr UTF8String];
             switch (attribute[0]) {
@@ -340,13 +340,13 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
                     const char *encoding = attribute + 1;
                     if (encoding[0] == '@') {
                         if (strcmp(encoding, "@\"NSString\"") == 0) {
-                            self.encodingType = UNPropertyEncodingTypeNSString;
+                            self.encodingType = UnicornPropertyEncodingTypeNSString;
                         } else if (strcmp(encoding, "@\"NSNumber\"") == 0) {
-                            self.encodingType = UNPropertyEncodingTypeNSNumber;
+                            self.encodingType = UnicornPropertyEncodingTypeNSNumber;
                         } else if (strcmp(encoding, "@\"NSURL\"") == 0) {
-                            self.encodingType = UNPropertyEncodingTypeNSURL;
+                            self.encodingType = UnicornPropertyEncodingTypeNSURL;
                         } else {
-                            self.encodingType = UNPropertyEncodingTypeUnsupportedObject;
+                            self.encodingType = UnicornPropertyEncodingTypeUnsupportedObject;
                         }
                         size_t size = strlen(encoding);
                         if (size > 3) {
@@ -355,33 +355,33 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
                         }
                     } else {
                         if (strcmp(encoding, @encode(char)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeInt8;
+                            self.encodingType = UnicornPropertyEncodingTypeInt8;
                         } else if (strcmp(encoding, @encode(unsigned char)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeUInt8;
+                            self.encodingType = UnicornPropertyEncodingTypeUInt8;
                         } else if (strcmp(encoding, @encode(short)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeInt16;
+                            self.encodingType = UnicornPropertyEncodingTypeInt16;
                         } else if (strcmp(encoding, @encode(unsigned short)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeUInt16;
+                            self.encodingType = UnicornPropertyEncodingTypeUInt16;
                         } else if (strcmp(encoding, @encode(int)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeInt32;
+                            self.encodingType = UnicornPropertyEncodingTypeInt32;
                         } else if (strcmp(encoding, @encode(unsigned int)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeUInt32;
+                            self.encodingType = UnicornPropertyEncodingTypeUInt32;
                         } else if (strcmp(encoding, @encode(long)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeInt64;
+                            self.encodingType = UnicornPropertyEncodingTypeInt64;
                         } else if (strcmp(encoding, @encode(unsigned long)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeUInt64;
+                            self.encodingType = UnicornPropertyEncodingTypeUInt64;
                         } else if (strcmp(encoding, @encode(long long)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeInt64;
+                            self.encodingType = UnicornPropertyEncodingTypeInt64;
                         } else if (strcmp(encoding, @encode(unsigned long long)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeUInt64;
+                            self.encodingType = UnicornPropertyEncodingTypeUInt64;
                         } else if (strcmp(encoding, @encode(float)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeFloat;
+                            self.encodingType = UnicornPropertyEncodingTypeFloat;
                         } else if (strcmp(encoding, @encode(double)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeDouble;
+                            self.encodingType = UnicornPropertyEncodingTypeDouble;
                         } else if (strcmp(encoding, @encode(bool)) == 0) {
-                            self.encodingType = UNPropertyEncodingTypeBool;
+                            self.encodingType = UnicornPropertyEncodingTypeBool;
                         } else {
-                            self.encodingType = UNPropertyEncodingTypeUnsupportedCType;
+                            self.encodingType = UnicornPropertyEncodingTypeUnsupportedCType;
                         }
                     }
                 } break;
@@ -400,30 +400,30 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
                     self.setter = NSSelectorFromString(setterString);
                 }
                 case 'R': {
-                    propertyType |= UNPropertyPropertyTypeReadonly;
+                    propertyType |= UnicornPropertyPropertyTypeReadonly;
                 } break;
                 case 'N': {
-                    propertyType |= UNPropertyPropertyTypeNonatomic;
+                    propertyType |= UnicornPropertyPropertyTypeNonatomic;
                 } break;
                 case 'D': {
-                    propertyType |= UNPropertyPropertyTypeDynamic;
+                    propertyType |= UnicornPropertyPropertyTypeDynamic;
                 } break;
                 default:
                     break;
             }
         }
-        if (self.ivarName && !(propertyType & UNPropertyPropertyTypeDynamic)) {
+        if (self.ivarName && !(propertyType & UnicornPropertyPropertyTypeDynamic)) {
             if (!self.getter) {
                 NSString *getterString = self.propertyName;
                 self.getter = NSSelectorFromString(getterString);
             }
-            if (!self.setter && !(propertyType & UNPropertyPropertyTypeReadonly)) {
+            if (!self.setter && !(propertyType & UnicornPropertyPropertyTypeReadonly)) {
                 NSString *setterString = self.propertyName;
                 setterString = [NSString stringWithFormat:@"set%@:", [NSString stringWithFormat:@"%@%@", [[setterString substringToIndex:1] capitalizedString], [setterString substringFromIndex:1]]];
                 self.setter = NSSelectorFromString(setterString);
             }
         }
-        if (self.encodingType&UNPropertyEncodingTypeSupportedCType) {
+        if (self.encodingType&UnicornPropertyEncodingTypeSupportedCType) {
             self.numberFormatter = [[NSNumberFormatter alloc] init];
             self.numberFormatter.numberStyle = NSNumberFormatterNoStyle;
         }
