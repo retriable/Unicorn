@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 s.name     = 'Unicorn'
 s.version  = '1.0.1'
 s.license  = 'MIT'
-s.summary  = 'Unicorn model'
+s.summary  = 'Unique model'
 s.homepage = 'https://github.com/emsihyo/Unicorn'
 s.author   = { 'emsihyo' => 'emsihyo@gmail.com' }
 s.source   = { :git => 'https://github.com/emsihyo/Unicorn.git',:tag => "#{s.version}" }
