@@ -6,8 +6,7 @@
 
 
 #import "UnicornModelInfo.h"
-#import "UnicornFuctions.h"
-
+#import "Unicorn.h"
 typedef NS_ENUM (NSInteger, UnicornPropertyPropertyType) {
     UnicornPropertyPropertyTypeUnknow = 0,
     UnicornPropertyPropertyTypeNonatomic = 1 << 0,
@@ -68,11 +67,11 @@ static inline void uni_db_add_table(UnicornClassInfo *classInfo, UnicornDatabase
     NSString *table = classInfo.className;
     if (!uni_db_check_table(db, table)) {
         NSString *uniquePropertyName = classInfo.mtUniquePropertyInfo.propertyName;
-        UNPropertyInfo *propertyInfo = classInfo.propertyInfosByPropertyName[uniquePropertyName];
+        UnicornPropertyInfo *propertyInfo = classInfo.propertyInfosByPropertyName[uniquePropertyName];
         NSString *uniqueDbColumn = propertyInfo.propertyName;
         NSString *uniqueDbColumnType = uni_sql_column_text(propertyInfo.dbColumnType);
         NSString *sql = nil;
-#ifdef uni_DB_AUTO_UPDATE_TIMESTAMP
+#ifdef UNI_DB_AUTO_UPDATE_TIMESTAMP
         sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,'%@' %@ NOT NULL UNIQUE,'%@' REAL)", table, uniqueDbColumn, uniqueDbColumnType, uni_on_update_timestamp];
 #else
         sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,'%@' %@ NOT NULL UNIQUE)", table, uniqueDbColumn, uniqueDbColumnType];
@@ -84,7 +83,7 @@ static inline void uni_db_add_table(UnicornClassInfo *classInfo, UnicornDatabase
 
 static inline void uni_db_add_column(UnicornClassInfo *classInfo, UnicornDatabase *db){
     NSString *table = classInfo.className;
-    [classInfo.dbPropertyInfos enumerateObjectsUsingBlock:^(UNPropertyInfo *_Nonnull propertyInfo, NSUInteger idx, BOOL *_Nonnull stop) {
+    [classInfo.dbPropertyInfos enumerateObjectsUsingBlock:^(UnicornPropertyInfo *_Nonnull propertyInfo, NSUInteger idx, BOOL *_Nonnull stop) {
         if (propertyInfo == classInfo.mtUniquePropertyInfo) {
             return;
         }
@@ -102,7 +101,7 @@ static inline void uni_db_add_indexes(UnicornClassInfo *classInfo, UnicornDataba
     [classInfo.dbIndexes enumerateObjectsUsingBlock:^(NSString *_Nonnull propertyName, NSUInteger idx, BOOL *_Nonnull stop) {
         [indexes addObject:propertyName];
     }];
-#ifdef uni_DB_AUTO_UPDATE_TIMESTAMP
+#ifdef UNI_DB_AUTO_UPDATE_TIMESTAMP
     [indexes addObject:uni_on_update_timestamp];
 #endif
     [indexes enumerateObjectsUsingBlock:^(NSString *_Nonnull databaseIndex, NSUInteger idx, BOOL *_Nonnull stop) {
@@ -132,7 +131,7 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
 
 @property (nonatomic, strong) UnicornMapTable *mt;
 @property (nonatomic, copy) NSString *mtUniquePropertyName;
-@property (nonatomic, strong) UNPropertyInfo *mtUniquePropertyInfo;
+@property (nonatomic, strong) UnicornPropertyInfo *mtUniquePropertyInfo;
 
 @property (nonatomic, strong) UnicornDatabase *db;
 @property (nonatomic, strong) NSArray *dbPropertyInfos;
@@ -144,7 +143,7 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
 @property (nonatomic, strong) NSArray *jsonPropertyInfos;
 @end
 
-@interface UNPropertyInfo ()
+@interface UnicornPropertyInfo ()
 
 @property (nonatomic, copy) NSString *propertyName;
 @property (nonatomic, copy) NSString *ivarName;
@@ -177,7 +176,7 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
         self.lock = [[NSRecursiveLock alloc] init];
         NSMutableDictionary *propertyInfosByPropertyName = [NSMutableDictionary dictionary];
         [self enumeratePropertiesUsingBlock:^(objc_property_t property) {
-            UNPropertyInfo *propertyInfo = [[UNPropertyInfo alloc] initWithProperty:property parentClass:cls];
+            UnicornPropertyInfo *propertyInfo = [[UnicornPropertyInfo alloc] initWithProperty:property parentClass:cls];
             [propertyInfosByPropertyName setObject:propertyInfo forKey:propertyInfo.propertyName];
         }];
         self.propertyInfosByPropertyName = [propertyInfosByPropertyName copy];
@@ -186,7 +185,7 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
         if ([cls conformsToProtocol:@protocol(UnicornJSON)]) {
             NSMutableArray *jsonPropertyInfos = [NSMutableArray array];
             [[cls uni_jsonKeyPathsByPropertyName] enumerateKeysAndObjectsUsingBlock:^(NSString *_Nonnull propertyName, NSString *_Nonnull jsonKeyPath, BOOL *_Nonnull stop) {
-                UNPropertyInfo *propertyInfo = self.propertyInfosByPropertyName[propertyName];
+                UnicornPropertyInfo *propertyInfo = self.propertyInfosByPropertyName[propertyName];
                 propertyInfo.jsonKeyPathInString = jsonKeyPath;
                 propertyInfo.jsonKeyPathInArray = [jsonKeyPath componentsSeparatedByString:@"."];
                 [jsonPropertyInfos addObject:propertyInfo];
@@ -199,7 +198,7 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
         if ([cls conformsToProtocol:@protocol(UnicornMT)]) {
             self.mtUniquePropertyName = [self.cls uni_mtUniquePropertyName];
             self.mtUniquePropertyInfo = self.propertyInfosByPropertyName[self.mtUniquePropertyName];
-            UNPropertyInfo *mtUniquePropertyInfo = self.propertyInfosByPropertyName[self.mtUniquePropertyName];
+            UnicornPropertyInfo *mtUniquePropertyInfo = self.propertyInfosByPropertyName[self.mtUniquePropertyName];
             NSAssert(mtUniquePropertyInfo && (mtUniquePropertyInfo.encodingType & UnicornPropertyEncodingTypeSupportedCType || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSString || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSURL || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSNumber), @"[class:%@,propertyName:%@] [property class do not supported for unique constraint]", NSStringFromClass(cls), mtUniquePropertyInfo.propertyName);
             self.mt = [UnicornMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:0];
         }
@@ -210,7 +209,7 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
             }
             NSArray *dbColumnNames = [cls uni_dbColumnNamesInPropertyName];
             [dbColumnNames enumerateObjectsUsingBlock:^(NSString *_Nonnull propertyName, NSUInteger idx, BOOL *_Nonnull stop) {
-                UNPropertyInfo *propertyInfo = self.propertyInfosByPropertyName[propertyName];
+                UnicornPropertyInfo *propertyInfo = self.propertyInfosByPropertyName[propertyName];
                 NSAssert(propertyInfo.ivarName.length > 0, @"[class:%@,propertyName:%@] [property do not have ivar]", NSStringFromClass(cls), propertyName);
                 UnicornDatabaseTransformer *dataBaseTransformer = nil;
                 if ([cls respondsToSelector:@selector(uni_dbValueTransformerForPropertyName:)]) {
@@ -247,18 +246,18 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
             NSMutableString *sql = [NSMutableString stringWithFormat:@"UPDATE %@ SET ", self.className];
             NSMutableString *sql1 = [NSMutableString stringWithFormat:@"INSERT INTO %@ (", self.className];
             NSMutableString *sql2 = [NSMutableString stringWithFormat:@" VALUES ("];
-            [self.dbPropertyInfos enumerateObjectsUsingBlock:^(UNPropertyInfo *_Nonnull propertyInfo, NSUInteger idx, BOOL *_Nonnull stop) {
+            [self.dbPropertyInfos enumerateObjectsUsingBlock:^(UnicornPropertyInfo *_Nonnull propertyInfo, NSUInteger idx, BOOL *_Nonnull stop) {
                 [sql appendFormat:@"%@=?,", propertyInfo.propertyName];
                 [sql1 appendFormat:@"%@,", propertyInfo.propertyName];
                 [sql2 appendFormat:@"?,"];
             }];
-#ifdef uni_DB_AUTO_UPDATE_TIMESTAMP
+#ifdef UNI_DB_AUTO_UPDATE_TIMESTAMP
             [sql appendFormat:@"%@=?,", uni_on_update_timestamp];
 #endif
             [sql deleteCharactersInRange:NSMakeRange(sql.length - 1, 1)];
             [sql appendFormat:@" WHERE %@=?;", self.mtUniquePropertyName];
             self.dbUpdateSql = sql;
-#ifdef uni_DB_AUTO_UPDATE_TIMESTAMP
+#ifdef UNI_DB_AUTO_UPDATE_TIMESTAMP
             [sql1 appendFormat:@"%@,", uni_on_update_timestamp];
             [sql2 appendFormat:@"?,"];
 #endif
@@ -324,7 +323,7 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
 
 @end
 
-@implementation UNPropertyInfo
+@implementation UnicornPropertyInfo
 
 - (instancetype)initWithProperty:(objc_property_t)property parentClass:(Class)parentClass {
     self = [super init];

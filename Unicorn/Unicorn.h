@@ -12,16 +12,22 @@
 #import "UnicornMapTable.h"
 #import "UnicornDatabase.h"
 #import "UnicornFuctions.h"
+
 #ifndef UNI_DB_MODEL_DB_PATH
-#define UNI_DB_MODEL_DB_PATH [[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"Caches/UNI_models.sqlite"]
+#define UNI_DB_MODEL_DB_PATH [[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"Caches/uni_models.sqlite"]
+#endif
+
+
+#ifndef UNI_DB_AUTO_UPDATE_TIMESTAMP
+//#define UNI_DB_AUTO_UPDATE_TIMESTAMP
 #endif
 
 #ifndef UNI_SAVE_MODEL
-#define UNI_SAVE_MODEL(x) x = [x UNI_save]
+#define UNI_SAVE_MODEL(x) x = [x uni_save]
 #endif
 
 #ifndef UNI_SAVE_MODELS
-#define UNI_SAVE_MODELS(c, x) x = [c UNI_save:x]
+#define UNI_SAVE_MODELS(c, x) x = [c uni_save:x]
 #endif
 
 #ifndef UNI_NON_WHITESPACE_NEWLINE

@@ -10,13 +10,7 @@
 #import "UnicornDatabase.h"
 #import <objc/runtime.h>
 
-#ifndef UNI_DB_MODEL_DB_PATH
-#define UNI_DB_MODEL_DB_PATH [[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"Caches/Unicorn.sqlite"]
-#endif
 
-#ifndef uni_DB_AUTO_UPDATE_TIMESTAMP
-//#define uni_DB_AUTO_UPDATE_TIMESTAMP 
-#endif
 extern NSString *const uni_on_update_timestamp;
 
 @protocol UnicornJSON<NSObject>
@@ -70,7 +64,7 @@ typedef NS_ENUM (NSInteger, UnicornPropertyEncodingType) {
     UnicornPropertyEncodingTypeObject = UnicornPropertyEncodingTypeSupportedObject|UnicornPropertyEncodingTypeUnsupportedObject
 };
 
-@class UNPropertyInfo;
+@class UnicornPropertyInfo;
 
 @interface UnicornClassInfo : NSObject
 
@@ -80,7 +74,7 @@ typedef NS_ENUM (NSInteger, UnicornPropertyEncodingType) {
 @property (nonatomic, strong, readonly) NSArray *propertyNames;
 @property (nonatomic, strong, readonly) NSArray *propertyInfos;
 @property (nonatomic, copy, readonly) NSString *mtUniquePropertyName;
-@property (nonatomic, strong, readonly) UNPropertyInfo *mtUniquePropertyInfo;
+@property (nonatomic, strong, readonly) UnicornPropertyInfo *mtUniquePropertyInfo;
 @property (nonatomic, strong, readonly) NSArray *dbPropertyInfos;
 @property (nonatomic, strong, readonly) NSArray *dbIndexes;
 @property (nonatomic, copy, readonly) NSString *dbSelectSql;
@@ -94,7 +88,7 @@ typedef NS_ENUM (NSInteger, UnicornPropertyEncodingType) {
 
 @end
 
-@interface UNPropertyInfo : NSObject
+@interface UnicornPropertyInfo : NSObject
 
 @property (nonatomic, copy, readonly) NSString *propertyName;
 @property (nonatomic, copy, readonly) NSString *ivarName;

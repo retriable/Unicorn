@@ -5,6 +5,7 @@
 //  Created by emsihyo on 2017/1/5.
 
 #import "NSObject+UnicornJSON.h"
+#import "NSObject+Unicorn.h"
 #import "UnicornFuctions.h"
 
 typedef struct {
@@ -16,7 +17,7 @@ static void json_forward(const void *_value, void *_context){
     uni_json_context *context = _context;
     __unsafe_unretained NSDictionary *dictionary = context->dictionary;
     __unsafe_unretained id model = context->model;
-    __unsafe_unretained UNPropertyInfo *propertyInfo = (__bridge __unsafe_unretained UNPropertyInfo *)_value;
+    __unsafe_unretained UnicornPropertyInfo *propertyInfo = (__bridge __unsafe_unretained UnicornPropertyInfo *)_value;
     __unsafe_unretained NSValueTransformer *valueTransformer = propertyInfo.jsonValueTransformer;
     __unsafe_unretained NSArray *jsonKeyPathInArray = propertyInfo.jsonKeyPathInArray;
     __unsafe_unretained NSString *jsonKeyPathInString = propertyInfo.jsonKeyPathInString;
@@ -38,7 +39,7 @@ static void json_reverse(const void *_value, void *_context){
     uni_json_context *context = _context;
     __unsafe_unretained NSMutableDictionary *dictionary = context->dictionary;
     __unsafe_unretained id model = context->model;
-    __unsafe_unretained UNPropertyInfo *propertyInfo = (__bridge __unsafe_unretained UNPropertyInfo *)_value;
+    __unsafe_unretained UnicornPropertyInfo *propertyInfo = (__bridge __unsafe_unretained UnicornPropertyInfo *)_value;
     __unsafe_unretained NSValueTransformer *valueTransformer = propertyInfo.jsonValueTransformer;
     id value = uni_model_get_value(model, propertyInfo);
     if (valueTransformer) {
@@ -100,7 +101,7 @@ static void json_reverse(const void *_value, void *_context){
     }
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:jsonDictionaries.count];
         if (mt) {
-            UNPropertyInfo *propertyInfo = classInfo.mtUniquePropertyInfo;
+            UnicornPropertyInfo *propertyInfo = classInfo.mtUniquePropertyInfo;
             NSValueTransformer *valueTransfomer = propertyInfo.jsonValueTransformer;
             if (db) {
                 [db beginTransaction];
@@ -118,12 +119,14 @@ static void json_reverse(const void *_value, void *_context){
                     if (model) {
                         [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
                         uni_db_update(model, classInfo, db);
+                        [model setUni_merged:YES];
                     } else {
                         id model = uni_db_unique_model(uniqueValue, classInfo, db);
                         if (model) {
                             [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
                             uni_db_update(model, classInfo, db);
                             uni_mt_set(model,uniqueValue,mt);
+                            [model setUni_merged:YES];
                         } else {
                             model = [[self alloc] init];
                             [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
@@ -188,12 +191,14 @@ static void json_reverse(const void *_value, void *_context){
             if (model) {
                 [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
                 uni_db_update(model, classInfo, db);
+                [model setUni_merged:YES];
             } else {
                 model=uni_db_unique_model(uniqueValue, classInfo, db);
                 if (model) {
                     [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
                     uni_db_update(model, classInfo, db);
                     uni_mt_set(model,uniqueValue,mt);
+                    [model setUni_merged:YES];
                 } else {
                     model = [[self alloc] init];
                     [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];

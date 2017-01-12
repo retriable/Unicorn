@@ -6,7 +6,27 @@
 
 #import "NSObject+Unicorn.h"
 #import "UnicornFuctions.h"
+@interface NSObject (Unicorn_)
 
+@property (assign)bool uni_merged;
+
+@end
+
+static NSString *const UNI_MERGED=@"uni_merged";
+
+@implementation NSObject(Unicorn_)
+
+- (void)setUni_merged:(bool)uni_merged{
+    [self willChangeValueForKey:UNI_MERGED];
+    objc_setAssociatedObject(self, (__bridge void *)UNI_MERGED, @(uni_merged), OBJC_ASSOCIATION_RETAIN);
+    [self didChangeValueForKey:UNI_MERGED];
+}
+
+- (bool)uni_merged{
+    return [objc_getAssociatedObject(self, (__bridge void *)UNI_MERGED) boolValue];
+}
+
+@end
 @implementation NSObject (Unicorn)
 
 + (instancetype)uni_modelWithValue:(id)value {
@@ -57,12 +77,14 @@
         if (model) {
             uni_model_merge(model, self, classInfo);
             uni_db_update(model, classInfo, db);
+            [model setUni_merged:YES];
         } else {
             model = uni_db_unique_model(uniqueValue, classInfo, db);
             if (model) {
                 uni_model_merge(model, self, classInfo);
                 uni_db_update(model, classInfo, db);
                 uni_mt_set(model, uniqueValue, mt);
+                [model setUni_merged:YES];
             } else {
                 model = self;
                 uni_db_insert(model, classInfo, db);

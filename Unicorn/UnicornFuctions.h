@@ -4,8 +4,8 @@
 //
 //  Created by emsihyo on 2017/1/5.
 
-#ifndef UNFuctions_h
-#define UNFuctions_h
+#ifndef UnicornFuctions_h
+#define UnicornFuctions_h
 #import "UnicornModelInfo.h"
 #import <objc/message.h>
 typedef char Int8;
@@ -67,7 +67,7 @@ static inline void uni_model_set_double(__unsafe_unretained id model, SEL setter
     ((void (*)(id, SEL, double))(void *) objc_msgSend)(model, setter, value);
 }
 
-static inline void uni_model_set_value(__unsafe_unretained id model, __unsafe_unretained UNPropertyInfo *propertyInfo, __unsafe_unretained id value){
+static inline void uni_model_set_value(__unsafe_unretained id model, __unsafe_unretained UnicornPropertyInfo *propertyInfo, __unsafe_unretained id value){
     UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
     SEL setter = propertyInfo.setter;
     if (encodingType & UnicornPropertyEncodingTypeObject) {
@@ -176,7 +176,7 @@ static inline double uni_model_get_double(__unsafe_unretained id model, SEL gett
     return ((double (*)(id, SEL))(void *) objc_msgSend)(model, getter);
 }
 
-static inline id uni_model_get_value(__unsafe_unretained id model, __unsafe_unretained UNPropertyInfo *propertyInfo){
+static inline id uni_model_get_value(__unsafe_unretained id model, __unsafe_unretained UnicornPropertyInfo *propertyInfo){
     id value = nil;
     UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
     SEL getter = propertyInfo.getter;
@@ -232,7 +232,7 @@ static inline void uni_model_merge(__unsafe_unretained id target_model, __unsafe
     if (target_model==source_model) {
         return;
     }
-    for (UNPropertyInfo *propertyInfo in classInfo.propertyInfos) {
+    for (UnicornPropertyInfo *propertyInfo in classInfo.propertyInfos) {
         UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
         SEL getter = propertyInfo.getter;
         SEL setter = propertyInfo.setter;
@@ -318,7 +318,7 @@ typedef struct {
 }dictionary_context;
 
 static void forward_applier(const void *_value, void *_context){
-    __unsafe_unretained UNPropertyInfo *propertyInfo = (__bridge __unsafe_unretained UNPropertyInfo *)_value;
+    __unsafe_unretained UnicornPropertyInfo *propertyInfo = (__bridge __unsafe_unretained UnicornPropertyInfo *)_value;
     dictionary_context *context = _context;
     __unsafe_unretained id model = context->model;
     __unsafe_unretained NSDictionary *dictionary = context->dictionary;
@@ -343,7 +343,7 @@ static void forward_applier(const void *_value, void *_context){
 }
 
 static inline id uni_model_get_unique_value(__unsafe_unretained id model, __unsafe_unretained UnicornClassInfo *classInfo){
-    __unsafe_unretained UNPropertyInfo *propertyInfo = classInfo.mtUniquePropertyInfo;
+    __unsafe_unretained UnicornPropertyInfo *propertyInfo = classInfo.mtUniquePropertyInfo;
     UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
     NSCParameterAssert(encodingType != UnicornPropertyEncodingTypeNSData && encodingType != UnicornPropertyEncodingTypeUnsupportedCType);
     id value = uni_model_get_value(model, propertyInfo);
@@ -377,7 +377,7 @@ static inline void uni_bind_value_to_stmt_with_column_type(__unsafe_unretained i
     }
 }
 
-static inline void uni_bind_value_to_stmt_with_property(__unsafe_unretained id model, __unsafe_unretained UNPropertyInfo *propertyInfo, sqlite3_stmt *stmt, int idx) {
+static inline void uni_bind_value_to_stmt_with_property(__unsafe_unretained id model, __unsafe_unretained UnicornPropertyInfo *propertyInfo, sqlite3_stmt *stmt, int idx) {
     UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
     __unsafe_unretained NSValueTransformer *valueTransformer = propertyInfo.dbValueTransformer;
     if (valueTransformer) {
@@ -584,7 +584,7 @@ static inline NSArray *uni_select(__unsafe_unretained NSString *afterWhereSql, _
 //    return value;
 //}
 
-//static inline void uni_model_set_stmt(__unsafe_unretained id model, __unsafe_unretained UNPropertyInfo *propertyInfo, sqlite3_stmt *stmt, int idx) {
+//static inline void uni_model_set_stmt(__unsafe_unretained id model, __unsafe_unretained UnicornPropertyInfo *propertyInfo, sqlite3_stmt *stmt, int idx) {
 //    int type = sqlite3_column_type(stmt, idx);
 //    UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
 //    SEL setter = propertyInfo.setter;
@@ -691,7 +691,7 @@ static inline NSArray *uni_select(__unsafe_unretained NSString *afterWhereSql, _
 //        i++;
 //        const char *columnName = sqlite3_column_name(stmt, i);
 //        if (columnName) {
-//            UNPropertyInfo *propertyInfo = classInfo.propertyInfosByPropertyName[[NSString stringWithUTF8String:columnName]];
+//            UnicornPropertyInfo *propertyInfo = classInfo.propertyInfosByPropertyName[[NSString stringWithUTF8String:columnName]];
 //            if ([classInfo.dbPropertyInfos containsObject:propertyInfo]) {
 //                uni_model_set_stmt(model, propertyInfo, stmt, i);
 //            }
@@ -699,4 +699,4 @@ static inline NSArray *uni_select(__unsafe_unretained NSString *afterWhereSql, _
 //    }
 //}
 
-#endif /* UNFuctions_h */
+#endif /* UnicornFuctions_h */

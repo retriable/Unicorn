@@ -7,7 +7,7 @@
 #import <Foundation/Foundation.h>
 
 @interface NSObject (Unicorn)
-
+@property (assign)bool uni_merged;
 /**
  return models of this class whitch unique value is equal to param value
 
@@ -41,7 +41,7 @@
 
 + (NSArray *_Nonnull)uni_modelsWithAfterWhereSql:(NSString * _Nullable)afterWhereSql arguments:(NSArray *_Nullable)arguments;
 
-#ifdef uni_DB_AUTO_UPDATE_TIMESTAMP
+#ifdef UNI_DB_AUTO_UPDATE_TIMESTAMP
 + (void)uni_deleteBeforeDate:(NSDate *)date;
 #endif
 
