@@ -199,7 +199,8 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
             self.mtUniquePropertyName = [self.cls uni_mtUniquePropertyName];
             self.mtUniquePropertyInfo = self.propertyInfosByPropertyName[self.mtUniquePropertyName];
             UnicornPropertyInfo *mtUniquePropertyInfo = self.propertyInfosByPropertyName[self.mtUniquePropertyName];
-            NSAssert(mtUniquePropertyInfo && (mtUniquePropertyInfo.encodingType & UnicornPropertyEncodingTypeSupportedCType || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSString || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSURL || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSNumber), @"[class:%@,propertyName:%@] [property class do not supported for unique constraint]", NSStringFromClass(cls), mtUniquePropertyInfo.propertyName);
+            bool valid=mtUniquePropertyInfo && (mtUniquePropertyInfo.encodingType & UnicornPropertyEncodingTypeSupportedCType || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSString || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSURL || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSNumber);
+            NSAssert(valid, @"[class:%@,propertyName:%@] [property class do not supported for unique constraint]", NSStringFromClass(cls), mtUniquePropertyInfo.propertyName);
             self.mt = [UnicornMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:0];
         }
         if ([cls conformsToProtocol:@protocol(UnicornDB)]) {

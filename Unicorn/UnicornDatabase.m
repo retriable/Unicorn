@@ -9,20 +9,20 @@
 
 NSString *const UnicornDatabaseErrorDomain = @"UnicornDatabaseErrorDomain";
 
-#ifdef DEBUG
-#ifndef UNI_LOG
-#define UNI_LOG(code) _log(__LINE__, code, sqlite3_errmsg(self.db))
-#endif
-#else
-#define UNI_LOG
+#ifndef UNI_DB_LOG
+#define UNI_DB_LOG(code) _log(__LINE__, code, sqlite3_errmsg(self.db))
 #endif
 
 static inline int _log(int line, int code, const char *desc) {
+#ifdef DEBUG
     if (code != SQLITE_DONE && code != SQLITE_OK && code != SQLITE_ROW) {
         NSLog(@"[file:%s][line:%d] [code:%d,desc:%s]", __FILE__, line, code, desc);
     }
+#endif
     return code;
 }
+
+
 
 @interface UnicornDatabaseTransformer ()
 
@@ -118,7 +118,7 @@ static inline int _log(int line, int code, const char *desc) {
 
 - (BOOL)open:(NSString *)file error:(NSError * *)error {
     sqlite3 *db;
-    if (UNI_LOG(sqlite3_open([file cStringUsingEncoding:NSUTF8StringEncoding], &db)) != SQLITE_OK) {
+    if (UNI_DB_LOG(sqlite3_open([file cStringUsingEncoding:NSUTF8StringEncoding], &db)) != SQLITE_OK) {
         if (*error) {
             *error = [self error];
         }
@@ -130,7 +130,7 @@ static inline int _log(int line, int code, const char *desc) {
 
 - (BOOL)close {
     if (self.db) {
-        if (UNI_LOG(sqlite3_close(self.db)) != SQLITE_OK) {
+        if (UNI_DB_LOG(sqlite3_close(self.db)) != SQLITE_OK) {
             return NO;
         }
         self.db = nil;
@@ -145,7 +145,7 @@ static inline int _log(int line, int code, const char *desc) {
     UnicornStmt *s = self.stmts[sql];
     if (!s) {
         sqlite3_stmt *stmt = NULL;
-        if (UNI_LOG(sqlite3_prepare_v2(self.db, [sql UTF8String], -1, &stmt, 0)) != SQLITE_OK) {
+        if (UNI_DB_LOG(sqlite3_prepare_v2(self.db, [sql UTF8String], -1, &stmt, 0)) != SQLITE_OK) {
             sqlite3_finalize(stmt);
             if (*error) {
                 *error = [self error];
@@ -157,8 +157,8 @@ static inline int _log(int line, int code, const char *desc) {
         s.sql = sql;
         self.stmts[sql] = s;
     }
-    UNI_LOG(sqlite3_reset(s.stmt));
-    UNI_LOG(sqlite3_clear_bindings(s.stmt));
+    UNI_DB_LOG(sqlite3_reset(s.stmt));
+    UNI_DB_LOG(sqlite3_clear_bindings(s.stmt));
     return s.stmt;
 }
 
@@ -209,7 +209,7 @@ static inline int _log(int line, int code, const char *desc) {
         stmtBlock(stmt, i + 1);
     }
     bool stop = NO;
-    while (UNI_LOG(sqlite3_step(stmt)) == SQLITE_ROW) {
+    while (UNI_DB_LOG(sqlite3_step(stmt)) == SQLITE_ROW) {
         resultBlock(stmt, &stop);
         if (stop) {
             return;
@@ -238,7 +238,7 @@ static inline int _log(int line, int code, const char *desc) {
     for (int i = 0; i < count; i++) {
         stmtBlock(stmt, i + 1);
     }
-    if (UNI_LOG(sqlite3_step(stmt)) != SQLITE_DONE) {
+    if (UNI_DB_LOG(sqlite3_step(stmt)) != SQLITE_DONE) {
         if (*error) {
             *error = [self error];
         }
@@ -315,7 +315,7 @@ static inline int _log(int line, int code, const char *desc) {
     } else {
         result = sqlite3_bind_text(stmt, idx, [[obj description] UTF8String], -1, SQLITE_STATIC);
     }
-    UNI_LOG(result);
+    UNI_DB_LOG(result);
 }
 
 #pragma mark--
