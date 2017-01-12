@@ -7,7 +7,7 @@
 
 #import "UnicornModelInfo.h"
 #import "Unicorn.h"
-typedef NS_ENUM (NSInteger, UnicornPropertyPropertyType) {
+typedef NS_OPTIONS(NSUInteger, UnicornPropertyPropertyType) {
     UnicornPropertyPropertyTypeUnknow = 0,
     UnicornPropertyPropertyTypeNonatomic = 1 << 0,
     UnicornPropertyPropertyTypeDynamic = 1 << 1,

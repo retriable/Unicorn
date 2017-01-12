@@ -40,7 +40,7 @@ extern NSString *const uni_on_update_timestamp;
 
 @end
 
-typedef NS_ENUM (NSInteger, UnicornPropertyEncodingType) {
+typedef NS_OPTIONS (NSUInteger, UnicornPropertyEncodingType) {
     UnicornPropertyEncodingTypeUnsupportedCType = 0,
     UnicornPropertyEncodingTypeBool = 1 << 1,
     UnicornPropertyEncodingTypeInt8 = 1 << 2,

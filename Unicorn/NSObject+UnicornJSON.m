@@ -21,7 +21,7 @@ static void json_forward(const void *_value, void *_context){
     __unsafe_unretained NSValueTransformer *valueTransformer = propertyInfo.jsonValueTransformer;
     __unsafe_unretained NSArray *jsonKeyPathInArray = propertyInfo.jsonKeyPathInArray;
     __unsafe_unretained NSString *jsonKeyPathInString = propertyInfo.jsonKeyPathInString;
-    int count=jsonKeyPathInArray.count;
+    NSUInteger count=jsonKeyPathInArray.count;
     id value = nil;
     if (count==0){
         value = dictionary;
@@ -56,7 +56,7 @@ static void json_reverse(const void *_value, void *_context){
         __unsafe_unretained NSArray *jsonKeyPathInArray = propertyInfo.jsonKeyPathInArray;
         __unsafe_unretained NSString *jsonKeyPathInString = propertyInfo.jsonKeyPathInString;
         NSMutableDictionary *parent = dictionary;
-        NSInteger count = jsonKeyPathInArray.count;
+        NSUInteger count = jsonKeyPathInArray.count;
         if (count==0) {
             [value enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
                 parent[key]=obj;
