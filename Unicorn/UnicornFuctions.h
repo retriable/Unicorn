@@ -236,6 +236,9 @@ static inline void uni_model_merge(__unsafe_unretained id target_model, __unsafe
         UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
         SEL getter = propertyInfo.getter;
         SEL setter = propertyInfo.setter;
+        if (!(setter&&getter)) {
+            continue;
+        }
         if (encodingType&UnicornPropertyEncodingTypeObject) {
             id value = uni_model_get_id(source_model, getter);
             if (value == (id)kCFNull) {
