@@ -322,7 +322,7 @@ typedef struct {
 
 static void forward_applier(const void *_value, void *_context){
     __unsafe_unretained UnicornPropertyInfo *propertyInfo = (__bridge __unsafe_unretained UnicornPropertyInfo *)_value;
-    dictionary_context *context = _context;
+    dictionary_context *context = (dictionary_context *)_context;
     __unsafe_unretained id model = context->model;
     __unsafe_unretained NSDictionary *dictionary = context->dictionary;
     __unsafe_unretained NSValueTransformer *valueTransformer = propertyInfo.dbValueTransformer;

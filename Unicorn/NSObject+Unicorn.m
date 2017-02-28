@@ -75,7 +75,6 @@ static NSString *const UNI_MERGED=@"uni_merged";
 + (void)uni_deleteModelsWithAfterWhereSql:(NSString * _Nullable)afterWhereSql arguments:(NSArray *_Nullable)arguments{
     NSParameterAssert([self conformsToProtocol:@protocol(UnicornDB)]);
     UnicornClassInfo *classInfo = [self uni_classInfo];
-    __block NSArray *models = nil;
     [classInfo sync:^(UnicornMapTable *mt, UnicornDatabase *db) {
         uni_delete(afterWhereSql, arguments, classInfo, db);
     }];
