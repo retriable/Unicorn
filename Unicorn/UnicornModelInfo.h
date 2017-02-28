@@ -6,39 +6,8 @@
 
 
 #import <Foundation/Foundation.h>
-#import "UnicornMapTable.h"
-#import "UnicornDatabase.h"
+#import "NSObject+Unicorn.h"
 #import <objc/runtime.h>
-
-
-extern NSString *const uni_on_update_timestamp;
-
-@protocol UnicornJSON<NSObject>
-
-+ (NSDictionary *)uni_jsonKeyPathsByPropertyName;
-
-@optional
-
-+ (NSValueTransformer *)uni_jsonValueTransformerForPropertyName:(NSString *)propertyName;
-
-@end
-@protocol UnicornMT <NSObject>
-
-+ (NSString *)uni_mtUniquePropertyName;
-
-@end
-
-@protocol UnicornDB <UnicornMT>
-
-+ (NSArray *)uni_dbColumnNamesInPropertyName;
-
-@optional
-
-+ (UnicornDatabaseTransformer *)uni_dbValueTransformerForPropertyName:(NSString *)propertyName;
-
-+ (NSArray *)uni_dbIndexesInPropertyName;
-
-@end
 
 typedef NS_OPTIONS (NSUInteger, UnicornPropertyEncodingType) {
     UnicornPropertyEncodingTypeUnsupportedCType = 0,
@@ -54,7 +23,7 @@ typedef NS_OPTIONS (NSUInteger, UnicornPropertyEncodingType) {
     UnicornPropertyEncodingTypeFloat = 1 << 10,
     UnicornPropertyEncodingTypeDouble = 1 << 11,
     UnicornPropertyEncodingTypeSupportedCType = UnicornPropertyEncodingTypeBool | UnicornPropertyEncodingTypeInt8 | UnicornPropertyEncodingTypeUInt8 | UnicornPropertyEncodingTypeInt16 | UnicornPropertyEncodingTypeUInt16 | UnicornPropertyEncodingTypeInt32 | UnicornPropertyEncodingTypeUInt32 | UnicornPropertyEncodingTypeInt64 | UnicornPropertyEncodingTypeUInt64 | UnicornPropertyEncodingTypeFloat | UnicornPropertyEncodingTypeDouble,
-
+    
     UnicornPropertyEncodingTypeUnsupportedObject = 1 <<12,
     UnicornPropertyEncodingTypeNSString = 1 << 13,
     UnicornPropertyEncodingTypeNSNumber = 1 << 14,

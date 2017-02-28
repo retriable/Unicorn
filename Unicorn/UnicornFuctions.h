@@ -561,6 +561,14 @@ static inline NSArray *uni_select(__unsafe_unretained NSString *afterWhereSql, _
     return models;
 }
 
+static inline void uni_delete(__unsafe_unretained NSString *afterWhereSql, __unsafe_unretained NSArray *arguments, __unsafe_unretained UnicornClassInfo *classInfo, __unsafe_unretained UnicornDatabase *db){
+    NSString *sql = [NSString stringWithFormat:@"DELETE FROM %@", classInfo.className];
+    if (afterWhereSql) {
+        sql = [sql stringByAppendingFormat:@" WHERE %@", afterWhereSql];
+    }
+    [db executeUpdate:sql arguments:arguments error:nil];
+}
+
 //static inline id uni_value_get_from_stmt(sqlite3_stmt *stmt, int idx){
 //    int type = sqlite3_column_type(stmt, idx);
 //    id value = nil;

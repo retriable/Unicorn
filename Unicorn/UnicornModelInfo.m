@@ -16,8 +16,6 @@ typedef NS_OPTIONS(NSUInteger, UnicornPropertyPropertyType) {
 
 static UnicornDatabase *global_database = nil;
 
-NSString *const uni_on_update_timestamp = @"uni_on_update_timestamp";
-
 static inline bool uni_db_check_table(UnicornDatabase *db, NSString *table){
     NSString *sql = @"SELECT * FROM sqlite_master WHERE tbl_name=? AND type='table'";
     NSArray *sets = [db executeQuery:sql arguments:@[table] error:nil];
@@ -113,7 +111,10 @@ static inline void uni_db_add_indexes(UnicornClassInfo *classInfo, UnicornDataba
     }];
 }
 
-static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *db){
+static inline void uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *db){
+    if (!db){
+        return;
+    }
     uni_db_add_table(classInfo, db);
     uni_db_add_column(classInfo, db);
     uni_db_add_indexes(classInfo, db);
@@ -202,8 +203,8 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
             BOOL valid=mtUniquePropertyInfo && (mtUniquePropertyInfo.encodingType & UnicornPropertyEncodingTypeSupportedCType || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSString || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSURL || mtUniquePropertyInfo.encodingType&UnicornPropertyEncodingTypeNSNumber);
             if (!valid) {
                 NSAssert(valid, @"[class:%@,propertyName:%@] [property class do not supported for unique constraint]", NSStringFromClass(cls), mtUniquePropertyInfo.propertyName);
-                self.mt = [UnicornMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:0];
             }
+            [self setMt:[UnicornMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory capacity:0] db:nil];
         }
         if ([cls conformsToProtocol:@protocol(UnicornDB)]) {
             NSMutableArray *dbPropertyInfos = [NSMutableArray array];
@@ -273,7 +274,7 @@ static inline void  uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *
             dispatch_once(&onceToken, ^{
                 global_database = [UnicornDatabase databaseWithFile:UNI_DB_MODEL_DB_PATH error:nil];
             });
-            self.db = global_database;
+            [self setMt:self.mt db:global_database];
         }
     }
     return self;

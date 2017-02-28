@@ -9,5 +9,5 @@ Unique model,used optionally in memory and in database(sqlite),support json mapp
 
 Add the following to your project's Podfile:
 ```ruby
-pod 'Unicorn', '~> 1.0.1'
+pod 'Unicorn', '~> 1.0.2'
 ```

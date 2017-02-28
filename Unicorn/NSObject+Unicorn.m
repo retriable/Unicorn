@@ -6,6 +6,9 @@
 
 #import "NSObject+Unicorn.h"
 #import "UnicornFuctions.h"
+
+NSString *const uni_on_update_timestamp = @"uni_on_update_timestamp";
+
 @interface NSObject (Unicorn_)
 
 @property (assign)bool uni_merged;
@@ -67,6 +70,15 @@ static NSString *const UNI_MERGED=@"uni_merged";
         models = uni_select(afterWhereSql, arguments, classInfo, mt, db);
     }];
     return models;
+}
+
++ (void)uni_deleteModelsWithAfterWhereSql:(NSString * _Nullable)afterWhereSql arguments:(NSArray *_Nullable)arguments{
+    NSParameterAssert([self conformsToProtocol:@protocol(UnicornDB)]);
+    UnicornClassInfo *classInfo = [self uni_classInfo];
+    __block NSArray *models = nil;
+    [classInfo sync:^(UnicornMapTable *mt, UnicornDatabase *db) {
+        uni_delete(afterWhereSql, arguments, classInfo, db);
+    }];
 }
 
 - (instancetype)uni_save:(UnicornClassInfo*)classInfo mt:(UnicornMapTable*)mt db:(UnicornDatabase*)db{

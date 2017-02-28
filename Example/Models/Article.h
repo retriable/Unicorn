@@ -6,7 +6,7 @@
 
 #import <Foundation/Foundation.h>
 #import "User.h"
-@interface Article : NSObject<UnicornDB,UnicornJSON>
+@interface Article : NSObject<UnicornJSON,UnicornDB>
 @property(assign) UInt64 aid;//unique id
 @property(strong) User *author;
 @property(copy) NSString *title;

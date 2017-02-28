@@ -16,4 +16,5 @@ UNI_JSON_KEY_PATHS(
     )
 UNI_MT_UNIQUE(aid)
 UNI_DB_COLUMN_NAMES(aid, title, intro, author, score)
+
 @end
