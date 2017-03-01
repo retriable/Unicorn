@@ -71,7 +71,7 @@ extern NSString * _Nonnull const uni_on_update_timestamp;
 /**
  select models with sql
  
- @param afterWhereSql e.x. uid=?,if nil,delete all
+ @param afterWhereSql e.x. uid=?
  @param arguments arguments
  @return unique models
  */
@@ -82,7 +82,7 @@ extern NSString * _Nonnull const uni_on_update_timestamp;
 /**
  delete models with sql
 
- @param afterWhereSql afterWhereSql e.x. uid=?,if nil,delete all
+ @param afterWhereSql afterWhereSql e.x. uid=?,if afterWhereSql nil,delete all
  @param arguments arguments
  */
 + (void)uni_deleteModelsWithAfterWhereSql:(NSString * _Nullable)afterWhereSql arguments:(NSArray *_Nullable)arguments;
@@ -90,7 +90,7 @@ extern NSString * _Nonnull const uni_on_update_timestamp;
 #ifdef UNI_DB_AUTO_UPDATE_TIMESTAMP
 
 /**
- delete models befor date
+ delete models befor date,if date is nil,delete all
 
  @param date date
  */
