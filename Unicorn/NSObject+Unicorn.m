@@ -47,7 +47,7 @@ static NSString *const UNI_MERGED=@"uni_merged";
     __block id model = nil;
     UnicornClassInfo *classInfo = [self.class uni_classInfo];
     [classInfo sync:^(UnicornMapTable *mt, UnicornDatabase *db) {
-        [self uni_save:classInfo mt:mt db:db];
+        model = [self uni_save:classInfo mt:mt db:db];
     }];
     return model;
 }
@@ -138,8 +138,11 @@ static NSString *const UNI_MERGED=@"uni_merged";
 + (void)uni_deleteBeforeDate:(NSDate *)date {
     UnicornClassInfo *classInfo = [self uni_classInfo];
     [classInfo sync:^(UnicornMapTable *mt, UnicornDatabase *db) {
-        NSString *sql = [NSString stringWithFormat:@"DELETE FROM %@ WHERE %@<%f", classInfo.className, uni_on_update_timestamp, [date timeIntervalSince1970]];
-        [db executeUpdate:sql arguments:nil error:nil];
+        NSString *afterWhereSql=nil;
+        if (date) {
+            afterWhereSql=[NSString stringWithFormat:@"%@<?",uni_on_update_timestamp];
+        }
+        uni_delete(afterWhereSql, @[@([date timeIntervalSince1970])], classInfo, db);
     }];
 }
 

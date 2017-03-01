@@ -34,7 +34,12 @@ static inline void Benchmark(void (^block)(void), void (^complete)(double ms)) {
                                        @"score":@"0",
                                        } mutableCopy];
     articleJsonDict[@"author"]=[userJsonDict mutableCopy];
-    NSLog(@"\n\n\n\n\n%@\n\n\n\n",[[Article uni_modelWithJsonDictionary:articleJsonDict] uni_jsonDictionary]);
+    Article *article=[[Article alloc]init];
+    article.aid=1010;
+    article=[article uni_save];
+    article=[Article uni_modelWithJsonDictionary:articleJsonDict];
+    NSLog(@"\n\n\n\n\n%@\n\n\n\n",[article uni_jsonDictionary]);
+    
     int count = 10000;
     NSMutableArray *articleJsonDicts = [NSMutableArray arrayWithCapacity:10000];
     for (int i = 10000; i < count+10000; i++) {
@@ -55,6 +60,7 @@ static inline void Benchmark(void (^block)(void), void (^complete)(double ms)) {
     }, ^(double ms) {
         NSLog(@"\n::::\n%.2f\n::::", ms);
     });
+    
     // Do any additional setup after loading the view, typically from a nib.
 }
 
