@@ -72,9 +72,9 @@ typedef NS_OPTIONS (NSUInteger, UnicornPropertyEncodingType) {
 @property (nonatomic, strong, readonly) NSNumberFormatter *numberFormatter;
 
 @property (nonatomic, assign, readonly) UnicornDatabaseColumnType dbColumnType;
-@property (nonatomic, assign, readonly) UnicornBlockValueTransformer *dbValueTransformer;
+@property (nonatomic, strong, readonly) UnicornBlockValueTransformer *dbValueTransformer;
 
-@property (nonatomic, strong, readonly) NSString *jsonKeyPathInString;
+@property (nonatomic, copy, readonly) NSString *jsonKeyPathInString;
 @property (nonatomic, strong, readonly) NSArray *jsonKeyPathInArray;
 @property (nonatomic, strong, readonly) NSValueTransformer *jsonValueTransformer;
 

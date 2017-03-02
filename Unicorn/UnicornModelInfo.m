@@ -34,8 +34,7 @@ static inline bool uni_db_check_column(UnicornDatabase *db, NSString *table, NSS
     if (sets.count > 0) {
         for (NSDictionary *set in sets) {
             NSString *createSql = set[@"sql"];
-            if (createSql &&
-                [createSql rangeOfString:column].location != NSNotFound) {
+            if (createSql && [createSql rangeOfString:column].location != NSNotFound) {
                 ret = YES;
                 break;
             }
@@ -142,6 +141,7 @@ static inline void uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *d
 @property (nonatomic, copy) NSString *dbInsertSql;
 
 @property (nonatomic, strong) NSArray *jsonPropertyInfos;
+    
 @end
 
 @interface UnicornPropertyInfo ()
@@ -159,9 +159,9 @@ static inline void uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *d
 @property (nonatomic, strong) NSNumberFormatter *numberFormatter;
 
 @property (nonatomic, assign) UnicornDatabaseColumnType dbColumnType;
-@property (nonatomic, assign) UnicornBlockValueTransformer *dbValueTransformer;
+@property (nonatomic, strong) UnicornBlockValueTransformer *dbValueTransformer;
 
-@property (nonatomic, strong) NSString *jsonKeyPathInString;
+@property (nonatomic, copy) NSString *jsonKeyPathInString;
 @property (nonatomic, strong) NSArray *jsonKeyPathInArray;
 @property (nonatomic, strong) NSValueTransformer *jsonValueTransformer;
 
@@ -299,7 +299,10 @@ static inline void uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *d
     }
     if (_db != db) {
         _db = db;
-        uni_db_create(self, _db);
+        __weak typeof(self) weakSelf=self;
+        [db sync:^(UnicornDatabase *db) {
+            uni_db_create(weakSelf, db);
+        }];
     }
     [self.lock unlock];
 }
