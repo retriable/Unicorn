@@ -140,8 +140,8 @@ static void json_reverse(const void *_value, void *_context){
                             uni_db_insert(model, classInfo, db);
                             uni_mt_set(model,uniqueValue,mt);
                         }
-                        [models addObject:model];
                     }
+                    [models addObject:model];
                 }
                 [db commit];
             } else {
