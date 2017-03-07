@@ -119,8 +119,9 @@ static NSString *const UNI_MERGED=@"uni_merged";
     }
     NSMutableArray *savedModels = [NSMutableArray arrayWithCapacity:models.count];
     if (db) {
-        NSMutableArray *updates=[NSMutableArray array];
-        NSMutableArray *inserts=[NSMutableArray array];
+        [db sync:^(UnicornDatabase *db) {
+            [db beginTransaction];
+        }];
         for (id m in models){
             id model=nil;
             id uniqueValue = uni_model_get_unique_value(m, classInfo);
@@ -128,22 +129,15 @@ static NSString *const UNI_MERGED=@"uni_merged";
             if (model) {
                 uni_model_merge(model, m, classInfo);
                 [model setUni_merged:YES];
-                [updates addObject:model];
+                uni_db_update(model, classInfo, db);
             }else{
                 model=m;
                 uni_mt_set(model, uniqueValue, mt);
-                [inserts addObject:model];
+                uni_db_insert(model, classInfo, db);
             }
             [savedModels addObject:model];
         }
         [db sync:^(UnicornDatabase *db) {
-            [db beginTransaction];
-            for (id model in updates){
-                uni_db_update(model, classInfo, db);
-            }
-            for (id model in inserts){
-                uni_db_insert(model, classInfo, db);
-            }
             [db commit];
         }];
     }else{

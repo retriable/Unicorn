@@ -39,7 +39,6 @@ static inline void Benchmark(void (^block)(void), void (^complete)(double ms)) {
     article=[article uni_save];
     article=[Article uni_modelWithJsonDictionary:articleJsonDict];
     NSLog(@"\n\n\n\n\n%@\n\n\n\n",[article uni_jsonDictionary]);
-    
     int count = 10000;
     NSMutableArray *articleJsonDicts = [NSMutableArray arrayWithCapacity:10000];
     for (int i = 10000; i < count+10000; i++) {

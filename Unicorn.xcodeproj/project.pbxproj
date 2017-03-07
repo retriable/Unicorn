@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A23CA091E6E719C003698E2 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A23CA081E6E719C003698E2 /* User.m */; };
 		0A5E65231E25BC7A0057FAA4 /* NSObject+Unicorn.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E65161E25BC7A0057FAA4 /* NSObject+Unicorn.m */; };
 		0A5E65241E25BC7A0057FAA4 /* NSObject+UnicornJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E65181E25BC7A0057FAA4 /* NSObject+UnicornJSON.m */; };
 		0A5E65251E25BC7A0057FAA4 /* UnicornBlockValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E651B1E25BC7A0057FAA4 /* UnicornBlockValueTransformer.m */; };
@@ -38,6 +39,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A23CA071E6E719C003698E2 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		0A23CA081E6E719C003698E2 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		0A5E65091E25BBF50057FAA4 /* libUnicorn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUnicorn.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A5E65151E25BC7A0057FAA4 /* NSObject+Unicorn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Unicorn.h"; sourceTree = "<group>"; };
 		0A5E65161E25BC7A0057FAA4 /* NSObject+Unicorn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Unicorn.m"; sourceTree = "<group>"; };
@@ -138,16 +141,16 @@
 		0A5E65511E25C0620057FAA4 /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				0A5E65731E25C2990057FAA4 /* Models */,
 				0A5E65551E25C0620057FAA4 /* AppDelegate.h */,
 				0A5E65561E25C0620057FAA4 /* AppDelegate.m */,
 				0A5E655E1E25C0620057FAA4 /* Assets.xcassets */,
 				0A5E65631E25C0620057FAA4 /* Info.plist */,
 				0A5E65601E25C0620057FAA4 /* LaunchScreen.storyboard */,
 				0A5E655B1E25C0620057FAA4 /* Main.storyboard */,
+				0A5E65731E25C2990057FAA4 /* Models */,
+				0A5E65521E25C0620057FAA4 /* Supporting Files */,
 				0A5E65581E25C0620057FAA4 /* ViewController.h */,
 				0A5E65591E25C0620057FAA4 /* ViewController.m */,
-				0A5E65521E25C0620057FAA4 /* Supporting Files */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -173,6 +176,8 @@
 			children = (
 				0A5E65741E25C2990057FAA4 /* Article.h */,
 				0A5E65751E25C2990057FAA4 /* Article.m */,
+				0A23CA071E6E719C003698E2 /* User.h */,
+				0A23CA081E6E719C003698E2 /* User.m */,
 				0A5E65771E25C2990057FAA4 /* user.json */,
 			);
 			path = Models;
@@ -287,6 +292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A23CA091E6E719C003698E2 /* User.m in Sources */,
 				0A5E65791E25C2990057FAA4 /* Article.m in Sources */,
 				0A5E655A1E25C0620057FAA4 /* ViewController.m in Sources */,
 				0A5E65571E25C0620057FAA4 /* AppDelegate.m in Sources */,
