@@ -81,32 +81,27 @@ static NSString *const UNI_MERGED=@"uni_merged";
 }
 
 - (instancetype)uni_save:(UnicornClassInfo*)classInfo mt:(UnicornMapTable*)mt db:(UnicornDatabase*)db{
+    if (!mt) {
+        return self;
+    }
     id model=nil;
+    id uniqueValue = uni_model_get_unique_value(self, classInfo);
     if (db) {
-        id uniqueValue = uni_model_get_unique_value(self, classInfo);
-        model = uni_mt_unique_model(uniqueValue, mt);
+        model = uni_unique_model(uniqueValue,classInfo,mt,db);
         if (model) {
             uni_model_merge(model, self, classInfo);
             uni_db_update(model, classInfo, db);
             [model setUni_merged:YES];
-        } else {
-            model = uni_db_unique_model(uniqueValue, classInfo, db);
-            if (model) {
-                uni_model_merge(model, self, classInfo);
-                uni_db_update(model, classInfo, db);
-                uni_mt_set(model, uniqueValue, mt);
-                [model setUni_merged:YES];
-            } else {
-                model = self;
-                uni_db_insert(model, classInfo, db);
-                uni_mt_set(model, uniqueValue, mt);
-            }
+        }else{
+            model=self;
+            uni_db_insert(model, classInfo, db);
+            uni_mt_set(model, uniqueValue, mt);
         }
     } else {
-        id uniqueValue = uni_model_get_unique_value(self, classInfo);
         model = uni_mt_unique_model(uniqueValue, mt);
         if (model) {
             uni_model_merge(model, self, classInfo);
+            [model setUni_merged:YES];
         } else {
             model = self;
             uni_mt_set(model, uniqueValue, mt);
@@ -116,21 +111,56 @@ static NSString *const UNI_MERGED=@"uni_merged";
 }
 
 + (NSArray *)uni_save:(NSArray *)models classInfo:(UnicornClassInfo*)classInfo mt:(UnicornMapTable*)mt db:(UnicornDatabase*)db{
+    if (models.count==0) {
+        return nil;
+    }
+    if (!mt) {
+        return models;
+    }
     NSMutableArray *savedModels = [NSMutableArray arrayWithCapacity:models.count];
-    void (^block)()=^{
-        for (id m in models) {
-            id model=[m uni_save:classInfo mt:mt db:db];
-            if (model) {
-                [savedModels addObject:model];
-            }
-        }
-    };
     if (db) {
-        [db beginTransaction];
-        block();
-        [db commit];
-    } else {
-        block();
+        NSMutableArray *updates=[NSMutableArray array];
+        NSMutableArray *inserts=[NSMutableArray array];
+        for (id m in models){
+            id model=nil;
+            id uniqueValue = uni_model_get_unique_value(m, classInfo);
+            model = uni_unique_model(uniqueValue,classInfo,mt,db);
+            if (model) {
+                uni_model_merge(model, m, classInfo);
+                [model setUni_merged:YES];
+                [updates addObject:model];
+            }else{
+                model=m;
+                uni_mt_set(model, uniqueValue, mt);
+                [inserts addObject:model];
+            }
+            [savedModels addObject:model];
+        }
+        [db sync:^(UnicornDatabase *db) {
+            [db beginTransaction];
+            for (id model in updates){
+                uni_db_update(model, classInfo, db);
+            }
+            for (id model in inserts){
+                uni_db_insert(model, classInfo, db);
+            }
+            [db commit];
+        }];
+    }else{
+        for (id m in models){
+            id model=nil;
+            id uniqueValue = uni_model_get_unique_value(self, classInfo);
+            model = uni_mt_unique_model(uniqueValue, mt);
+            if (model) {
+                uni_model_merge(model, self, classInfo);
+                [model setUni_merged:YES];
+            } else {
+                model = self;
+                uni_mt_set(model, uniqueValue, mt);
+            }
+            [savedModels addObject:model];
+        }
+
     }
     return savedModels;
 }

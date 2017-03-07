@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A23CA061E6E52B4003698E2 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A23CA051E6E52B4003698E2 /* User.m */; };
 		0A5E65231E25BC7A0057FAA4 /* NSObject+Unicorn.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E65161E25BC7A0057FAA4 /* NSObject+Unicorn.m */; };
 		0A5E65241E25BC7A0057FAA4 /* NSObject+UnicornJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E65181E25BC7A0057FAA4 /* NSObject+UnicornJSON.m */; };
 		0A5E65251E25BC7A0057FAA4 /* UnicornBlockValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E651B1E25BC7A0057FAA4 /* UnicornBlockValueTransformer.m */; };
@@ -23,7 +24,6 @@
 		0A5E65721E25C2550057FAA4 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A5E65711E25C2550057FAA4 /* libsqlite3.tbd */; };
 		0A5E65791E25C2990057FAA4 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E65751E25C2990057FAA4 /* Article.m */; };
 		0A5E657A1E25C2990057FAA4 /* user.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A5E65771E25C2990057FAA4 /* user.json */; };
-		0A5E657B1E25C2990057FAA4 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E65781E25C2990057FAA4 /* User.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +39,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A23CA041E6E52B4003698E2 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		0A23CA051E6E52B4003698E2 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		0A5E65091E25BBF50057FAA4 /* libUnicorn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUnicorn.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A5E65151E25BC7A0057FAA4 /* NSObject+Unicorn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Unicorn.h"; sourceTree = "<group>"; };
 		0A5E65161E25BC7A0057FAA4 /* NSObject+Unicorn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Unicorn.m"; sourceTree = "<group>"; };
@@ -67,9 +69,7 @@
 		0A5E65711E25C2550057FAA4 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		0A5E65741E25C2990057FAA4 /* Article.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
 		0A5E65751E25C2990057FAA4 /* Article.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
-		0A5E65761E25C2990057FAA4 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		0A5E65771E25C2990057FAA4 /* user.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = user.json; sourceTree = "<group>"; };
-		0A5E65781E25C2990057FAA4 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		0AD6CFBC1E25DAEE009F63EE /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		0AD6CFBD1E25DAEE009F63EE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0AD6CFBE1E25E069009F63EE /* Unicorn.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Unicorn.podspec; sourceTree = "<group>"; };
@@ -176,8 +176,8 @@
 			children = (
 				0A5E65741E25C2990057FAA4 /* Article.h */,
 				0A5E65751E25C2990057FAA4 /* Article.m */,
-				0A5E65761E25C2990057FAA4 /* User.h */,
-				0A5E65781E25C2990057FAA4 /* User.m */,
+				0A23CA041E6E52B4003698E2 /* User.h */,
+				0A23CA051E6E52B4003698E2 /* User.m */,
 				0A5E65771E25C2990057FAA4 /* user.json */,
 			);
 			path = Models;
@@ -292,7 +292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A5E657B1E25C2990057FAA4 /* User.m in Sources */,
+				0A23CA061E6E52B4003698E2 /* User.m in Sources */,
 				0A5E65791E25C2990057FAA4 /* Article.m in Sources */,
 				0A5E655A1E25C0620057FAA4 /* ViewController.m in Sources */,
 				0A5E65571E25C0620057FAA4 /* AppDelegate.m in Sources */,

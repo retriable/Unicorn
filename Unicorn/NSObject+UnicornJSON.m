@@ -103,77 +103,80 @@ static void json_reverse(const void *_value, void *_context){
 }
 
 + (NSArray *)uni_modelsWithJsonDictionaries:(NSArray *)jsonDictionaries classInfo:(UnicornClassInfo *)classInfo mt:(UnicornMapTable*)mt db:(UnicornDatabase*)db {
-    if (!jsonDictionaries) {
-        return [NSMutableArray array];
+    if (jsonDictionaries.count==0) {
+        return nil;
     }
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:jsonDictionaries.count];
-        if (mt) {
-            UnicornPropertyInfo *propertyInfo = classInfo.mtUniquePropertyInfo;
-            NSValueTransformer *valueTransfomer = propertyInfo.jsonValueTransformer;
-            if (db) {
+    if (mt) {
+        UnicornPropertyInfo *propertyInfo = classInfo.mtUniquePropertyInfo;
+        NSValueTransformer *valueTransfomer = propertyInfo.jsonValueTransformer;
+        if (db) {
+            NSMutableArray *updates=[NSMutableArray array];
+            NSMutableArray *inserts=[NSMutableArray array];
+            for (NSDictionary *jsonDictionary in jsonDictionaries){
+                id uniqueValue = nil;
+                if (classInfo.mtUniquePropertyInfo.jsonKeyPathInArray.count == 1) {
+                    uniqueValue = jsonDictionary[propertyInfo.jsonKeyPathInString];
+                } else {
+                    uniqueValue = [jsonDictionary uni_valueForKeyPaths:propertyInfo.jsonKeyPathInArray];
+                }
+                if (valueTransfomer) {
+                    uniqueValue = [valueTransfomer transformedValue:uniqueValue];
+                }
+                id model = uni_unique_model(uniqueValue, classInfo,mt,db);
+                if (model) {
+                    [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
+                    [updates addObject:model];
+                    [model setUni_merged:YES];
+                }else{
+                    model = [[self alloc] init];
+                    [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
+                    [inserts addObject:model];
+                    uni_mt_set(model,uniqueValue,mt);
+                }
+                [models addObject:model];
+            }
+            [db sync:^(UnicornDatabase *db) {
                 [db beginTransaction];
-                for (NSDictionary *jsonDictionary in jsonDictionaries) {
-                    id uniqueValue = nil;
-                    if (classInfo.mtUniquePropertyInfo.jsonKeyPathInArray.count == 1) {
-                        uniqueValue = jsonDictionary[propertyInfo.jsonKeyPathInString];
-                    } else {
-                        uniqueValue = [jsonDictionary uni_valueForKeyPaths:propertyInfo.jsonKeyPathInArray];
-                    }
-                    if (valueTransfomer) {
-                        uniqueValue = [valueTransfomer transformedValue:uniqueValue];
-                    }
-                    id model = uni_mt_unique_model(uniqueValue, mt);
-                    if (model) {
-                        [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
-                        uni_db_update(model, classInfo, db);
-                        [model setUni_merged:YES];
-                    } else {
-                        id model = uni_db_unique_model(uniqueValue, classInfo, db);
-                        if (model) {
-                            [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
-                            uni_db_update(model, classInfo, db);
-                            uni_mt_set(model,uniqueValue,mt);
-                            [model setUni_merged:YES];
-                        } else {
-                            model = [[self alloc] init];
-                            [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
-                            uni_db_insert(model, classInfo, db);
-                            uni_mt_set(model,uniqueValue,mt);
-                        }
-                    }
-                    [models addObject:model];
+                for (id model in updates){
+                    uni_db_update(model, classInfo, db);
+                }
+                for (id model in inserts){
+                    uni_db_insert(model, classInfo, db);
                 }
                 [db commit];
-            } else {
-                for (NSDictionary *jsonDictionary in jsonDictionaries) {
-                    id uniqueValue = nil;
-                    if (classInfo.mtUniquePropertyInfo.jsonKeyPathInArray.count == 1) {
-                        uniqueValue = jsonDictionary[propertyInfo.jsonKeyPathInString];
-                    } else {
-                        uniqueValue = [jsonDictionary uni_valueForKeyPaths:propertyInfo.jsonKeyPathInArray];
-                    }
-                    if (valueTransfomer) {
-                        uniqueValue = [valueTransfomer transformedValue:uniqueValue];
-                    }
-                    id model = [mt objectForKey:uniqueValue];
-                    if (model) {
-                        [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
-                    } else {
-                        model = [[self alloc] init];
-                        [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
-                        uni_mt_set(model,uniqueValue,mt);
-                    }
-                    [models addObject:model];
+            }];
+        }else{
+            for (NSDictionary *jsonDictionary in jsonDictionaries){
+                id uniqueValue = nil;
+                if (classInfo.mtUniquePropertyInfo.jsonKeyPathInArray.count == 1) {
+                    uniqueValue = jsonDictionary[propertyInfo.jsonKeyPathInString];
+                } else {
+                    uniqueValue = [jsonDictionary uni_valueForKeyPaths:propertyInfo.jsonKeyPathInArray];
                 }
-            }
-        } else {
-            for (NSDictionary *jsonDictionary in jsonDictionaries) {
-                id model = [[self alloc] init];
-                [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
+                if (valueTransfomer) {
+                    uniqueValue = [valueTransfomer transformedValue:uniqueValue];
+                }
+                id model = uni_mt_unique_model(uniqueValue, mt);
+                if (model) {
+                    [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
+                    [model setUni_merged:YES];
+                } else {
+                    model = [[self alloc] init];
+                    [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
+                    uni_mt_set(model,uniqueValue,mt);
+                }
                 [models addObject:model];
             }
         }
-    return models;
+    }else{
+        for (NSDictionary *jsonDictionary in jsonDictionaries) {
+            id model = [[self alloc] init];
+            [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
+            [models addObject:model];
+        }
+    }
+    return models.count>0?models:nil;
 }
 
 + (instancetype)uni_modelWithJsonDictionary:(NSDictionary *)jsonDictionary classInfo:(UnicornClassInfo *)classInfo mt:(UnicornMapTable*)mt db:(UnicornDatabase*)db{
@@ -194,29 +197,22 @@ static void json_reverse(const void *_value, void *_context){
             uniqueValue = [valueTransfomer transformedValue:uniqueValue];
         }
         if (db) {
-            model = uni_mt_unique_model(uniqueValue, mt);
+            model = uni_unique_model(uniqueValue, classInfo, mt, db);
             if (model) {
                 [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
                 uni_db_update(model, classInfo, db);
                 [model setUni_merged:YES];
-            } else {
-                model=uni_db_unique_model(uniqueValue, classInfo, db);
-                if (model) {
-                    [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
-                    uni_db_update(model, classInfo, db);
-                    uni_mt_set(model,uniqueValue,mt);
-                    [model setUni_merged:YES];
-                } else {
-                    model = [[self alloc] init];
-                    [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
-                    uni_db_insert(model, classInfo, db);
-                    uni_mt_set(model,uniqueValue,mt);
-                }
+            }else{
+                model = [[self alloc] init];
+                [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
+                uni_db_insert(model, classInfo, db);
+                uni_mt_set(model,uniqueValue,mt);
             }
         } else {
             model = [mt objectForKey:uniqueValue];
             if (model) {
                 [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
+                [model setUni_merged:YES];
             } else {
                 model = [[self alloc] init];
                 [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];

@@ -114,9 +114,11 @@ static inline void uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *d
     if (!db){
         return;
     }
-    uni_db_add_table(classInfo, db);
-    uni_db_add_column(classInfo, db);
-    uni_db_add_indexes(classInfo, db);
+    [db sync:^(UnicornDatabase *db) {
+        uni_db_add_table(classInfo, db);
+        uni_db_add_column(classInfo, db);
+        uni_db_add_indexes(classInfo, db);
+    }];
 }
 
 @interface UnicornClassInfo ()
@@ -282,13 +284,7 @@ static inline void uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *d
 
 - (void)sync:(void (^)(UnicornMapTable *mt, UnicornDatabase *db))block {
     [self.lock lock];
-    if (self.db) {
-        [self.db sync:^(UnicornDatabase *db) {
-            block(self.mt, self.db);
-        }];
-    } else {
-        block(self.mt, self.db);
-    }
+    block(self.mt, self.db);
     [self.lock unlock];
 }
 

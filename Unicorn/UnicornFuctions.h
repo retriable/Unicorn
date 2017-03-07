@@ -464,81 +464,76 @@ static inline id uni_mt_unique_model(__unsafe_unretained id uniqueValue, __unsaf
     return [mt objectForKey:uniqueValue];
 }
 
-static inline id uni_db_unique_model(__unsafe_unretained id uniqueValue, __unsafe_unretained UnicornClassInfo *classInfo, __unsafe_unretained UnicornDatabase *db){
-    NSDictionary *modelDict = [[db executeQuery:classInfo.dbSelectSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
-        uni_bind_value_to_stmt_with_column_type(uniqueValue, classInfo.mtUniquePropertyInfo.dbColumnType, stmt, idx);
-    } error:nil] firstObject];
-    if (modelDict.count==0) {
-        return nil;
-    }
-    dictionary_context context = {};
-    context.dictionary = modelDict;
-    id model = [[classInfo.cls alloc] init];
-    context.model = model;
-    CFArrayRef ref = (__bridge CFArrayRef)classInfo.dbPropertyInfos;
-    CFArrayApplyFunction(ref, CFRangeMake(0, CFArrayGetCount(ref)), forward_applier, &context);
-    return model;
-}
-
-static inline id uni_unique_model(__unsafe_unretained id uniqueValue, __unsafe_unretained UnicornClassInfo *classInfo, __unsafe_unretained UnicornMapTable *mt, __unsafe_unretained UnicornDatabase *db){
-    __block id model = nil;
-    if (mt) {
-        model = uni_mt_unique_model(uniqueValue, mt);
-        if (!model) {
-            model = uni_db_unique_model(uniqueValue, classInfo, db);
-            if (model) {
-                uni_mt_set(model,uniqueValue,mt);
-            }
+static inline NSDictionary * uni_db_unique_dict(__unsafe_unretained id uniqueValue, __unsafe_unretained UnicornClassInfo *classInfo, __unsafe_unretained UnicornDatabase *db){
+    __block NSDictionary *modelDict = nil;
+    [db sync:^(UnicornDatabase *db) {
+        id value=uniqueValue;
+        __unsafe_unretained UnicornBlockValueTransformer *valueTransformer=classInfo.mtUniquePropertyInfo.dbValueTransformer;
+        if (valueTransformer) {
+            value=[valueTransformer reverseTransformedValue:value];
         }
-    }
-    return model;
+        modelDict = [[db executeQuery:classInfo.dbSelectSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
+                    uni_bind_value_to_stmt_with_column_type(value, classInfo.mtUniquePropertyInfo.dbColumnType, stmt, idx);
+                } error:nil] firstObject];
+    }];
+    return modelDict.count>0?modelDict:nil;
 }
 
 static inline void uni_db_update(__unsafe_unretained id model, __unsafe_unretained UnicornClassInfo *classInfo, __unsafe_unretained UnicornDatabase *db){
-    NSInteger count = classInfo.dbPropertyInfos.count;
-    [db executeUpdate:classInfo.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
+    [db sync:^(UnicornDatabase *db) {
+        NSInteger count = classInfo.dbPropertyInfos.count;
+        [db executeUpdate:classInfo.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
 #ifdef uni_DB_AUTO_UPDATE_TIMESTAMP
-        if (idx == count+1) {
-            sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
-        } else if (idx == count+2) {
-            uni_bind_value_to_stmt_with_property(model, classInfo.mtUniquePropertyInfo, stmt, idx);
-        } else {
-            uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
-        }
+            if (idx == count+1) {
+                sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
+            } else if (idx == count+2) {
+                uni_bind_value_to_stmt_with_property(model, classInfo.mtUniquePropertyInfo, stmt, idx);
+            } else {
+                uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
+            }
 #else
-        if (idx == count+1) {
-            uni_bind_value_to_stmt_with_property(model, classInfo.mtUniquePropertyInfo, stmt, idx);
-        } else {
-            uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
-        }
+            if (idx == count+1) {
+                uni_bind_value_to_stmt_with_property(model, classInfo.mtUniquePropertyInfo, stmt, idx);
+            } else {
+                uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
+            }
 #endif
-    } error:nil];
+        } error:nil];
+    }];
 }
 
 static inline void uni_db_insert(__unsafe_unretained id model, __unsafe_unretained UnicornClassInfo *classInfo, __unsafe_unretained UnicornDatabase *db){
+    [db sync:^(UnicornDatabase *db) {
 #ifdef uni_DB_AUTO_UPDATE_TIMESTAMP
-    NSInteger count = classInfo.dbPropertyInfos.count;
-    [db executeUpdate:classInfo.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
-        if (idx == count+1) {
-            sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
-        } else {
+        NSInteger count = classInfo.dbPropertyInfos.count;
+        [db executeUpdate:classInfo.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
+            if (idx == count+1) {
+                sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
+            } else {
+                uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
+            }
             uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
-        }
-        uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
-    } error:nil];
+        } error:nil];
 #else
-    [db executeUpdate:classInfo.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
-        uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
-    } error:nil];
+        [db executeUpdate:classInfo.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
+            uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
+        } error:nil];
 #endif
+    }];
 }
 
 static inline NSArray *uni_select(__unsafe_unretained NSString *afterWhereSql, __unsafe_unretained NSArray *arguments, __unsafe_unretained UnicornClassInfo *classInfo, __unsafe_unretained UnicornMapTable *mt, __unsafe_unretained UnicornDatabase *db){
-    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@", classInfo.className];
-    if (afterWhereSql) {
-        sql = [sql stringByAppendingFormat:@" WHERE %@", afterWhereSql];
+    __block NSArray *modelDicts = nil;
+    [db sync:^(UnicornDatabase *db) {
+        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@", classInfo.className];
+        if (afterWhereSql) {
+            sql = [sql stringByAppendingFormat:@" WHERE %@", afterWhereSql];
+        }
+        modelDicts = [db executeQuery:sql arguments:arguments error:nil];
+    }];
+    if (modelDicts.count==0) {
+        return nil;
     }
-    NSArray *modelDicts = [db executeQuery:sql arguments:arguments error:nil];
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:modelDicts.count];
     __unsafe_unretained NSValueTransformer *valueTransformer = classInfo.mtUniquePropertyInfo.dbValueTransformer;
     CFArrayRef ref = (__bridge CFArrayRef)classInfo.dbPropertyInfos;
@@ -558,15 +553,38 @@ static inline NSArray *uni_select(__unsafe_unretained NSString *afterWhereSql, _
         }
         [models addObject:model];
     }
-    return models;
+    return models.count>0?models:nil;
 }
 
 static inline void uni_delete(__unsafe_unretained NSString *afterWhereSql, __unsafe_unretained NSArray *arguments, __unsafe_unretained UnicornClassInfo *classInfo, __unsafe_unretained UnicornDatabase *db){
-    NSString *sql = [NSString stringWithFormat:@"DELETE FROM %@", classInfo.className];
-    if (afterWhereSql) {
-        sql = [sql stringByAppendingFormat:@" WHERE %@", afterWhereSql];
+    [db sync:^(UnicornDatabase *db) {
+        NSString *sql = [NSString stringWithFormat:@"DELETE FROM %@", classInfo.className];
+        if (afterWhereSql) {
+            sql = [sql stringByAppendingFormat:@" WHERE %@", afterWhereSql];
+        }
+        [db executeUpdate:sql arguments:arguments error:nil];
+    }];
+}
+
+static inline id uni_unique_model(__unsafe_unretained id uniqueValue, __unsafe_unretained UnicornClassInfo *classInfo, __unsafe_unretained UnicornMapTable *mt, __unsafe_unretained UnicornDatabase *db){
+    __block id model = nil;
+    if (mt) {
+        model = uni_mt_unique_model(uniqueValue, mt);
+        if (!model) {
+            NSDictionary *modelDict=uni_db_unique_dict(uniqueValue, classInfo, db);
+            if (modelDict.count==0) {
+                return nil;
+            }
+            dictionary_context context = {};
+            context.dictionary = modelDict;
+            model = [[classInfo.cls alloc] init];
+            context.model = model;
+            CFArrayRef ref = (__bridge CFArrayRef)classInfo.dbPropertyInfos;
+            CFArrayApplyFunction(ref, CFRangeMake(0, CFArrayGetCount(ref)), forward_applier, &context);
+            uni_mt_set(model,uniqueValue,mt);
+        }
     }
-    [db executeUpdate:sql arguments:arguments error:nil];
+    return model;
 }
 
 //static inline id uni_value_get_from_stmt(sqlite3_stmt *stmt, int idx){
