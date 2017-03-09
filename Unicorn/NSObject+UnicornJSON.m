@@ -35,7 +35,9 @@ static void json_forward(const void *_value, void *_context){
     } else if (propertyInfo.isConformingToUnicornJSONModel) {
         value = [propertyInfo.cls uni_modelWithJsonDictionary:value];
     }
-    uni_model_set_value(model, propertyInfo, value);
+    if (value) {
+        uni_model_set_value(model, propertyInfo, value);
+    }
 }
 
 static void json_reverse(const void *_value, void *_context){
