@@ -23,7 +23,7 @@ typedef NS_ENUM (NSInteger, UnicornDatabaseColumnType) {
 @property (nonatomic, strong, readonly) UnicornBlockValueTransformer *valueTransformer;
 @property (nonatomic, assign, readonly) UnicornDatabaseColumnType columnType;
 
-+ (UnicornBlockValueTransformer *)transformerWithValueTransformer:(UnicornBlockValueTransformer *)valueTransformer columnType:(UnicornDatabaseColumnType)columnType;
++ (UnicornDatabaseTransformer *)transformerWithValueTransformer:(UnicornBlockValueTransformer *)valueTransformer columnType:(UnicornDatabaseColumnType)columnType ;
 
 @end
 

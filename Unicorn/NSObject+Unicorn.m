@@ -170,4 +170,7 @@ static NSString *const UNI_MERGED=@"uni_merged";
     }];
 }
 
++ (void)setMt:(UnicornMapTable *)mt db:(UnicornDatabase *)db{
+    [[self uni_classInfo] setMt:mt db:db];
+}
 @end

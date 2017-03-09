@@ -98,4 +98,13 @@ extern NSString * _Nonnull const uni_on_update_timestamp;
 
 #endif
 
+/**
+ set mt and db for this class
+
+ @param mt new maptable
+ @param db new database
+ */
++ (void)setMt:(UnicornMapTable * _Nullable)mt db:(UnicornDatabase * _Nullable)db;
+
+
 @end
