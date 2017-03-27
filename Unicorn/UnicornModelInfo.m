@@ -189,8 +189,10 @@ static inline void uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *d
             NSMutableArray *jsonPropertyInfos = [NSMutableArray array];
             [[cls uni_jsonKeyPathsByPropertyName] enumerateKeysAndObjectsUsingBlock:^(NSString *_Nonnull propertyName, NSString *_Nonnull jsonKeyPath, BOOL *_Nonnull stop) {
                 UnicornPropertyInfo *propertyInfo = self.propertyInfosByPropertyName[propertyName];
-                propertyInfo.jsonKeyPathInString = jsonKeyPath;
-                propertyInfo.jsonKeyPathInArray = [jsonKeyPath componentsSeparatedByString:@"."];
+                if (jsonKeyPath.length>0) {
+                    propertyInfo.jsonKeyPathInString = jsonKeyPath;
+                    propertyInfo.jsonKeyPathInArray = [jsonKeyPath componentsSeparatedByString:@"."];
+                }
                 [jsonPropertyInfos addObject:propertyInfo];
                 if ([cls respondsToSelector:@selector(uni_jsonValueTransformerForPropertyName:)]) {
                     propertyInfo.jsonValueTransformer = [cls uni_jsonValueTransformerForPropertyName:propertyName];
