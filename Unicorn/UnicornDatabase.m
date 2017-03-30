@@ -119,7 +119,7 @@ static inline int _log(int line, int code, const char *desc) {
 - (BOOL)open:(NSString *)file error:(NSError * *)error {
     sqlite3 *db;
     if (UNI_DB_LOG(sqlite3_open([file cStringUsingEncoding:NSUTF8StringEncoding], &db)) != SQLITE_OK) {
-        if (*error) {
+        if (error) {
             *error = [self error];
         }
         return NO;
@@ -147,7 +147,7 @@ static inline int _log(int line, int code, const char *desc) {
         sqlite3_stmt *stmt = NULL;
         if (UNI_DB_LOG(sqlite3_prepare_v2(self.db, [sql UTF8String], -1, &stmt, 0)) != SQLITE_OK) {
             sqlite3_finalize(stmt);
-            if (*error) {
+            if (error) {
                 *error = [self error];
             }
             return NULL;
@@ -229,7 +229,7 @@ static inline int _log(int line, int code, const char *desc) {
 - (BOOL)executeUpdate:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock error:(NSError * *)error {
     sqlite3_stmt *stmt = [self stmtForSql:sql error:error];
     if (!stmt) {
-        if (*error) {
+        if (error) {
             *error = [self error];
         }
         return NO;
@@ -239,7 +239,7 @@ static inline int _log(int line, int code, const char *desc) {
         stmtBlock(stmt, i + 1);
     }
     if (UNI_DB_LOG(sqlite3_step(stmt)) != SQLITE_DONE) {
-        if (*error) {
+        if (error) {
             *error = [self error];
         }
         return NO;

@@ -71,16 +71,62 @@ static inline void uni_model_set_value(__unsafe_unretained id model, __unsafe_un
     UnicornPropertyEncodingType encodingType = propertyInfo.encodingType;
     SEL setter = propertyInfo.setter;
     if (encodingType & UnicornPropertyEncodingTypeObject) {
-        if (value == (id)kCFNull) {
-            value = nil;
+        if (value == (id)kCFNull||value==nil) {
+            uni_model_set_id(model, setter, nil);
+            return;
         }
-        uni_model_set_id(model, setter, value);
+        switch (encodingType) {
+            case UnicornPropertyEncodingTypeNSString:
+                if ([value isKindOfClass:NSString.class]) {
+                    uni_model_set_id(model, setter, value);
+                }else if([value isKindOfClass:NSNumber.class]){
+                    uni_model_set_id(model, setter, [NSString stringWithFormat:@"%@",value]);
+                }else if([value isKindOfClass:NSData.class]){
+                    uni_model_set_id(model, setter, [value base64EncodedStringWithOptions:0]);
+                }else{
+                    NSCParameterAssert(0);
+                }
+                break;
+            case UnicornPropertyEncodingTypeNSNumber:
+                if ([value isKindOfClass:NSNumber.class]) {
+                    uni_model_set_id(model, setter, value);
+                }else if([value isKindOfClass:NSString.class]){
+                    uni_model_set_id(model, setter, [propertyInfo.numberFormatter numberFromString:value]);
+                }else{
+                    NSCParameterAssert(0);
+                }
+                break;
+                
+            case UnicornPropertyEncodingTypeNSURL:
+                if ([value isKindOfClass:NSURL.class]) {
+                    uni_model_set_id(model, setter, value);
+                }else if([value isKindOfClass:NSString.class]){
+                    uni_model_set_id(model, setter, value);
+                }else{
+                    NSCParameterAssert(0);
+                }
+                break;
+                
+            case UnicornPropertyEncodingTypeNSData:
+                if ([value isKindOfClass:NSData.class]) {
+                    uni_model_set_id(model, setter, value);
+                }else if([value isKindOfClass:NSString.class]){
+                    uni_model_set_id(model, setter, [[NSData alloc] initWithBase64EncodedString:value options:0]);
+                }else{
+                    NSCParameterAssert(0);
+                }
+                break;
+            default:
+                uni_model_set_id(model, setter, value);
+                break;
+        }
     } else if (value == nil || value == (id)kCFNull) {
         uni_model_set_double(model, setter, 0);
     } else {
-        if (![value isKindOfClass:NSNumber.class]) {
+        if ([value isKindOfClass:NSString.class]) {
             value = [propertyInfo.numberFormatter numberFromString:value];
         }
+        NSCParameterAssert([value isKindOfClass:NSNumber.class]);
         switch (encodingType) {
             case UnicornPropertyEncodingTypeBool:
                 uni_model_set_bool(model, setter, [value boolValue]);

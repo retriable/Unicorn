@@ -35,7 +35,7 @@ static void json_forward(const void *_value, void *_context){
     } else if (propertyInfo.isConformingToUnicornJSONModel) {
         value = [propertyInfo.cls uni_modelWithJsonDictionary:value];
     }
-    if (value) {
+    if(value){
         uni_model_set_value(model, propertyInfo, value);
     }
 }
@@ -126,6 +126,9 @@ static void json_reverse(const void *_value, void *_context){
                 if (valueTransfomer) {
                     uniqueValue = [valueTransfomer transformedValue:uniqueValue];
                 }
+                if (classInfo.mtUniquePropertyInfo.numberFormatter&&[uniqueValue isKindOfClass:NSString.class]) {
+                    uniqueValue=[classInfo.mtUniquePropertyInfo.numberFormatter numberFromString:uniqueValue];
+                }
                 id model = uni_unique_model(uniqueValue, classInfo,mt,db);
                 if (model) {
                     [model uni_mergeWithJsonDictionary:jsonDictionary classInfo:classInfo];
@@ -191,6 +194,9 @@ static void json_reverse(const void *_value, void *_context){
         NSValueTransformer *valueTransfomer = classInfo.mtUniquePropertyInfo.jsonValueTransformer;
         if (valueTransfomer) {
             uniqueValue = [valueTransfomer transformedValue:uniqueValue];
+        }
+        if (classInfo.mtUniquePropertyInfo.numberFormatter&&[uniqueValue isKindOfClass:NSString.class]) {
+            uniqueValue=[classInfo.mtUniquePropertyInfo.numberFormatter numberFromString:uniqueValue];
         }
         if (db) {
             model = uni_unique_model(uniqueValue, classInfo, mt, db);
