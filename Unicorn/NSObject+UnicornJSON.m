@@ -123,11 +123,17 @@ static void json_reverse(const void *_value, void *_context){
                 } else {
                     uniqueValue = [jsonDictionary uni_valueForKeyPaths:propertyInfo.jsonKeyPathInArray];
                 }
+                if(!uniqueValue){
+                    continue;
+                }
                 if (valueTransfomer) {
                     uniqueValue = [valueTransfomer transformedValue:uniqueValue];
                 }
                 if (classInfo.mtUniquePropertyInfo.numberFormatter&&[uniqueValue isKindOfClass:NSString.class]) {
                     uniqueValue=[classInfo.mtUniquePropertyInfo.numberFormatter numberFromString:uniqueValue];
+                }
+                if(!uniqueValue){
+                    continue;
                 }
                 id model = uni_unique_model(uniqueValue, classInfo,mt,db);
                 if (model) {
@@ -153,8 +159,14 @@ static void json_reverse(const void *_value, void *_context){
                 } else {
                     uniqueValue = [jsonDictionary uni_valueForKeyPaths:propertyInfo.jsonKeyPathInArray];
                 }
+                if(!uniqueValue){
+                    continue;
+                }
                 if (valueTransfomer) {
                     uniqueValue = [valueTransfomer transformedValue:uniqueValue];
+                }
+                if(!uniqueValue){
+                    continue;
                 }
                 id model = uni_mt_unique_model(uniqueValue, mt);
                 if (model) {
@@ -191,9 +203,15 @@ static void json_reverse(const void *_value, void *_context){
         } else {
             uniqueValue = [jsonDictionary uni_valueForKeyPaths:jsonKeyPathInArray];
         }
+        if (!uniqueValue) {
+            return nil;
+        }
         NSValueTransformer *valueTransfomer = classInfo.mtUniquePropertyInfo.jsonValueTransformer;
         if (valueTransfomer) {
             uniqueValue = [valueTransfomer transformedValue:uniqueValue];
+        }
+        if (!uniqueValue) {
+            return nil;
         }
         if (classInfo.mtUniquePropertyInfo.numberFormatter&&[uniqueValue isKindOfClass:NSString.class]) {
             uniqueValue=[classInfo.mtUniquePropertyInfo.numberFormatter numberFromString:uniqueValue];

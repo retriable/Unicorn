@@ -146,10 +146,10 @@ static NSString *const UNI_MERGED=@"uni_merged";
             id uniqueValue = uni_model_get_unique_value(self, classInfo);
             model = uni_mt_unique_model(uniqueValue, mt);
             if (model) {
-                uni_model_merge(model, self, classInfo);
+                uni_model_merge(model, m, classInfo);
                 [model setUni_merged:YES];
             } else {
-                model = self;
+                model = m;
                 uni_mt_set(model, uniqueValue, mt);
             }
             [savedModels addObject:model];
