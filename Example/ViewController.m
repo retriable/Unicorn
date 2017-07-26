@@ -28,7 +28,7 @@ static inline void Benchmark(void (^block)(void), void (^complete)(double ms)) {
     NSLog(@"::::\nlibary path:\n%@\n::::",[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject]);
     NSMutableDictionary *userJsonDict=[[NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:[[NSBundle mainBundle]pathForResource:@"user" ofType:@"json"]] options:0 error:nil] mutableCopy];
     NSMutableDictionary *articleJsonDict = [@{
-                                       @"id":@"articleId",
+                                       @"id":@"12345",
                                        @"title":@"title",
                                        @"intro":@"intro",
                                        @"score":@"0",
@@ -39,7 +39,7 @@ static inline void Benchmark(void (^block)(void), void (^complete)(double ms)) {
     article=[article uni_save];
     article=[Article uni_modelWithJsonDictionary:articleJsonDict];
     NSLog(@"\n\n\n\n\n%@\n\n\n\n",[article uni_jsonDictionary]);
-    int count = 10000;
+    int count = 100000;
     NSMutableArray *articleJsonDicts = [NSMutableArray arrayWithCapacity:10000];
     for (int i = 10000; i < count+10000; i++) {
         NSMutableDictionary *userDict = [userJsonDict mutableCopy];
@@ -62,9 +62,6 @@ static inline void Benchmark(void (^block)(void), void (^complete)(double ms)) {
     
     // Do any additional setup after loading the view, typically from a nib.
 }
-
-
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
