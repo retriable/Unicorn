@@ -96,7 +96,7 @@ static inline int _log(int line, int code, const char *desc) {
     [self close];
 }
 
-+ (instancetype)databaseWithFile:(NSString *)file error:(NSError * *)error {
++ (instancetype)databaseWithFile:(NSString *)file error:(NSError **)error {
     UnicornDatabase *database = [[self alloc] init];
     return [database open:file error:error] ? database : nil;
 }
@@ -116,7 +116,7 @@ static inline int _log(int line, int code, const char *desc) {
 #pragma mark--
 #pragma mark-- open and close
 
-- (BOOL)open:(NSString *)file error:(NSError * *)error {
+- (BOOL)open:(NSString *)file error:(NSError **)error {
     sqlite3 *db;
     if (UNI_DB_LOG(sqlite3_open([file cStringUsingEncoding:NSUTF8StringEncoding], &db)) != SQLITE_OK) {
         if (error) {
@@ -141,7 +141,7 @@ static inline int _log(int line, int code, const char *desc) {
 #pragma mark--
 #pragma mark-- stmt
 
-- (sqlite3_stmt *)stmtForSql:(NSString *)sql error:(NSError * *)error {
+- (sqlite3_stmt *)stmtForSql:(NSString *)sql error:(NSError **)error {
     UnicornStmt *s = self.stmts[sql];
     if (!s) {
         sqlite3_stmt *stmt = NULL;
@@ -173,13 +173,13 @@ static inline int _log(int line, int code, const char *desc) {
 #pragma mark--
 #pragma mark-- query
 
-- (NSArray *)executeQuery:(NSString *)sql arguments:(NSArray *)arguments error:(NSError * *)error {
+- (NSArray *)executeQuery:(NSString *)sql arguments:(NSArray *)arguments error:(NSError **)error {
     return [self executeQuery:sql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
         [self _bindObject:arguments[idx - 1] toColumn:idx inStatement:stmt];
     } error:error];
 }
 
-- (NSArray *)executeQuery:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock error:(NSError * *)error {
+- (NSArray *)executeQuery:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock error:(NSError **)error {
     __block NSMutableArray *array = [NSMutableArray array];
     [self executeQuery:sql stmtBlock:stmtBlock resultBlock:^(sqlite3_stmt *stmt, bool *stop) {
         int count = sqlite3_data_count(stmt);
@@ -191,18 +191,18 @@ static inline int _log(int line, int code, const char *desc) {
     return array;
 }
 
-- (void)executeQuery:(NSString *)sql arguments:(NSArray *)arguments resultBlock:(void (^)(sqlite3_stmt *stmt, bool *stop))resultBlock error:(NSError * *)error {
-    [self executeQuery:sql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
+- (BOOL)executeQuery:(NSString *)sql arguments:(NSArray *)arguments resultBlock:(void (^)(sqlite3_stmt *stmt, bool *stop))resultBlock error:(NSError **)error {
+    return [self executeQuery:sql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
         [self _bindObject:arguments[idx-1] toColumn:idx inStatement:stmt];
     } resultBlock:resultBlock error:error];
 }
 
-- (void)executeQuery:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock resultBlock:(void (^)(sqlite3_stmt *stmt, bool *stop))resultBlock error:(NSError * *)error {
+- (BOOL)executeQuery:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock resultBlock:(void (^)(sqlite3_stmt *stmt, bool *stop))resultBlock error:(NSError **)error {
     NSParameterAssert(stmtBlock);
     NSParameterAssert(resultBlock);
     sqlite3_stmt *stmt = [self stmtForSql:sql error:error];
     if (!stmt) {
-        return;
+        return NO;
     }
     int count = sqlite3_bind_parameter_count(stmt);
     for (int i = 0; i < count; i++) {
@@ -212,21 +212,22 @@ static inline int _log(int line, int code, const char *desc) {
     while (UNI_DB_LOG(sqlite3_step(stmt)) == SQLITE_ROW) {
         resultBlock(stmt, &stop);
         if (stop) {
-            return;
+            break;
         }
     }
+    return YES;
 }
 
 #pragma mark--
 #pragma mark-- update
 
-- (BOOL)executeUpdate:(NSString *)sql arguments:(NSArray *)arguments error:(NSError * *)error {
+- (BOOL)executeUpdate:(NSString *)sql arguments:(NSArray *)arguments error:(NSError **)error {
     return [self executeUpdate:sql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
         [self _bindObject:arguments[idx-1] toColumn:idx inStatement:stmt];
     } error:error];
 }
 
-- (BOOL)executeUpdate:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock error:(NSError * *)error {
+- (BOOL)executeUpdate:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock error:(NSError **)error {
     sqlite3_stmt *stmt = [self stmtForSql:sql error:error];
     if (!stmt) {
         if (error) {

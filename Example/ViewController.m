@@ -34,28 +34,27 @@ static inline void Benchmark(void (^block)(void), void (^complete)(double ms)) {
                                        @"score":@"0",
                                        } mutableCopy];
     articleJsonDict[@"author"]=[userJsonDict mutableCopy];
-    Article *article=[[Article alloc]init];
-    article.aid=1010;
-    article=[article uni_save];
-    article=[Article uni_modelWithJsonDictionary:articleJsonDict];
-    NSLog(@"\n\n\n\n\n%@\n\n\n\n",[article uni_jsonDictionary]);
-    int count = 100000;
-    NSMutableArray *articleJsonDicts = [NSMutableArray arrayWithCapacity:10000];
-    for (int i = 10000; i < count+10000; i++) {
+    int start = 100000;
+    int count = 3000;
+    NSMutableArray *articleJsonDicts = [NSMutableArray arrayWithCapacity:count];
+    NSMutableArray *userJosnDicts=[NSMutableArray arrayWithCapacity:count];
+    for (int i = start; i < 100000+count; i++) {
         NSMutableDictionary *userDict = [userJsonDict mutableCopy];
         userDict[@"id"] = @(i);
-        userDict[@"public_repos"] = @(arc4random()%20000);
-        userDict[@"public_gists"] = @(arc4random()%20000);
-        userDict[@"followers"] = @(arc4random()%20000);
-        userDict[@"following"] = @(arc4random()%20000);
-        userDict[@"date"] = @([[NSDate date] timeIntervalSince1970]-arc4random()%20000);
+        userDict[@"public_repos"] = @(arc4random()%count);
+        userDict[@"public_gists"] = @(arc4random()%count);
+        userDict[@"followers"] = @(arc4random()%count);
+        userDict[@"following"] = @(arc4random()%count);
+        userDict[@"date"] = @([[NSDate date] timeIntervalSince1970]-arc4random()%count);
+        [userJosnDicts addObject:userDict];
         NSMutableDictionary *jsonDict = [articleJsonDict mutableCopy];
-        jsonDict[@"id"] = @(i+100000);
+        jsonDict[@"id"] = @(i+count);
         jsonDict[@"author"]=userDict;
         [articleJsonDicts addObject:jsonDict];
     }
     Benchmark(^{
-        [Article uni_modelsWithJsonDictionaries:articleJsonDicts];
+        [User uni_modelsWithJsonDictionaries:userJosnDicts];
+//        [Article uni_modelsWithJsonDictionaries:articleJsonDicts];
     }, ^(double ms) {
         NSLog(@"\n::::\n%.2f\n::::", ms);
     });

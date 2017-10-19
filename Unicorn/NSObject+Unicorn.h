@@ -16,7 +16,7 @@ extern NSString * _Nonnull const uni_on_update_timestamp;
 
 @optional
 
-+ ( NSValueTransformer  * _Nonnull)uni_jsonValueTransformerForPropertyName:(NSString * _Nonnull)propertyName;
++ ( NSValueTransformer  * _Nullable)uni_jsonValueTransformerForPropertyName:(NSString * _Nonnull)propertyName;
 
 @end
 
@@ -32,7 +32,7 @@ extern NSString * _Nonnull const uni_on_update_timestamp;
 
 @optional
 
-+ (UnicornDatabaseTransformer * _Nonnull)uni_dbValueTransformerForPropertyName:(NSString * _Nonnull)propertyName;
++ (UnicornDatabaseTransformer * _Nullable)uni_dbValueTransformerForPropertyName:(NSString * _Nonnull)propertyName;
 
 + (NSArray * _Nonnull)uni_dbIndexesInPropertyName;
 
@@ -87,16 +87,12 @@ extern NSString * _Nonnull const uni_on_update_timestamp;
  */
 + (void)uni_deleteModelsWithAfterWhereSql:(NSString * _Nullable)afterWhereSql arguments:(NSArray *_Nullable)arguments;
 
-#ifdef UNI_DB_AUTO_UPDATE_TIMESTAMP
-
 /**
  delete models befor date,if date is nil,delete all
 
  @param date date
  */
-+ (void)uni_deleteBeforeDate:(NSDate *)date;
-
-#endif
++ (void)uni_deleteBeforeDate:(NSDate *_Nullable)date;
 
 /**
  set mt and db for this class

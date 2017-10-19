@@ -68,12 +68,14 @@ static inline void uni_db_add_table(UnicornClassInfo *classInfo, UnicornDatabase
         NSString *uniqueDbColumn = propertyInfo.propertyName;
         NSString *uniqueDbColumnType = uni_sql_column_text(propertyInfo.dbColumnType);
         NSString *sql = nil;
-#ifdef UNI_DB_AUTO_UPDATE_TIMESTAMP
-        sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,'%@' %@ NOT NULL UNIQUE,'%@' REAL)", table, uniqueDbColumn, uniqueDbColumnType, uni_on_update_timestamp];
-#else
         sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,'%@' %@ NOT NULL UNIQUE)", table, uniqueDbColumn, uniqueDbColumnType];
-#endif
+        [db executeUpdate:sql arguments:nil error:nil];
+    }
+}
 
+static inline void uni_db_add_column_sub(UnicornDatabase *db,NSString *table,NSString *column,NSString *columnType){
+    if (!uni_db_check_column(db, table, column)) {
+        NSString *sql = [NSString stringWithFormat:@"ALTER TABLE '%@' ADD COLUMN '%@' %@", table, column, columnType];
         [db executeUpdate:sql arguments:nil error:nil];
     }
 }
@@ -84,23 +86,18 @@ static inline void uni_db_add_column(UnicornClassInfo *classInfo, UnicornDatabas
         if (propertyInfo == classInfo.mtUniquePropertyInfo) {
             return;
         }
-        NSString *column = propertyInfo.propertyName;
-        if (!uni_db_check_column(db, table, column)) {
-            NSString *dbColumnType = uni_sql_column_text(propertyInfo.dbColumnType);
-            NSString *sql = [NSString stringWithFormat:@"ALTER TABLE '%@' ADD COLUMN '%@' %@", table, column, dbColumnType];
-            [db executeUpdate:sql arguments:nil error:nil];
-        }
+        uni_db_add_column_sub(db, table, propertyInfo.propertyName, uni_sql_column_text(propertyInfo.dbColumnType));
     }];
+    uni_db_add_column_sub(db, table, uni_on_update_timestamp, uni_sql_column_text(UnicornDatabaseColumnTypeReal));
 }
+
 
 static inline void uni_db_add_indexes(UnicornClassInfo *classInfo, UnicornDatabase *db){
     NSMutableArray *indexes = [NSMutableArray array];
     [classInfo.dbIndexes enumerateObjectsUsingBlock:^(NSString *_Nonnull propertyName, NSUInteger idx, BOOL *_Nonnull stop) {
         [indexes addObject:propertyName];
     }];
-#ifdef UNI_DB_AUTO_UPDATE_TIMESTAMP
     [indexes addObject:uni_on_update_timestamp];
-#endif
     [indexes enumerateObjectsUsingBlock:^(NSString *_Nonnull databaseIndex, NSUInteger idx, BOOL *_Nonnull stop) {
         if (!uni_check_index(db, classInfo.className, databaseIndex)) {
             NSString *index = [NSString stringWithFormat:@"%@_%@_index", classInfo.className, databaseIndex];
@@ -114,11 +111,9 @@ static inline void uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *d
     if (!db){
         return;
     }
-    [db sync:^(UnicornDatabase *db) {
-        uni_db_add_table(classInfo, db);
-        uni_db_add_column(classInfo, db);
-        uni_db_add_indexes(classInfo, db);
-    }];
+    uni_db_add_table(classInfo, db);
+    uni_db_add_column(classInfo, db);
+    uni_db_add_indexes(classInfo, db);
 }
 
 @interface UnicornClassInfo ()
@@ -259,16 +254,12 @@ static inline void uni_db_create(UnicornClassInfo *classInfo, UnicornDatabase *d
                 [sql1 appendFormat:@"%@,", propertyInfo.propertyName];
                 [sql2 appendFormat:@"?,"];
             }];
-#ifdef UNI_DB_AUTO_UPDATE_TIMESTAMP
             [sql appendFormat:@"%@=?,", uni_on_update_timestamp];
-#endif
             [sql deleteCharactersInRange:NSMakeRange(sql.length - 1, 1)];
             [sql appendFormat:@" WHERE %@=?;", self.mtUniquePropertyName];
             self.dbUpdateSql = sql;
-#ifdef UNI_DB_AUTO_UPDATE_TIMESTAMP
             [sql1 appendFormat:@"%@,", uni_on_update_timestamp];
             [sql2 appendFormat:@"?,"];
-#endif
             [sql1 deleteCharactersInRange:NSMakeRange(sql1.length - 1, 1)];
             [sql1 appendFormat:@")"];
             [sql2 deleteCharactersInRange:NSMakeRange(sql2.length - 1, 1)];

@@ -529,7 +529,6 @@ static inline void uni_db_update(__unsafe_unretained id model, __unsafe_unretain
     [db sync:^(UnicornDatabase *db) {
         NSInteger count = classInfo.dbPropertyInfos.count;
         [db executeUpdate:classInfo.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
-#ifdef uni_DB_AUTO_UPDATE_TIMESTAMP
             if (idx == count+1) {
                 sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
             } else if (idx == count+2) {
@@ -537,20 +536,12 @@ static inline void uni_db_update(__unsafe_unretained id model, __unsafe_unretain
             } else {
                 uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
             }
-#else
-            if (idx == count+1) {
-                uni_bind_value_to_stmt_with_property(model, classInfo.mtUniquePropertyInfo, stmt, idx);
-            } else {
-                uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
-            }
-#endif
         } error:nil];
     }];
 }
 
 static inline void uni_db_insert(__unsafe_unretained id model, __unsafe_unretained UnicornClassInfo *classInfo, __unsafe_unretained UnicornDatabase *db){
     [db sync:^(UnicornDatabase *db) {
-#ifdef uni_DB_AUTO_UPDATE_TIMESTAMP
         NSInteger count = classInfo.dbPropertyInfos.count;
         [db executeUpdate:classInfo.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
             if (idx == count+1) {
@@ -558,13 +549,7 @@ static inline void uni_db_insert(__unsafe_unretained id model, __unsafe_unretain
             } else {
                 uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
             }
-            uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
         } error:nil];
-#else
-        [db executeUpdate:classInfo.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
-            uni_bind_value_to_stmt_with_property(model, classInfo.dbPropertyInfos[idx-1], stmt, idx);
-        } error:nil];
-#endif
     }];
 }
 

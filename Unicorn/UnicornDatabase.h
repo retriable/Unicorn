@@ -29,7 +29,7 @@ typedef NS_ENUM (NSInteger, UnicornDatabaseColumnType) {
 
 @interface UnicornDatabase : NSObject
 
-+ (instancetype)databaseWithFile:(NSString *)file error:(NSError * *)error;
++ (instancetype)databaseWithFile:(NSString *)file error:(NSError **)error;
 
 - (void)sync:(void (^)(UnicornDatabase *db))block;
 
@@ -37,11 +37,11 @@ typedef NS_ENUM (NSInteger, UnicornDatabaseColumnType) {
 
 - (BOOL)executeUpdate:(NSString *)sql arguments:(NSArray *)arguments error:(NSError **)error;
 
-- (BOOL)executeUpdate:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock error:(NSError * *)error;
+- (BOOL)executeUpdate:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock error:(NSError **)error;
 
-- (void)executeQuery:(NSString *)sql arguments:(NSArray *)arguments resultBlock:(void (^)(sqlite3_stmt *stmt, bool *stop))resultBlock error:(NSError **)error;
+- (BOOL)executeQuery:(NSString *)sql arguments:(NSArray *)arguments resultBlock:(void (^)(sqlite3_stmt *stmt, bool *stop))resultBlock error:(NSError **)error;
 
-- (void)executeQuery:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock resultBlock:(void (^)(sqlite3_stmt *stmt, bool *stop))resultBlock error:(NSError **)error;
+- (BOOL)executeQuery:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock resultBlock:(void (^)(sqlite3_stmt *stmt, bool *stop))resultBlock error:(NSError **)error;
 
 - (NSArray *)executeQuery:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock error:(NSError **)error;
 

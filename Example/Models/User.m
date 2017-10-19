@@ -45,7 +45,7 @@ UNI_JSON_KEY_PATHS(
 UNI_MT_UNIQUE(userID)
 UNI_DB_COLUMN_NAMES(login, userID, avatarURL, gravatarID, url, htmlURL, followersURL, followingURL, gistsURL, starredURL, subscriptionsURL, organizationsURL, reposURL, eventsURL, receivedEventsURL, siteAdmin, publicRepos, publicGists, createdAt, updatedAt, type, name, company, blog, location, email, hireable, bio, followers, following, createdAt, updatedAt)
 
-+ (NSValueTransformer *)UNI_jsonValueTransformerForPropertyName:(NSString *)propertyName {
++ ( NSValueTransformer * )uni_jsonValueTransformerForPropertyName:(NSString *)propertyName {
     if ([propertyName isEqualToString:@"date"]) {
         return [UnicornBlockValueTransformer transformerWithForward:^id (NSNumber *value) {
             return [NSDate dateWithTimeIntervalSince1970:value.doubleValue];
@@ -56,7 +56,7 @@ UNI_DB_COLUMN_NAMES(login, userID, avatarURL, gravatarID, url, htmlURL, follower
     return nil;
 }
 
-+ (UnicornDatabaseTransformer *)UNI_dbValueTransformerForPropertyName:(NSString *)propertyName {
++ (UnicornDatabaseTransformer *)uni_dbValueTransformerForPropertyName:(NSString *)propertyName {
     if ([propertyName isEqualToString:@"date"]) {
         [UnicornDatabaseTransformer transformerWithValueTransformer:[UnicornBlockValueTransformer transformerWithForward:^id (NSNumber *value) {
             return [NSDate dateWithTimeIntervalSince1970:value.doubleValue];

@@ -1,6 +1,6 @@
 #Unicorn
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/emsihyo/Unicorn/master/LICENSE)&nbsp;
-[![CocoaPods](http://img.shields.io/cocoapods/v/Unicorn.svg?style=flat)](http://cocoapods.org/?q= Unicorn)&nbsp;
+[![CocoaPods](http://img.shields.io/cocoapods/v/Unicorn.svg?style=flat)](http://cocoapods.org/?q=Unicorn)&nbsp;
 # Unicorn
 
 Unique model,used optionally in memory and in database(sqlite),support json mapping.
@@ -9,5 +9,5 @@ Unique model,used optionally in memory and in database(sqlite),support json mapp
 
 Add the following to your project's Podfile:
 ```ruby
-pod 'Unicorn', '~> 1.0.2'
+pod 'Unicorn', '~> 1.0.3'
 ```
