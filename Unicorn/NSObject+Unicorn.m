@@ -55,9 +55,9 @@ static NSString *const UNI_MERGED=@"uni_merged";
 + (NSArray *)uni_save:(NSArray *)models {
     NSParameterAssert([self conformsToProtocol:@protocol(UnicornMT)]);
     UnicornClassInfo *classInfo = [self.class uni_classInfo];
-    __block NSArray *savedModels=nil;
+    __block NSArray *savedModels = [NSArray array];
     [classInfo sync:^(UnicornMapTable *mt, UnicornDatabase *db) {
-        savedModels=[self uni_save:models classInfo:classInfo mt:mt db:db];
+        savedModels = [self uni_save:models classInfo:classInfo mt:mt db:db];
     }];
     return savedModels;
 }
@@ -65,7 +65,7 @@ static NSString *const UNI_MERGED=@"uni_merged";
 + (NSArray *)uni_modelsWithAfterWhereSql:(NSString *)afterWhereSql arguments:(NSArray *)arguments {
     NSParameterAssert([self conformsToProtocol:@protocol(UnicornDB)]);
     UnicornClassInfo *classInfo = [self uni_classInfo];
-    __block NSArray *models = nil;
+    __block NSArray *models = [NSArray array];
     [classInfo sync:^(UnicornMapTable *mt, UnicornDatabase *db) {
         models = uni_select(afterWhereSql, arguments, classInfo, mt, db);
     }];
@@ -77,6 +77,18 @@ static NSString *const UNI_MERGED=@"uni_merged";
     UnicornClassInfo *classInfo = [self uni_classInfo];
     [classInfo sync:^(UnicornMapTable *mt, UnicornDatabase *db) {
         uni_delete(afterWhereSql, arguments, classInfo, db);
+    }];
+}
+
+
++ (void)uni_deleteBeforeDate:(NSDate *)date {
+    UnicornClassInfo *classInfo = [self uni_classInfo];
+    [classInfo sync:^(UnicornMapTable *mt, UnicornDatabase *db) {
+        NSString *afterWhereSql=nil;
+        if (date) {
+            afterWhereSql=[NSString stringWithFormat:@"%@<?",uni_on_update_timestamp];
+        }
+        uni_delete(afterWhereSql, @[@([date timeIntervalSince1970])], classInfo, db);
     }];
 }
 
@@ -142,7 +154,7 @@ static NSString *const UNI_MERGED=@"uni_merged";
         }];
     }else{
         for (id m in models){
-            id model=nil;
+            id model = nil;
             id uniqueValue = uni_model_get_unique_value(self, classInfo);
             model = uni_mt_unique_model(uniqueValue, mt);
             if (model) {
@@ -154,20 +166,9 @@ static NSString *const UNI_MERGED=@"uni_merged";
             }
             [savedModels addObject:model];
         }
-
+        
     }
     return savedModels;
-}
-
-+ (void)uni_deleteBeforeDate:(NSDate *)date {
-    UnicornClassInfo *classInfo = [self uni_classInfo];
-    [classInfo sync:^(UnicornMapTable *mt, UnicornDatabase *db) {
-        NSString *afterWhereSql=nil;
-        if (date) {
-            afterWhereSql=[NSString stringWithFormat:@"%@<?",uni_on_update_timestamp];
-        }
-        uni_delete(afterWhereSql, @[@([date timeIntervalSince1970])], classInfo, db);
-    }];
 }
 
 + (void)setMt:(UnicornMapTable *)mt db:(UnicornDatabase *)db{

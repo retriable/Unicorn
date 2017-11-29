@@ -30,13 +30,17 @@ static void json_forward(const void *_value, void *_context){
     } else {
         value = [dictionary uni_valueForKeyPaths:jsonKeyPathInArray];
     }
-    if (valueTransformer) {
-        value = [valueTransformer transformedValue:value];
-    } else if (propertyInfo.isConformingToUnicornJSONModel) {
-        value = [propertyInfo.cls uni_modelWithJsonDictionary:value];
-    }
-    if(value){
-        uni_model_set_value(model, propertyInfo, value);
+    if (value==NSNull.null){
+        uni_model_set_value(model, propertyInfo, nil);
+    }else{
+        if (valueTransformer) {
+            value = [valueTransformer transformedValue:value];
+        } else if (propertyInfo.isConformingToUnicornJSONModel) {
+            value = [propertyInfo.cls uni_modelWithJsonDictionary:value];
+        }
+        if(value){
+            uni_model_set_value(model, propertyInfo, value);
+        }
     }
 }
 
