@@ -91,7 +91,7 @@ static void json_reverse(const void *_value, void *_context){
 + (NSArray *)uni_modelsWithJsonDictionaries:(NSArray *)jsonDictionaries {
     NSParameterAssert([self conformsToProtocol:@protocol(UnicornJSON)]);
     UnicornClassInfo *classInfo = [self uni_classInfo];
-    __block NSArray *models=nil;
+    __block NSArray *models = [NSArray array];
     [classInfo sync:^(UnicornMapTable *mt, UnicornDatabase *db) {
         models = [self uni_modelsWithJsonDictionaries:jsonDictionaries classInfo:classInfo mt:mt db:db];
     }];
@@ -109,8 +109,11 @@ static void json_reverse(const void *_value, void *_context){
 }
 
 + (NSArray *)uni_modelsWithJsonDictionaries:(NSArray *)jsonDictionaries classInfo:(UnicornClassInfo *)classInfo mt:(UnicornMapTable*)mt db:(UnicornDatabase*)db {
+    if (!jsonDictionaries){
+        return  nil;
+    }
     if (jsonDictionaries.count==0) {
-        return nil;
+        return [NSArray array];
     }
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:jsonDictionaries.count];
     if (mt) {
@@ -191,7 +194,7 @@ static void json_reverse(const void *_value, void *_context){
             [models addObject:model];
         }
     }
-    return models.count>0?models:nil;
+    return models;
 }
 
 + (instancetype)uni_modelWithJsonDictionary:(NSDictionary *)jsonDictionary classInfo:(UnicornClassInfo *)classInfo mt:(UnicornMapTable*)mt db:(UnicornDatabase*)db{
