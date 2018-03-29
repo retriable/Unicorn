@@ -367,7 +367,6 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
                 CFDictionarySetValue(classCache, (__bridge const void *)(cls), (__bridge const void *)(clz));
             }
             dispatch_semaphore_signal(lock);
-            NSLog(@"%@",clz);
         }
     }
     return clz;
