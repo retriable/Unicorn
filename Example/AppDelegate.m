@@ -2,7 +2,9 @@
 //  AppDelegate.m
 //  Example
 //
-//  Created by emsihyo on 2017/1/11.
+//  Created by emsihyo on 2018/2/26.
+//  Copyright © 2018年 emsihyo. All rights reserved.
+//
 
 #import "AppDelegate.h"
 

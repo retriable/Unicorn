@@ -1,5 +1,0 @@
-language: objective-c
-script: 
-  - xctool -project {Unicorn.xcodeproj} -scheme {Example} build release -sdk iphonesimulator GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
-after_success:
-  - bash <(curl -s https://codecov.io/bash) -t :aa971b91-c115-4176-939c-42c459fb31a0

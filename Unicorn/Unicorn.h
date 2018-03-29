@@ -2,55 +2,30 @@
 //  Unicorn.h
 //  Unicorn
 //
-//  Created by emsihyo on 2017/1/10.
+//  Created by emsihyo on 2018/2/1.
+//  Copyright © 2018年 emsihyo. All rights reserved.
+//
 
-#import <Foundation/Foundation.h>
-#import "NSObject+Unicorn.h"
-#import "NSObject+UnicornJSON.h"
-#import "UnicornBlockValueTransformer.h"
-#import "UnicornModelInfo.h"
-#import "UnicornMapTable.h"
-#import "UnicornDatabase.h"
-#import "UnicornFuctions.h"
+#import <UIKit/UIKit.h>
 
-#ifndef UNI_DB_MODEL_DB_PATH
-#define UNI_DB_MODEL_DB_PATH [[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"Caches/uni_models.sqlite"]
+#import "NSObject+Uni.h"
+#import "UniProtocol.h"
+
+#ifndef uni
+#define uni
+#define uni_s(x) @#x
+#define uni_a(...) [[[@#__VA_ARGS__ stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByReplacingOccurrencesOfString: @" " withString: @""] componentsSeparatedByString:@","]
+#define uni_d(x,...) @{@#x:uni_a(__VA_ARGS__)}
 #endif
 
-#ifndef UNI_SAVE_MODEL
-#define UNI_SAVE_MODEL(x) x = [x uni_save]
-#endif
+NSDictionary * uni_keyPaths(NSDictionary * dict,...);
 
-#ifndef UNI_SAVE_MODELS
-#define UNI_SAVE_MODELS(c, x) x = [c uni_save:x]
-#endif
+//! Project version number for Unicorn.
+FOUNDATION_EXPORT double UnicornVersionNumber;
 
-#ifndef UNI_NON_WHITESPACE_NEWLINE
-#define UNI_NON_WHITESPACE_NEWLINE(x) [[x stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByReplacingOccurrencesOfString: @" " withString: @""]
-#endif
+//! Project version string for Unicorn.
+FOUNDATION_EXPORT const unsigned char UnicornVersionString[];
 
-#ifndef UNI_MT_UNIQUE
-#define UNI_MT_UNIQUE(x)    \
-+(NSString *)uni_mtUniquePropertyName { \
-return @#x;                        \
-}
-#endif
+// In this header, you should import all the public headers of your framework using statements like #import <Unicorn/PublicHeader.h>
 
-#ifndef UNI_DB_COLUMN_NAMES
-#define UNI_DB_COLUMN_NAMES(...)                                               \
-+(NSArray *)uni_dbColumnNamesInPropertyName {                                            \
-return [UNI_NON_WHITESPACE_NEWLINE(@#__VA_ARGS__) componentsSeparatedByString:@","]; \
-}
-#endif
-
-#ifndef UNI_PAIR
-#define UNI_PAIR(x, y) @#x: @#y
-#endif
-
-#ifndef UNI_JSON_KEY_PATHS
-#define UNI_JSON_KEY_PATHS(...)          \
-+(NSDictionary *)uni_jsonKeyPathsByPropertyName { \
-return @{__VA_ARGS__};                       \
-}
-#endif
 

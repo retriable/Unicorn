@@ -1,115 +1,48 @@
 //
-//  UnicornDatabase.m
+//  UniDB.m
 //  Unicorn
 //
-//  Created by emsihyo on 2016/12/29.
-
-
-#import "UnicornDatabase.h"
-
-NSString *const UnicornDatabaseErrorDomain = @"UnicornDatabaseErrorDomain";
-
-#ifndef UNI_DB_LOG
-#define UNI_DB_LOG(code) _log(__LINE__, code, sqlite3_errmsg(self.db))
-#endif
-
-static inline int _log(int line, int code, const char *desc) {
-#ifdef DEBUG
-    if (code != SQLITE_DONE && code != SQLITE_OK && code != SQLITE_ROW) {
-        NSLog(@"[file:%s][line:%d] [code:%d,desc:%s]", __FILE__, line, code, desc);
-    }
-#endif
-    return code;
-}
 
 
 
-@interface UnicornDatabaseTransformer ()
+#import "UniDB.h"
 
-@property (nonatomic, strong) UnicornBlockValueTransformer *valueTransformer;
-@property (nonatomic, assign) UnicornDatabaseColumnType columnType;
+NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
 
-@end
-
-@implementation UnicornDatabaseTransformer
-
-+ (UnicornDatabaseTransformer *)transformerWithValueTransformer:(UnicornBlockValueTransformer *)valueTransformer columnType:(UnicornDatabaseColumnType)columnType {
-    UnicornDatabaseTransformer *transformer = [[UnicornDatabaseTransformer alloc] init];
-    transformer.valueTransformer = valueTransformer;
-    transformer.columnType = columnType;
-    return transformer;
-}
-
-@end
-
-@interface UnicornStmt : NSObject
+@interface UniStmt : NSObject
 
 @property (nonatomic, assign) sqlite3_stmt *stmt;
 @property (nonatomic, copy) NSString *sql;
 
 @end
 
-@implementation UnicornStmt
+@implementation UniStmt
 
 - (void)dealloc {
-    if (self.stmt) {
-        sqlite3_finalize(self.stmt);
-    }
+    if (self.stmt) sqlite3_finalize(self.stmt);
 }
 
 @end
 
-@interface UnicornDatabase ()
+@interface UniDB ()
 
 @property (nonatomic, assign) sqlite3 *db;
-@property (nonatomic, strong) dispatch_queue_t queue;
-@property (nonatomic, assign) void *queueKey;
 @property (nonatomic, assign) UInt64 transactionReferenceCount;
 @property (nonatomic, strong) NSMutableDictionary *stmts;
 
 @end
 
-@implementation UnicornDatabase
-
-- (void)sync:(void (^)(UnicornDatabase *db))block {
-    if (dispatch_get_specific(self.queueKey)) {
-        block(self);
-    } else {
-        dispatch_sync(self.queue, ^{
-            block(self);
-        });
-    }
-}
-
-- (void)async:(void (^)(UnicornDatabase *db))block {
-    if (dispatch_get_specific(self.queueKey)) {
-        block(self);
-    } else {
-        dispatch_async(self.queue, ^{
-            block(self);
-        });
-    }
-}
+@implementation UniDB
 
 - (void)dealloc {
-    [self removeAllStmt];
     [self close];
-}
-
-+ (instancetype)databaseWithFile:(NSString *)file error:(NSError **)error {
-    UnicornDatabase *database = [[self alloc] init];
-    return [database open:file error:error] ? database : nil;
 }
 
 - (instancetype)init {
     self = [super init];
-    if (self) {
-        self.transactionReferenceCount = 0;
-        self.queue = dispatch_queue_create("UnicornDatabase", NULL);
-        self.queueKey = &_queueKey;
-        dispatch_queue_set_specific(self.queue, self.queueKey, (__bridge void *)self, NULL);
-        self.stmts = [NSMutableDictionary dictionary];
-    }
+    if (!self) return nil;
+    self.transactionReferenceCount = 0;
+    self.stmts = [NSMutableDictionary dictionary];
     return self;
 }
 
@@ -117,11 +50,10 @@ static inline int _log(int line, int code, const char *desc) {
 #pragma mark-- open and close
 
 - (BOOL)open:(NSString *)file error:(NSError **)error {
+    [self close];
     sqlite3 *db;
-    if (UNI_DB_LOG(sqlite3_open([file cStringUsingEncoding:NSUTF8StringEncoding], &db)) != SQLITE_OK) {
-        if (error) {
-            *error = [self error];
-        }
+    if (sqlite3_open([file cStringUsingEncoding:NSUTF8StringEncoding], &db) != SQLITE_OK) {
+        if (error) *error = [self error];
         return NO;
     }
     self.db = db;
@@ -130,9 +62,8 @@ static inline int _log(int line, int code, const char *desc) {
 
 - (BOOL)close {
     if (self.db) {
-        if (UNI_DB_LOG(sqlite3_close(self.db)) != SQLITE_OK) {
-            return NO;
-        }
+        [self.stmts removeAllObjects];
+        if (sqlite3_close(self.db) != SQLITE_OK) return NO;
         self.db = nil;
     }
     return YES;
@@ -142,23 +73,21 @@ static inline int _log(int line, int code, const char *desc) {
 #pragma mark-- stmt
 
 - (sqlite3_stmt *)stmtForSql:(NSString *)sql error:(NSError **)error {
-    UnicornStmt *s = self.stmts[sql];
+    UniStmt *s = self.stmts[sql];
     if (!s) {
-        sqlite3_stmt *stmt = NULL;
-        if (UNI_DB_LOG(sqlite3_prepare_v2(self.db, [sql UTF8String], -1, &stmt, 0)) != SQLITE_OK) {
+        sqlite3_stmt *stmt;
+        if (sqlite3_prepare_v2(self.db, [sql UTF8String], -1, &stmt, 0) != SQLITE_OK) {
             sqlite3_finalize(stmt);
-            if (error) {
-                *error = [self error];
-            }
+            if (error) *error = [self error];
             return NULL;
         }
-        s = [[UnicornStmt alloc] init];
+        s = [[UniStmt alloc] init];
         s.stmt = stmt;
         s.sql = sql;
         self.stmts[sql] = s;
     }
-    UNI_DB_LOG(sqlite3_reset(s.stmt));
-    UNI_DB_LOG(sqlite3_clear_bindings(s.stmt));
+    sqlite3_reset(s.stmt);
+    sqlite3_clear_bindings(s.stmt);
     return s.stmt;
 }
 
@@ -184,9 +113,7 @@ static inline int _log(int line, int code, const char *desc) {
     [self executeQuery:sql stmtBlock:stmtBlock resultBlock:^(sqlite3_stmt *stmt, bool *stop) {
         int count = sqlite3_data_count(stmt);
         NSDictionary *dictionary = [self _dictionaryInStmt:stmt count:count];
-        if (dictionary.count > 0) {
-            [array addObject:dictionary];
-        }
+        if (dictionary.count > 0) [array addObject:dictionary];
     } error:error];
     return array;
 }
@@ -201,19 +128,15 @@ static inline int _log(int line, int code, const char *desc) {
     NSParameterAssert(stmtBlock);
     NSParameterAssert(resultBlock);
     sqlite3_stmt *stmt = [self stmtForSql:sql error:error];
-    if (!stmt) {
-        return NO;
-    }
+    if (!stmt) return NO;
     int count = sqlite3_bind_parameter_count(stmt);
     for (int i = 0; i < count; i++) {
         stmtBlock(stmt, i + 1);
     }
     bool stop = NO;
-    while (UNI_DB_LOG(sqlite3_step(stmt)) == SQLITE_ROW) {
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
         resultBlock(stmt, &stop);
-        if (stop) {
-            break;
-        }
+        if (stop) break;
     }
     return YES;
 }
@@ -230,19 +153,15 @@ static inline int _log(int line, int code, const char *desc) {
 - (BOOL)executeUpdate:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock error:(NSError **)error {
     sqlite3_stmt *stmt = [self stmtForSql:sql error:error];
     if (!stmt) {
-        if (error) {
-            *error = [self error];
-        }
+        if (error) *error = [self error];
         return NO;
     }
     int count = sqlite3_bind_parameter_count(stmt);
     for (int i = 0; i < count; i++) {
         stmtBlock(stmt, i + 1);
     }
-    if (UNI_DB_LOG(sqlite3_step(stmt)) != SQLITE_DONE) {
-        if (error) {
-            *error = [self error];
-        }
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        if (error) *error = [self error];
         return NO;
     }
     return YES;
@@ -252,27 +171,25 @@ static inline int _log(int line, int code, const char *desc) {
 #pragma mark--transaction
 
 - (BOOL)beginTransaction {
+    BOOL res=YES;
     self.transactionReferenceCount++;
-    if (self.transactionReferenceCount == 1) {
-        return [self executeUpdate:@"BEGIN" arguments:nil error:nil];
-    }
-    return YES;
+    if (self.transactionReferenceCount == 1) res=[self executeUpdate:@"BEGIN" arguments:nil error:nil];
+    return res;
 }
 
 - (BOOL)commit {
+    BOOL res=YES;
     if (self.transactionReferenceCount > 0) {
         self.transactionReferenceCount--;
-        if (self.transactionReferenceCount == 0) {
-            return [self executeUpdate:@"COMMIT" arguments:nil error:nil];
-        }
+        if (self.transactionReferenceCount == 0) res= [self executeUpdate:@"COMMIT" arguments:nil error:nil];
     }
-    return YES;
+    return res;
 }
 
 #pragma mark--
 #pragma mark-- bind object to column
 
-- (void)_bindObject:(id)obj toColumn:(int)idx inStatement:(sqlite3_stmt *)stmt {
+- (int)_bindObject:(id)obj toColumn:(int)idx inStatement:(sqlite3_stmt *)stmt {
     int result = SQLITE_OK;
     if ((!obj) || obj == (id)kCFNull) {
         result = sqlite3_bind_null(stmt, idx);
@@ -316,7 +233,7 @@ static inline int _log(int line, int code, const char *desc) {
     } else {
         result = sqlite3_bind_text(stmt, idx, [[obj description] UTF8String], -1, SQLITE_STATIC);
     }
-    UNI_DB_LOG(result);
+    return result;
 }
 
 #pragma mark--
@@ -329,28 +246,16 @@ static inline int _log(int line, int code, const char *desc) {
         int type = sqlite3_column_type(stmt, idx);
         id value = nil;
         switch (type) {
-            case SQLITE_INTEGER:
-                value = @(sqlite3_column_int64(stmt, idx));
-                break;
-            case SQLITE_FLOAT:
-                value = @(sqlite3_column_double(stmt, idx));
-                break;
-
-            case SQLITE_BLOB:
-            {
+            case SQLITE_INTEGER: value = @(sqlite3_column_int64(stmt, idx)); break;
+            case SQLITE_FLOAT: value = @(sqlite3_column_double(stmt, idx)); break;
+            case SQLITE_BLOB: {
                 int bytes = sqlite3_column_bytes(stmt, idx);
                 value = [NSData dataWithBytes:sqlite3_column_blob(stmt, idx) length:bytes];
-            }
-            break;
-            case SQLITE_NULL:
-                break;
-            default:
-                value = [[NSString alloc] initWithCString:(const char *)sqlite3_column_text(stmt, idx) encoding:NSUTF8StringEncoding];
-                break;
+            } break;
+            case SQLITE_NULL: break;
+            default: value = [[NSString alloc] initWithCString:(const char *)sqlite3_column_text(stmt, idx) encoding:NSUTF8StringEncoding]; break;
         }
-        if (value && value != (id)kCFNull) {
-            set[columnName] = value;
-        }
+        if (value && value != (id)kCFNull) set[columnName] = value;
     }
     return set;
 }
