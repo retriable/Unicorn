@@ -97,6 +97,8 @@
 		0A8334402043AAA100796062 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0A8CECA52040F3820007FAA8 /* NSObject+Uni.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+Uni.h"; sourceTree = "<group>"; };
 		0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Uni.m"; sourceTree = "<group>"; };
+		0ABCBDBC206C910100B4CC20 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
+		0ABCBDBD206C910100B4CC20 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		0AFC97AB2023F35400D6506E /* UniDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UniDB.h; sourceTree = "<group>"; };
 		0AFC97AC2023F35400D6506E /* UniDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UniDB.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -184,6 +186,8 @@
 		0A8334302043AAA100796062 /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				0ABCBDBC206C910100B4CC20 /* LICENSE */,
+				0ABCBDBD206C910100B4CC20 /* README.md */,
 				0A8334312043AAA100796062 /* AppDelegate.h */,
 				0A8334322043AAA100796062 /* AppDelegate.m */,
 				0A8334342043AAA100796062 /* ViewController.h */,
