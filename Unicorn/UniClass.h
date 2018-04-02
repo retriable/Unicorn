@@ -7,7 +7,10 @@
 //
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
+
+#import "UniBlockValueTransformer.h"
 #import "UniDB.h"
+
 typedef NS_OPTIONS(NSUInteger, UniEncodingType) {
     UniEncodingTypeMask                 = 0xFF,
     UniEncodingTypeUnknown              = 0,
@@ -94,18 +97,15 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 
 @interface UniProperty : NSObject
 
-@property (readonly) NSString           *name;
-@property (readonly) UniEncodingType    encodingType;
-@property (readonly) Class              cls;
-@property (readonly) SEL                setter;
-@property (readonly) SEL                getter;
-
-@property (readonly) NSArray            *jsonKeyPathArr;
-@property (readonly) NSValueTransformer *jsonValueTransformer;
-
-@property (readonly) NSNumberFormatter  *numberFormatter;
-
-@property (readonly) UniColumnType      columnType;
-@property (readonly) NSValueTransformer *dbValueTransformer;
+@property (readonly) NSString                 *name;
+@property (readonly) UniEncodingType          encodingType;
+@property (readonly) Class                    cls;
+@property (readonly) SEL                      setter;
+@property (readonly) SEL                      getter;
+@property (readonly) NSArray                  *jsonKeyPathArr;
+@property (readonly) UniBlockValueTransformer *jsonValueTransformer;
+@property (readonly) NSNumberFormatter        *numberFormatter;
+@property (readonly) UniColumnType            columnType;
+@property (readonly) UniBlockValueTransformer *dbValueTransformer;
 
 @end

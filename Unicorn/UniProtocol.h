@@ -15,7 +15,7 @@
 
 @optional
 
-+ (NSValueTransformer * _Nullable)uni_jsonValueTransformer:(NSString * _Nonnull)propertyName;
++ (UniBlockValueTransformer * _Nullable)uni_jsonValueTransformer:(NSString * _Nonnull)propertyName;
 
 @end
 
@@ -31,7 +31,7 @@
 
 @optional
 
-+ (NSValueTransformer * _Nullable)uni_dbValueTransformer:(NSString * _Nonnull)propertyName;
++ (UniBlockValueTransformer * _Nullable)uni_dbValueTransformer:(NSString * _Nonnull)propertyName;
 
 + (UniColumnType)uni_columnType:(NSString * _Nonnull)propertyName;
 

@@ -9,7 +9,6 @@
 #import <objc/message.h>
 #import <sqlite3.h>
 
-#import "UniBlockValueTransformer.h"
 #import "UniClass.h"
 #import "UniDB.h"
 #import "UniProtocol.h"
@@ -151,17 +150,17 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
 
 @interface UniProperty ()
 
-@property (nonatomic, strong) NSString *         name;
-@property (nonatomic, strong) NSString *         ivar;
-@property (nonatomic, assign) UniEncodingType    encodingType;
-@property (nonatomic, assign) SEL                setter;
-@property (nonatomic, assign) SEL                getter;
-@property (nonatomic, strong) NSNumberFormatter  *numberFormatter;
-@property (nonatomic, strong) NSArray            *jsonKeyPathArr;
-@property (nonatomic, strong) NSValueTransformer *jsonValueTransformer;
-@property (nonatomic, assign) UniColumnType      columnType;
-@property (nonatomic, strong) NSValueTransformer *dbValueTransformer;
-@property (nonatomic, assign) Class              cls;
+@property (nonatomic, strong) NSString *               name;
+@property (nonatomic, strong) NSString *               ivar;
+@property (nonatomic, assign) UniEncodingType          encodingType;
+@property (nonatomic, assign) SEL                      setter;
+@property (nonatomic, assign) SEL                      getter;
+@property (nonatomic, strong) NSNumberFormatter        *numberFormatter;
+@property (nonatomic, strong) NSArray                  *jsonKeyPathArr;
+@property (nonatomic, strong) UniBlockValueTransformer *jsonValueTransformer;
+@property (nonatomic, assign) UniColumnType            columnType;
+@property (nonatomic, strong) UniBlockValueTransformer *dbValueTransformer;
+@property (nonatomic, assign) Class                    cls;
 
 - (instancetype)initWithProperty:(objc_property_t)property;
 
@@ -222,7 +221,7 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
                 if ([cls respondsToSelector:@selector(uni_jsonValueTransformer:)]) {
                     property.jsonValueTransformer=[cls uni_jsonValueTransformer:property.name];
                     if (property.jsonValueTransformer) {
-                        for (NSString *className in [(UniBlockValueTransformer*)property.jsonValueTransformer anonymousClassNames]){\
+                        for (NSString *className in [property.jsonValueTransformer anonymousClassNames]){\
                             if (!context[className]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
@@ -249,7 +248,7 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
                         UniColumnType columnType=[self.cls uni_columnType:property.name];
                         property.columnType=columnType;
                         NSParameterAssert(property.columnType);
-                        for (NSString *className in [(UniBlockValueTransformer*)property.dbValueTransformer anonymousClassNames]){\
+                        for (NSString *className in [property.dbValueTransformer anonymousClassNames]){\
                             if (!context[className]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
