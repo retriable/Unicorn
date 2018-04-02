@@ -21,6 +21,7 @@
     UniBlockValueTransformer *valueTransformer=[[UniBlockValueTransformer alloc]init];
     valueTransformer.forward = forward;
     valueTransformer.reverse = reverse;
+    valueTransformer.anonymousClassNames=anonymousClassNames;
     return valueTransformer;
 }
 

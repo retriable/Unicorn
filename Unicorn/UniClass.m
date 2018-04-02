@@ -588,7 +588,9 @@ properties      : \n%@\n\
             [s appendFormat:@"%@.",keyPath];
         }
         [s deleteCharactersInRange:NSMakeRange(s.length-1, 1)];
+        [s appendString:@","];
     }
+    [s deleteCharactersInRange:NSMakeRange(s.length-1, 1)];
     return [NSString stringWithFormat:@"\n\
     name                   : %@\n\
     encoding type          : %@\n\
