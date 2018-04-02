@@ -18,7 +18,7 @@
                           );
 }
 
-+ (NSValueTransformer*)uni_jsonValueTransformer:(NSString *)propertyName{
++ (UniBlockValueTransformer*)uni_jsonValueTransformer:(NSString *)propertyName{
     if ([propertyName isEqual:uni_string(authors)]) {
         return [UniBlockValueTransformer transformerWithAnonymousClassNames:uni_array(Author) forward:^id(id value) {
             return [Author uni_parseJson:value];
@@ -41,7 +41,7 @@
     return uni_array(id,title,authors);
 }
 
-+ (NSValueTransformer*)uni_dbValueTransformer:(NSString *)propertyName{
++ (UniBlockValueTransformer*)uni_dbValueTransformer:(NSString *)propertyName{
     if ([propertyName isEqual:uni_string(authors)]) {
         return [UniBlockValueTransformer transformerWithAnonymousClassNames:uni_array(Author) forward:^id(id value) {
             NSArray * comps=[value componentsSeparatedByString:@","];
