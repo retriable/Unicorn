@@ -29,10 +29,6 @@
     return nil;
 }
 
-+ (NSArray*)uni_anonymousClassNames{
-    return uni_array(Author);
-}
-
 + (NSString*)uni_primary{
     return uni_string(id);
 }

@@ -443,9 +443,9 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
     }
     if (!lock) {
         lock=[[NSRecursiveLock alloc]init];
-        for (NSString *clsName in self.relatedClassNameSet){
-            [mt setObject:lock forKey:clsName];
-        }
+    }
+    for (NSString *clsName in self.relatedClassNameSet){
+        [mt setObject:lock forKey:clsName];
     }
     dispatch_semaphore_signal(semaphore);
     [lock lock];
