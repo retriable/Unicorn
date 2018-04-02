@@ -65,14 +65,13 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 @property (readonly) Class        cls;
 @property (readonly) NSString     *name;
 
-@property (readonly) NSArray      *properties;
+@property (readonly) NSArray      *propertyArr;
 @property (readonly) NSDictionary *propertyDict;
-@property (readonly) NSArray      *jsonProperties;
-@property (readonly) id           jsonPrimaryKeyPaths;
+@property (readonly) NSArray      *jsonPropertyArr;
 
 @property (readonly) UniProperty  *primaryProperty;
 
-@property (readonly) NSArray      *dbProperties;
+@property (readonly) NSArray      *dbPropertyArr;
 @property (readonly) NSString     *dbSelectSql;
 @property (readonly) NSString     *dbUpdateSql;
 @property (readonly) NSString     *dbInsertSql;
@@ -101,8 +100,7 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 @property (readonly) SEL                setter;
 @property (readonly) SEL                getter;
 
-
-@property (readonly) NSArray            *jsonkeyPaths;
+@property (readonly) NSArray            *jsonKeyPathArr;
 @property (readonly) NSValueTransformer *jsonValueTransformer;
 
 @property (readonly) NSNumberFormatter  *numberFormatter;

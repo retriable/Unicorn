@@ -11,15 +11,34 @@
 @implementation Article
 
 + (NSDictionary *)uni_keyPaths{
-    return uni_keyPaths(uni_d(id,id),uni_d(title,title),uni_d(author,author),nil);
+    return uni_dictionary(
+                          uni_package(id,id),
+                          uni_package(title,title,info.title),
+                          uni_package(authors,authors)
+                          );
+}
+
++ (NSValueTransformer*)uni_jsonValueTransformer:(NSString *)propertyName{
+    if ([propertyName isEqual:uni_string(authors)]) {
+        return [UniBlockValueTransformer transformerWithForward:^id(id value) {
+            return [Author uni_parseJson:value];
+        } reverse:^id(id value) {
+            return [Author uni_jsonDictionaryFromModels:value];
+        }];
+    }
+    return nil;
+}
+
++ (NSArray*)uni_anonymousClassNames{
+    return uni_array(Author);
 }
 
 + (NSString*)uni_primary{
-    return uni_s(id);
+    return uni_string(id);
 }
 
 + (NSArray*)uni_columns{
-    return uni_a(id,title,author);
+    return uni_array(id,title);
 }
 
 @end

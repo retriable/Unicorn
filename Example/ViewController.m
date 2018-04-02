@@ -10,6 +10,15 @@
 @import Unicorn;
 #import "Article.h"
 #import <sys/time.h>
+
+#ifndef XXXXXX
+#define XXXXXX
+
+#define uni_array(...) [[[@#__VA_ARGS__ stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByReplacingOccurrencesOfString: @" " withString: @""] componentsSeparatedByString:@","]
+#define uni_package(x,...) @#x:uni_array(__VA_ARGS__)
+#define uni_dictionary(...) @{__VA_ARGS__}
+#endif
+
 @interface ViewController ()
 
 @end
@@ -30,20 +39,10 @@ static inline void Benchmark(void (^block)(void), void (^complete)(double ms)) {
     NSLog(@"%@",[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject]);
     NSString *json=[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Article" ofType:@"json"] encoding:NSUTF8StringEncoding error:nil];
     NSDictionary *article=[NSJSONSerialization JSONObjectWithData:[json dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-    NSMutableArray *dicts=[NSMutableArray array];
-    for (int i=0;i<10000;i++){
-        NSMutableDictionary *a=[article mutableCopy];
-        NSMutableDictionary *t=[a[@"author"] mutableCopy];
-        NSMutableDictionary *u=[t[@"user"] mutableCopy];
-        a[@"id"]=@(i);
-        t[@"id"]=[NSString stringWithFormat:@"%@",@(i+10000)];
-        u[@"id"]=@(i+10000000);
-        a[@"author"]=t;
-        t[@"user"]=u;
-        [dicts addObject:a];
-    }
     Benchmark(^{
-        [Article uni_parseJson:dicts];
+        Article *a=[Article uni_parseJson:article];
+        
+        NSLog(@"%@",[a uni_jsonDictionary]);
     }, ^(double ms) {
         NSLog(@"%.2f ms",ms);
     });

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A45FCD3206BF0B0002C2BA4 /* Unicorn.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A45FCD2206BF0B0002C2BA4 /* Unicorn.m */; };
 		0A45FCF7206BF4A3002C2BA4 /* Article.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A45FCF6206BF4A3002C2BA4 /* Article.json */; };
 		0A45FCF8206BF4A3002C2BA4 /* Article.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A45FCF6206BF4A3002C2BA4 /* Article.json */; };
 		0A7655C32022EF1B0061FEC8 /* Unicorn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */; };
@@ -32,6 +31,8 @@
 		0A83344E2043AAFF00796062 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655E9202307FB0061FEC8 /* User.m */; };
 		0A8CECA72040F3820007FAA8 /* NSObject+Uni.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A8CECA52040F3820007FAA8 /* NSObject+Uni.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A8CECA82040F3820007FAA8 /* NSObject+Uni.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */; };
+		0AF93E2E207265390091F806 /* UniBlockValueTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AF93E2C207265390091F806 /* UniBlockValueTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AF93E2F207265390091F806 /* UniBlockValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF93E2D207265390091F806 /* UniBlockValueTransformer.m */; };
 		0AFC97AD2023F35400D6506E /* UniDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFC97AB2023F35400D6506E /* UniDB.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0AFC97AE2023F35400D6506E /* UniDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC97AC2023F35400D6506E /* UniDB.m */; };
 /* End PBXBuildFile section */
@@ -68,7 +69,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0A45FCD2206BF0B0002C2BA4 /* Unicorn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Unicorn.m; sourceTree = "<group>"; };
 		0A45FCF6206BF4A3002C2BA4 /* Article.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Article.json; sourceTree = "<group>"; };
 		0A7655B92022EF1B0061FEC8 /* Unicorn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Unicorn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A7655BC2022EF1B0061FEC8 /* Unicorn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Unicorn.h; sourceTree = "<group>"; };
@@ -99,6 +99,8 @@
 		0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Uni.m"; sourceTree = "<group>"; };
 		0ABCBDBC206C910100B4CC20 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 		0ABCBDBD206C910100B4CC20 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		0AF93E2C207265390091F806 /* UniBlockValueTransformer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UniBlockValueTransformer.h; sourceTree = "<group>"; };
+		0AF93E2D207265390091F806 /* UniBlockValueTransformer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniBlockValueTransformer.m; sourceTree = "<group>"; };
 		0AFC97AB2023F35400D6506E /* UniDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UniDB.h; sourceTree = "<group>"; };
 		0AFC97AC2023F35400D6506E /* UniDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UniDB.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -156,10 +158,11 @@
 				0A7655BD2022EF1B0061FEC8 /* Info.plist */,
 				0A8CECA52040F3820007FAA8 /* NSObject+Uni.h */,
 				0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */,
+				0AF93E2C207265390091F806 /* UniBlockValueTransformer.h */,
+				0AF93E2D207265390091F806 /* UniBlockValueTransformer.m */,
 				0A7655D92022EF5B0061FEC8 /* UniClass.h */,
 				0A7655DA2022EF5B0061FEC8 /* UniClass.m */,
 				0A7655BC2022EF1B0061FEC8 /* Unicorn.h */,
-				0A45FCD2206BF0B0002C2BA4 /* Unicorn.m */,
 				0AFC97AB2023F35400D6506E /* UniDB.h */,
 				0AFC97AC2023F35400D6506E /* UniDB.m */,
 				0A7655DD2022F5E70061FEC8 /* UniProtocol.h */,
@@ -208,6 +211,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AF93E2E207265390091F806 /* UniBlockValueTransformer.h in Headers */,
 				0A8CECA72040F3820007FAA8 /* NSObject+Uni.h in Headers */,
 				0A7655DB2022EF5B0061FEC8 /* UniClass.h in Headers */,
 				0A7655DE2022F5E70061FEC8 /* UniProtocol.h in Headers */,
@@ -280,7 +284,7 @@
 		0A7655B02022EF1B0061FEC8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = emsihyo;
 				TargetAttributes = {
 					0A7655B82022EF1B0061FEC8 = {
@@ -351,9 +355,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AF93E2F207265390091F806 /* UniBlockValueTransformer.m in Sources */,
 				0AFC97AE2023F35400D6506E /* UniDB.m in Sources */,
 				0A7655DC2022EF5B0061FEC8 /* UniClass.m in Sources */,
-				0A45FCD3206BF0B0002C2BA4 /* Unicorn.m in Sources */,
 				0A8CECA82040F3820007FAA8 /* NSObject+Uni.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -431,6 +435,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -438,6 +443,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -466,7 +472,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -489,6 +495,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -496,6 +503,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -518,7 +526,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

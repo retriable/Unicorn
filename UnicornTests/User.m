@@ -11,15 +11,15 @@
 @implementation User
 
 + (NSDictionary*)uni_keyPaths{
-    return uni_keyPaths(uni_d(id,id),uni_d(name,name),uni_d(age,age),nil);
+    return uni_dictionary(uni_package(id,id),uni_package(name,name),uni_package(age,age));
 }
 
 + (NSString*)uni_primary{
-    return uni_s(id);
+    return uni_string(id);
 }
 
 + (NSArray*)uni_columns{
-    return uni_a(id,name,age);
+    return uni_array(id,name,age);
 }
 
 @end

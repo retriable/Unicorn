@@ -13,7 +13,13 @@
  reverse model to json dictionary
  */
 @property (readonly)NSDictionary * uni_jsonDictionary;
+/**
+ reverse models to array of json dictionary
 
+ @param models models
+ @return array of json dictionary
+ */
++ (NSArray*)uni_jsonDictionaryFromModels:(NSArray*)models;
 /**
  reverse model to json string
  */

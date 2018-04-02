@@ -10,15 +10,19 @@
 @implementation Author
 
 + (NSDictionary *)uni_keyPaths{
-    return uni_keyPaths(uni_d(id,id),uni_d(name,name),uni_d(user,user),nil);
+    return uni_dictionary(
+                          uni_package(id,id),
+                          uni_package(name,name),
+                          uni_package(user,user)
+                          );
 }
 
 + (NSString*)uni_primary{
-    return uni_s(id);
+    return uni_string(id);
 }
 
 + (NSArray*)uni_columns{
-    return uni_a(id,name,user);
+    return uni_array(id,name,user);
 }
 
 @end

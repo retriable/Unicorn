@@ -13,6 +13,6 @@
 
 @property (assign)UInt64 id;
 @property (copy)NSString *title;
-@property (strong)Author *author;
+@property (strong)NSArray *authors;
 
 @end

@@ -200,18 +200,12 @@ static __inline__ __attribute__((always_inline)) id uni_get_value(id target,UniP
     }
 }
 
-static __inline__ __attribute__((always_inline)) id uni_get_value_from_dict(NSDictionary *dict,id key){
-    if ([key isKindOfClass:[NSString class]]) {
-        return dict[key];
-    }else if ([key isKindOfClass:[NSArray class]]){
-        id value=dict;
-        for (NSString *k in key){
-            value=value[k];
-        }
-        return value;
-    }else{
-        NSCParameterAssert(0); return nil;
+static __inline__ __attribute__((always_inline)) id uni_get_value_from_dict(NSDictionary *dict,NSArray * key){
+    id value=dict;
+    for (NSString *k in key){
+        value=value[k];
     }
+    return value;
 }
 
 static __inline__ __attribute__((always_inline)) void _uni_bind_stmt(__unsafe_unretained id value,  UniColumnType columnType, sqlite3_stmt *stmt, int idx){
@@ -269,7 +263,7 @@ static __inline__ __attribute__((always_inline)) void uni_bind_stmt(id target,Un
 }
 
 static __inline__ __attribute__((always_inline)) void uni_merge_from_obj(id target,id source,UniClass *cls){
-    for (UniProperty *property in cls.properties){
+    for (UniProperty *property in cls.propertyArr){
         switch (property.encodingType&UniEncodingTypeMask) {
             case UniEncodingTypeBool: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,((bool (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
             case UniEncodingTypeInt8: ((void (*)(id, SEL,int8_t))(void *) objc_msgSend)(target, property.setter,((int8_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
@@ -503,18 +497,14 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     id model;
     id primary;
     if (cls.isConformsToUniMM) {
-        if ([cls.jsonPrimaryKeyPaths isKindOfClass:[NSString class]]) {
-            primary=dict[cls.jsonPrimaryKeyPaths];
-        }else if([cls.jsonPrimaryKeyPaths isKindOfClass:[NSArray class]]){
-            for (id keyPath in cls.jsonPrimaryKeyPaths){
-                primary=uni_get_value_from_dict(dict, keyPath);
-                if (primary) break;
-            }
+        for (NSArray *keyPath in cls.primaryProperty.jsonKeyPathArr){
+            primary=uni_get_value_from_dict(dict, keyPath);
+            if (primary) break;
         }
-        if (!primary) { NSParameterAssert(0); return nil; }
         if (cls.primaryProperty.jsonValueTransformer) primary=[cls.primaryProperty.jsonValueTransformer transformedValue:primary];
+        if (!primary) { NSParameterAssert(0); return nil; }
         model = [self _uni_queryOne:primary cls:cls];
-        int count=(int)cls.dbProperties.count;
+        int count=(int)cls.dbPropertyArr.count;
         NSError *err;
         if (model) {
             [model _uni_mergeWithJsonDict:dict cls:cls];
@@ -524,7 +514,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                 } else if (idx == count+2) {
                     uni_bind_stmt(model, cls.primaryProperty, stmt, idx);
                 } else {
-                    uni_bind_stmt(model, cls.dbProperties[idx-1], stmt, idx);
+                    uni_bind_stmt(model, cls.dbPropertyArr[idx-1], stmt, idx);
                 }
             } error:&err]){
                 NSParameterAssert(0);
@@ -537,7 +527,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                 if (idx == count+1) {
                     sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
                 } else {
-                    uni_bind_stmt(model, cls.dbProperties[idx-1], stmt, idx);
+                    uni_bind_stmt(model, cls.dbPropertyArr[idx-1], stmt, idx);
                 }
             } error:nil]) {
                 NSParameterAssert(0);
@@ -547,7 +537,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                     } else if (idx == count+2) {
                         uni_bind_stmt(model, cls.primaryProperty, stmt, idx);
                     } else {
-                        uni_bind_stmt(model, cls.dbProperties[idx-1], stmt, idx);
+                        uni_bind_stmt(model, cls.dbPropertyArr[idx-1], stmt, idx);
                     }
                 } error:&err]){
                     NSParameterAssert(0);
@@ -572,22 +562,22 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
 }
 
 - (void)_uni_mergeWithJsonDict:(NSDictionary *)dict cls:(UniClass *)cls {
-    for (UniProperty *property in cls.jsonProperties){
+    for (UniProperty *property in cls.jsonPropertyArr){
         id value;
-        for (id key in property.jsonkeyPaths){
-            value=uni_get_value_from_dict(dict, key);
+        for (NSArray *keyPath in property.jsonKeyPathArr){
+            value=uni_get_value_from_dict(dict, keyPath);
             if (value) break;
         }
         if (property.jsonValueTransformer) value=[property.jsonValueTransformer transformedValue:value];
-        if ((property.encodingType&UniEncodingTypeMask)==UniEncodingTypeNSObject) {
+        else if ((property.encodingType&UniEncodingTypeMask)==UniEncodingTypeNSObject) {
             UniClass *clz=[UniClass classWithClass:property.cls];
             if (clz.isConformsToUniJSON) {
                 value=[property.cls _uni_parseJson:value cls:clz];
-                uni_set_value(self, property, value);
             }else{
                 NSParameterAssert(0);
             }
-        }else{
+        }
+        if (value) {
             uni_set_value(self, property, value);
         }
     }
@@ -653,7 +643,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     id model=[cls.mm objectForKey:primary];
     if (model) {
         if (model!=self) {
-            for (UniProperty *property in cls.properties){
+            for (UniProperty *property in cls.propertyArr){
                 uni_merge_from_obj(model,property,uni_get_value(self, property));
             }
         }
@@ -663,12 +653,12 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     }
     if (!cls.isConformsToUniDB) return model;
     NSError *err;
-    int count=(int)cls.dbProperties.count;
+    int count=(int)cls.dbPropertyArr.count;
     if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
         if (idx == count+1) {
             sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
         } else {
-            uni_bind_stmt(model, cls.dbProperties[idx-1], stmt, idx);
+            uni_bind_stmt(model, cls.dbPropertyArr[idx-1], stmt, idx);
         }
     } error:nil]) {
         if(![cls.db executeUpdate:cls.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
@@ -677,7 +667,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             } else if (idx == count+2) {
                 uni_bind_stmt(model, cls.primaryProperty, stmt, idx);
             } else {
-                uni_bind_stmt(model, cls.dbProperties[idx-1], stmt, idx);
+                uni_bind_stmt(model, cls.dbPropertyArr[idx-1], stmt, idx);
             }
         } error:&err]){
             NSParameterAssert(false);
@@ -712,17 +702,18 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
 }
 
 - (NSDictionary*)uni_jsonDictionary{
-    if (![self.class conformsToProtocol:@protocol(UniJSON)]) return nil;
     UniClass *cls=[UniClass classWithClass:self.class];
+    if (!cls.isConformsToUniJSON) return nil;
     NSMutableDictionary *dict=[NSMutableDictionary dictionary];
-    for (UniProperty *property in cls.jsonProperties){
+    for (UniProperty *property in cls.jsonPropertyArr){
         id value=uni_get_value(self, property);
+        if (property.jsonValueTransformer) value=[property.jsonValueTransformer reverseTransformedValue:value];
+        else if ((property.encodingType&UniEncodingTypeMask)==UniEncodingTypeNSObject) value=[value uni_jsonDictionary];
         if (!value) continue;
-        if ((property.encodingType&UniEncodingTypeMask)==UniEncodingTypeNSObject) value=[value uni_jsonDictionary];
-        id keyPath=property.jsonkeyPaths[0];
-        if ([keyPath isKindOfClass:[NSString class]]) {
-            dict[keyPath]=value;
-        }else if([keyPath isKindOfClass:[NSArray class]]){
+        NSArray *keyPath=property.jsonKeyPathArr[0];
+        if (keyPath.count==1) {
+            dict[keyPath[0]]=value;
+        }else{
             for (int i=0;i<[keyPath count]-1;i++){
                 id k=keyPath[i];
                 NSMutableDictionary *d=dict[k];
@@ -731,13 +722,18 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                 dict=d;
             }
             dict[[keyPath lastObject]]=value;
-        }else{
-            NSParameterAssert(0);
         }
     }
     return dict;
 }
-
++ (NSArray*)uni_jsonDictionaryFromModels:(NSArray*)models{
+    NSMutableArray *dicts=[NSMutableArray array];
+    for (id model in models){
+        NSDictionary *dict=[model uni_jsonDictionary];
+        if(dict) [dicts addObject:dict];
+    }
+    return dicts;
+}
 + (BOOL)uni_open:(NSString*)file error:(NSError* __autoreleasing *)error{
     __block BOOL suc;
     UniClass *cls=[UniClass classWithClass:self];

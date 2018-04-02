@@ -23,6 +23,10 @@
 
 + (NSString * _Nonnull)uni_primary;
 
+@optional
+
++ (NSArray * _Nonnull)uni_anonymousClassNames;
+
 @end
 
 @protocol UniDB <UniMM>
