@@ -10,6 +10,8 @@
 
 @interface UniBlockValueTransformer : NSValueTransformer
 
-+ (instancetype)transformerWithForward:(id(^)(id value))forward reverse:(id(^)(id value))reverse;
+@property (readonly)NSArray *anonymousClassNames;
+
++ (instancetype)transformerWithAnonymousClassNames:(NSArray*)anonymousClassNames forward:(id(^)(id value))forward reverse:(id(^)(id value))reverse;
 
 @end

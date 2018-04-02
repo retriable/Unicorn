@@ -11,7 +11,11 @@
 @implementation User
 
 + (NSDictionary*)uni_keyPaths{
-    return uni_dictionary(uni_package(id,id),uni_package(name,name),uni_package(age,age));
+    return uni_dictionary(
+                          uni_package(id,id),
+                          uni_package(name,name,info.name),
+                          uni_package(age,age,info.age)
+                          );
 }
 
 + (NSString*)uni_primary{

@@ -9,9 +9,11 @@
 #import <objc/message.h>
 #import <sqlite3.h>
 
+#import "UniBlockValueTransformer.h"
 #import "UniClass.h"
 #import "UniDB.h"
 #import "UniProtocol.h"
+
 
 static __inline__ __attribute__((always_inline)) NSString * uni_encodingDesc(UniEncodingType encodingType){
     NSMutableString * type = [NSMutableString string];
@@ -217,7 +219,19 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
                     [jsonKeyPathArrParsed addObject:[jsonKeyPath componentsSeparatedByString:@"."]];
                 }
                 property.jsonKeyPathArr=jsonKeyPathArrParsed;
-                if ([cls respondsToSelector:@selector(uni_jsonValueTransformer:)]) property.jsonValueTransformer=[cls uni_jsonValueTransformer:property.name];
+                if ([cls respondsToSelector:@selector(uni_jsonValueTransformer:)]) {
+                    property.jsonValueTransformer=[cls uni_jsonValueTransformer:property.name];
+                    if (property.jsonValueTransformer) {
+                        for (NSString *className in [(UniBlockValueTransformer*)property.jsonValueTransformer anonymousClassNames]){\
+                            if (!context[className]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-value"
+                                [[UniClass alloc]initWithClass:NSClassFromString(className) context:context];
+#pragma clang diagnostic pop
+                            }
+                        }
+                    }
+                }
                 [jsonPropertyArr addObject:property];
             }
         }
@@ -230,11 +244,19 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
             if ([self.dbColumnArr containsObject:property.name]) {
                 [dbPropertyArr addObject:property];
                 if ([cls respondsToSelector:@selector(uni_dbValueTransformer:)]){
-                    property.dbValueTransformer=[self.cls uni_dbValueTransformer:self.name];
+                    property.dbValueTransformer=[self.cls uni_dbValueTransformer:property.name];
                     if (property.dbValueTransformer) {
-                        UniColumnType columnType=[self.cls uni_columnType:self.name];
+                        UniColumnType columnType=[self.cls uni_columnType:property.name];
                         property.columnType=columnType;
                         NSParameterAssert(property.columnType);
+                        for (NSString *className in [(UniBlockValueTransformer*)property.dbValueTransformer anonymousClassNames]){\
+                            if (!context[className]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-value"
+                                [[UniClass alloc]initWithClass:NSClassFromString(className) context:context];
+#pragma clang diagnostic pop
+                            }
+                        }
                         return;
                     }
                 }
@@ -297,17 +319,9 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
     self.propertyDict=propertyDict;
     self.jsonPropertyArr=jsonPropertyArr;
     self.dbPropertyArr=dbPropertyArr;
-    if ([cls respondsToSelector:@selector(uni_anonymousClassNames)]) {
-        for (NSString * className in [cls uni_anonymousClassNames]){
-            if (!context[className]) {
-                context[className]=[[UniClass alloc]initWithClass:NSClassFromString(className) context:context];
-            }
-        }
-    }
     self.relatedClassNameSet=[NSSet setWithArray:[context allKeys]];
     return self;
 }
-
 
 - (void)enumeratePropertiesUsingBlock:(void (^)(objc_property_t property))block {
     Class cls = self.cls;
@@ -327,18 +341,13 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
 
 
 - (void)prepare{
-    if ([self.cls conformsToProtocol:@protocol(UniMM)]) self.mm=[NSMapTable strongToWeakObjectsMapTable];
-    if([self.cls conformsToProtocol:@protocol(UniDB)]){
-        NSMutableArray *dbPropertyArr=[NSMutableArray array];
-        for (NSString * name in [self.cls uni_columns]){
-            [dbPropertyArr addObject:self.propertyDict[name]];
-        }
-        self.dbPropertyArr=dbPropertyArr;
+    if (self.isConformsToUniMM) self.mm=[NSMapTable strongToWeakObjectsMapTable];
+    if(self.isConformsToUniDB){
         self.dbSelectSql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@=?;", self.name, self.primaryProperty.name];
         NSMutableString *sql = [NSMutableString stringWithFormat:@"UPDATE %@ SET ", self.name];
         NSMutableString *sql1 = [NSMutableString stringWithFormat:@"INSERT INTO %@ (", self.name];
         NSMutableString *sql2 = [NSMutableString stringWithFormat:@" VALUES ("];
-        for (UniProperty *property in dbPropertyArr){
+        for (UniProperty *property in self.dbPropertyArr){
             [sql appendFormat:@"%@=?,", property.name];
             [sql1 appendFormat:@"%@,", property.name];
             [sql2 appendFormat:@"?,"];

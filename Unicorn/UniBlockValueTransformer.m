@@ -9,6 +9,7 @@
 #import "UniBlockValueTransformer.h"
 @interface UniBlockValueTransformer()
 
+@property (nonatomic,strong)NSArray *anonymousClassNames;
 @property (nonatomic,copy) id (^forward)(id value);
 @property (nonatomic,copy) id (^reverse)(id value);
 
@@ -16,7 +17,7 @@
 
 @implementation UniBlockValueTransformer
 
-+ (instancetype)transformerWithForward:(id(^)(id value))forward reverse:(id(^)(id value))reverse{
++ (instancetype)transformerWithAnonymousClassNames:(NSArray*)anonymousClassNames forward:(id(^)(id value))forward reverse:(id(^)(id value))reverse{
     UniBlockValueTransformer *valueTransformer=[[UniBlockValueTransformer alloc]init];
     valueTransformer.forward = forward;
     valueTransformer.reverse = reverse;
