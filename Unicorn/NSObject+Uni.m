@@ -193,13 +193,30 @@ static __inline__ __attribute__((always_inline)) void uni_bind_stmt(id target,Un
         case UniEncodingTypeFloat: sqlite3_bind_double(stmt, idx, (double)((float (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
         case UniEncodingTypeDouble: sqlite3_bind_double(stmt, idx, ((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
         case UniEncodingTypeLongDouble: sqlite3_bind_double(stmt, idx, ((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeNSString: sqlite3_bind_text(stmt, idx, [((NSString * (*)(id, SEL))(void *) objc_msgSend)(target, property.getter) UTF8String], -1, SQLITE_STATIC); break;
-        case UniEncodingTypeNSURL: sqlite3_bind_text(stmt, idx, [[((NSURL * (*)(id, SEL))(void *) objc_msgSend)(target, property.getter) absoluteString] UTF8String], -1, SQLITE_STATIC); break;
-        case UniEncodingTypeNSNumber: sqlite3_bind_text(stmt, idx, [[[NSNumberFormatter uni_default] stringFromNumber:((NSNumber * (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)] UTF8String], -1, SQLITE_STATIC); break;
-        case UniEncodingTypeNSDate: sqlite3_bind_double(stmt, idx, [((NSDate * (*)(id, SEL))(void *) objc_msgSend)(target, property.getter) timeIntervalSince1970]); break;
+        case UniEncodingTypeNSString: {
+            id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
+            if (value&&[value isKindOfClass:NSString.class]) sqlite3_bind_text(stmt, idx, [value UTF8String], -1, SQLITE_STATIC);
+            else sqlite3_bind_null(stmt, idx);
+        }break;
+        case UniEncodingTypeNSURL: {
+            id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
+            if (value&&[value isKindOfClass:NSURL.class]) sqlite3_bind_text(stmt, idx, [[value absoluteString] UTF8String], -1, SQLITE_STATIC);
+            else sqlite3_bind_null(stmt, idx);
+        }break;
+        case UniEncodingTypeNSNumber:{
+            id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
+            if (value&&[value isKindOfClass:NSNumber.class]) sqlite3_bind_text(stmt, idx, [[[NSNumberFormatter uni_default] stringFromNumber:value] UTF8String], -1, SQLITE_STATIC);
+            else sqlite3_bind_null(stmt, idx);
+        } break;
+        case UniEncodingTypeNSDate:{
+            id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
+            if (value&&[value isKindOfClass:NSDate.class]) sqlite3_bind_double(stmt, idx, [value timeIntervalSince1970]);
+            else sqlite3_bind_null(stmt, idx);
+        } break;
         case UniEncodingTypeNSData: {
-            NSData *value = ((NSData * (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
-            sqlite3_bind_blob(stmt, idx, [value bytes], (int)[value length], SQLITE_STATIC);
+            NSData *value = ((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
+            if (value&&[value isKindOfClass:NSData.class])sqlite3_bind_blob(stmt, idx, [value bytes], (int)[value length], SQLITE_STATIC);
+            else sqlite3_bind_null(stmt, idx);
         } break;
         case UniEncodingTypeNSObject:{
             UniClass *clz=[UniClass classWithClass:property.cls];
