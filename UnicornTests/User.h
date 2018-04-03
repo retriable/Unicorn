@@ -11,7 +11,7 @@
 
 @interface User : NSObject<UniJSON,UniDB>
 
-@property (assign)UInt64 id;
+@property (copy)NSString *id;
 @property (copy)NSString *name;
 @property (assign)UInt8  age;
 

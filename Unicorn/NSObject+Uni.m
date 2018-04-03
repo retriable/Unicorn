@@ -104,8 +104,22 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
             else NSCParameterAssert(0);
         } break;
         case UniEncodingTypeNSString:
+            if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
+            else if ([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[NSNumberFormatter uni_default] stringFromNumber:value]);
+            else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
+            else ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[value description]);
+            break;
         case UniEncodingTypeNSURL:
+            if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[NSURL URLWithString:value]);
+            else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
+            else NSCParameterAssert(0);
+            break;
         case UniEncodingTypeNSNumber:
+            if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
+            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[NSNumberFormatter uni_default] numberFromString:value]);
+            else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
+            else NSCParameterAssert(0);
+            break;
         case UniEncodingTypeNSDate:
         case UniEncodingTypeNSData:
             if ([value isKindOfClass:property.cls]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
