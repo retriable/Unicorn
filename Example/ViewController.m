@@ -39,7 +39,8 @@ static inline void Benchmark(void (^block)(void), void (^complete)(double ms)) {
     NSLog(@"%@",[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject]);
     NSString *json=[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Article" ofType:@"json"] encoding:NSUTF8StringEncoding error:nil];
     NSDictionary *article=[NSJSONSerialization JSONObjectWithData:[json dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-    Benchmark(^{        
+    Benchmark(^{
+        Article *a=[Article uni_parseJson:article];
         NSLog(@"%@",[a uni_jsonDictionary]);
     }, ^(double ms) {
         NSLog(@"%.2f ms",ms);
