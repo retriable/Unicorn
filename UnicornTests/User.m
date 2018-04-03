@@ -12,18 +12,21 @@
 
 + (NSDictionary*)uni_keyPaths{
     return uni_dictionary(
-                          uni_package(id,id),
-                          uni_package(name,name,info.name),
-                          uni_package(age,age,info.age)
+                          uni_package(uid,id),
+                          uni_package(headimgurl,headimgurl),
+                          uni_package(intro,intro),
+                          uni_package(mail,mail),
+                          uni_package(nickname,nickname),
+                          uni_package(phone,phone),
+                          uni_package(sex,sex)
                           );
 }
 
 + (NSString*)uni_primary{
-    return uni_string(id);
+    return uni_string(uid);
 }
 
-+ (NSArray*)uni_columns{
-    return uni_array(id,name,age);
++ (NSArray *)uni_columns{
+    return uni_array(uid,headimgurl,intro,mail,nickname,phone,sex);
 }
-
 @end

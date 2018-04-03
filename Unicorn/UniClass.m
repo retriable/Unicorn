@@ -175,12 +175,12 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
     if ([cls conformsToProtocol:@protocol(UniJSON)]) {
         self.isConformsToUniJSON=YES;
         self.jsonKeyPathsDict=[cls uni_keyPaths];
+        jsonPropertyArr=[NSMutableArray array];
     }
     if ([cls conformsToProtocol:@protocol(UniMM)]) {
         context[self.name]=self;
         self.isConformsToUniMM=YES;
         self.primaryKey=[cls uni_primary];
-        jsonPropertyArr=[NSMutableArray array];
     }
     if ([cls conformsToProtocol:@protocol(UniDB)]){
         self.isConformsToUniDB=YES;
@@ -231,7 +231,7 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
                     if (property.dbValueTransformer) {
                         UniColumnType columnType=[self.cls uni_columnType:property.name];
                         property.columnType=columnType;
-                        NSParameterAssert(property.columnType);
+                        NSAssert(property.columnType,@"should implement +uni_columnType for property %@ in class %@",property.name,self.name);
                         for (NSString *className in [property.dbValueTransformer anonymousClassNames]) if (!context[className]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
@@ -265,14 +265,16 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
                             property.dbValueTransformer=propertyCls.primaryProperty.dbValueTransformer;
                         }
                     } break;
-                    default: NSParameterAssert(0); break;
+                    default: {
+                        NSAssert(0,@"should implement +uni_dbValueTransformer: and +uni_columnType: for property:%@ in class:%@",property.name,self.name);
+                    } break;
                 }
             }
         }
     }];
     if (self.isConformsToUniMM) {
-        NSParameterAssert(self.primaryProperty);
-        NSParameterAssert(({
+        NSAssert(self.primaryProperty,@"you should implement +uni_primary: in class:%@",self.name);
+        NSAssert(({
             //Try to meet the requirements as much as possible and avoid certain problems,so only support the following types.
             BOOL valid=NO;
             switch (self.primaryProperty.encodingType&UniEncodingTypeMask) {
@@ -294,7 +296,7 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
                 default: break;
             }
             valid;
-        }));
+        }),@"primary only support bool int8 uint8 int16 uint16 int32 uint32 int64 uint64 float double longDouble NSString NSNumber NSURL");
     }
     self.propertyArr=propertyArr;
     self.propertyDict=propertyDict;
@@ -353,7 +355,7 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
 }
 
 - (BOOL)__open:(NSString*)file error:(NSError**)error{
-    if(![self.db open:file error:error]){ NSParameterAssert(false); return NO; }
+    if(![self.db open:file error:error]){ NSAssert(0,@"open db fail:%@",*error); return NO; }
     NSString *dbColumnType = uni_columnDesc(self.primaryProperty.columnType);
    __block NSString *sql = nil;
     sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('%@' %@ NOT NULL PRIMARY KEY)", self.name, self.primaryProperty.name, dbColumnType];

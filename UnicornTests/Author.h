@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "User.h"
 
-@interface Author : NSObject<UniJSON,UniDB>
+@interface Author : NSObject<UniJSON>
 
 @property (assign)UInt64 id;
 @property (copy)NSString *name;

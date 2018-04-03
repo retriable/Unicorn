@@ -11,8 +11,12 @@
 
 @interface User : NSObject<UniJSON,UniDB>
 
-@property (copy)NSString *id;
-@property (copy)NSString *name;
-@property (assign)UInt8  age;
+@property (copy)NSString *headimgurl;
+@property (copy)NSString *uid;
+@property (copy)NSString  *intro;
+@property (copy)NSString  *mail;
+@property (copy)NSString  *nickname;
+@property (copy)NSString  *phone;
+@property (assign)NSInteger  sex;
 
 @end

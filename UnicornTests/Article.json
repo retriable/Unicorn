@@ -1,23 +1,57 @@
 {
-    "id":369,
-    "title":"中国🇨🇳(～￣▽￣)～",
-    "authors":[{
-              "id":1,
-              "name":"作者1",
-              "user":{
-                  "id":1,
-                  "name":"用户1",
-                  "age":1
-              }
-              },{
-              "id":2,
-              "name":"作者2",
-              "user":{
-                  "id":2,
-                  "info":{
-                      "name":"用户2",
-                      "age":2
-                   }
-              }
-              }]
+    "id": 369,
+    "title": "中国🇨🇳(～￣▽￣)～",
+    "authors":
+    [{
+        "id": 1,
+        "name": "作者1",
+        "user":{
+            "allReward": {
+                "forward": 0,
+                "read": 0,
+                "reward": 0
+            },
+            "headimgurl": "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJkicTDk6Mp8WNyZWDN0odCUWNSMhYESoRssRTAyibCzVwlruxpXjtC5PQe5VNAlpx6eZGeGTbGfr1g/132",
+            "id": 2052,
+            "nickname": "西乡拆迁小队长",
+            "sex": 0,
+            "token": "123d37ab96ba43a39f3233f144dedcf8",
+            "tReward": {
+                "forward": 0,
+                "read": 0,
+                "reward": 0
+            },
+            "userActive": {
+                "comments": 0,
+                "favorite": 0,
+                "follow": 0
+            }
+        }
+     },
+     {
+        "id": 1,
+        "name": "作者1",
+        "user":{
+            "allReward": {
+            "forward": 0,
+            "read": 0,
+            "reward": 0
+            },
+            "headimgurl": "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJkicTDk6Mp8WNyZWDN0odCUWNSMhYESoRssRTAyibCzVwlruxpXjtC5PQe5VNAlpx6eZGeGTbGfr1g/132",
+            "id": 2052,
+            "nickname": "西乡拆迁小队长",
+            "sex": 0,
+            "token": "123d37ab96ba43a39f3233f144dedcf8",
+            "tReward": {
+                "forward": 0,
+                "read": 0,
+                "reward": 0
+            },
+            "userActive": {
+                "comments": 0,
+                "favorite": 0,
+                "follow": 0
+            }
+        }
+    }]
 }
