@@ -130,9 +130,7 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
     sqlite3_stmt *stmt = [self stmtForSql:sql error:error];
     if (!stmt) return NO;
     int count = sqlite3_bind_parameter_count(stmt);
-    for (int i = 0; i < count; i++) {
-        stmtBlock(stmt, i + 1);
-    }
+    for (int i = 0; i < count; i++) stmtBlock(stmt, i + 1);
     bool stop = NO;
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         resultBlock(stmt, &stop);
@@ -157,9 +155,7 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
         return NO;
     }
     int count = sqlite3_bind_parameter_count(stmt);
-    for (int i = 0; i < count; i++) {
-        stmtBlock(stmt, i + 1);
-    }
+    for (int i = 0; i < count; i++) stmtBlock(stmt, i + 1);
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         if (error) *error = [self error];
         return NO;
@@ -191,48 +187,27 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
 
 - (int)_bindObject:(id)obj toColumn:(int)idx inStatement:(sqlite3_stmt *)stmt {
     int result = SQLITE_OK;
-    if ((!obj) || obj == (id)kCFNull) {
-        result = sqlite3_bind_null(stmt, idx);
-    } else if ([obj isKindOfClass:NSNumber.class]) {
-        if (strcmp([obj objCType], @encode(char)) == 0) {
-            result = sqlite3_bind_int(stmt, idx, [obj charValue]);
-        } else if (strcmp([obj objCType], @encode(unsigned char)) == 0) {
-            result = sqlite3_bind_int(stmt, idx, [obj unsignedCharValue]);
-        } else if (strcmp([obj objCType], @encode(short)) == 0) {
-            result = sqlite3_bind_int(stmt, idx, [obj shortValue]);
-        } else if (strcmp([obj objCType], @encode(unsigned short)) == 0) {
-            result = sqlite3_bind_int(stmt, idx, [obj unsignedShortValue]);
-        } else if (strcmp([obj objCType], @encode(int)) == 0) {
-            result = sqlite3_bind_int(stmt, idx, [obj intValue]);
-        } else if (strcmp([obj objCType], @encode(unsigned int)) == 0) {
-            result = sqlite3_bind_int64(stmt, idx, (long long)[obj unsignedIntValue]);
-        } else if (strcmp([obj objCType], @encode(long)) == 0) {
-            result = sqlite3_bind_int64(stmt, idx, [obj longValue]);
-        } else if (strcmp([obj objCType], @encode(unsigned long)) == 0) {
-            result = sqlite3_bind_int64(stmt, idx, (long long)[obj unsignedLongValue]);
-        } else if (strcmp([obj objCType], @encode(long long)) == 0) {
-            result = sqlite3_bind_int64(stmt, idx, [obj longLongValue]);
-        } else if (strcmp([obj objCType], @encode(unsigned long long)) == 0) {
-            result = sqlite3_bind_int64(stmt, idx, (long long)[obj unsignedLongLongValue]);
-        } else if (strcmp([obj objCType], @encode(float)) == 0) {
-            result = sqlite3_bind_double(stmt, idx, [obj floatValue]);
-        } else if (strcmp([obj objCType], @encode(double)) == 0) {
-            result = sqlite3_bind_double(stmt, idx, [obj doubleValue]);
-        } else if (strcmp([obj objCType], @encode(bool)) == 0) {
-            result = sqlite3_bind_int(stmt, idx, ([obj boolValue] ? 1 : 0));
-        } else {
-            result = sqlite3_bind_text(stmt, idx, [[obj description] UTF8String], -1, SQLITE_STATIC);
-        }
+    if ((!obj) || obj == (id)kCFNull) result = sqlite3_bind_null(stmt, idx);
+    else if ([obj isKindOfClass:NSNumber.class]) {
+        if (strcmp([obj objCType], @encode(char)) == 0) result = sqlite3_bind_int(stmt, idx, [obj charValue]);
+        else if (strcmp([obj objCType], @encode(unsigned char)) == 0) result = sqlite3_bind_int(stmt, idx, [obj unsignedCharValue]);
+        else if (strcmp([obj objCType], @encode(short)) == 0) result = sqlite3_bind_int(stmt, idx, [obj shortValue]);
+        else if (strcmp([obj objCType], @encode(unsigned short)) == 0) result = sqlite3_bind_int(stmt, idx, [obj unsignedShortValue]);
+        else if (strcmp([obj objCType], @encode(int)) == 0) result = sqlite3_bind_int(stmt, idx, [obj intValue]);
+        else if (strcmp([obj objCType], @encode(unsigned int)) == 0) result = sqlite3_bind_int64(stmt, idx, (long long)[obj unsignedIntValue]);
+        else if (strcmp([obj objCType], @encode(long)) == 0) result = sqlite3_bind_int64(stmt, idx, [obj longValue]);
+        else if (strcmp([obj objCType], @encode(unsigned long)) == 0) result = sqlite3_bind_int64(stmt, idx, (long long)[obj unsignedLongValue]);
+        else if (strcmp([obj objCType], @encode(long long)) == 0) result = sqlite3_bind_int64(stmt, idx, [obj longLongValue]);
+        else if (strcmp([obj objCType], @encode(unsigned long long)) == 0) result = sqlite3_bind_int64(stmt, idx, (long long)[obj unsignedLongLongValue]);
+        else if (strcmp([obj objCType], @encode(float)) == 0) result = sqlite3_bind_double(stmt, idx, [obj floatValue]);
+        else if (strcmp([obj objCType], @encode(double)) == 0) result = sqlite3_bind_double(stmt, idx, [obj doubleValue]);
+        else if (strcmp([obj objCType], @encode(bool)) == 0) result = sqlite3_bind_int(stmt, idx, ([obj boolValue] ? 1 : 0));
+        else result = sqlite3_bind_text(stmt, idx, [[obj description] UTF8String], -1, SQLITE_STATIC);
     } else if ([obj isKindOfClass:NSData.class]) {
         const void *bytes = [obj bytes];
-        if (bytes) {
-            result = sqlite3_bind_blob(stmt, idx, bytes, (int)[obj length], SQLITE_STATIC);
-        } else {
-            result = sqlite3_bind_null(stmt, idx);
-        }
-    } else {
-        result = sqlite3_bind_text(stmt, idx, [[obj description] UTF8String], -1, SQLITE_STATIC);
-    }
+        if (bytes) result = sqlite3_bind_blob(stmt, idx, bytes, (int)[obj length], SQLITE_STATIC);
+        else result = sqlite3_bind_null(stmt, idx);
+    } else result = sqlite3_bind_text(stmt, idx, [[obj description] UTF8String], -1, SQLITE_STATIC);
     return result;
 }
 
