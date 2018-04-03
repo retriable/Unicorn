@@ -426,7 +426,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
 
 + (instancetype)_uni_parseJsonString:(NSString*)str cls:(UniClass*)cls{
     id json = [NSJSONSerialization JSONObjectWithData:[str dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-    if(!json){ NSParameterAssert(0); return nil; }
+    if(!json) return nil;
     if ([json isKindOfClass:[NSDictionary class]]) return [self _uni_parseJsonDict:json cls:cls];
     else if([json isKindOfClass:[NSArray class]]) return [self _uni_parseJsonArr:json cls:cls];
     else NSParameterAssert(0); return nil;
@@ -441,7 +441,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             if (primary) break;
         }
         if (cls.primaryProperty.jsonValueTransformer) primary=[cls.primaryProperty.jsonValueTransformer transformedValue:primary];
-        if (!primary) { NSParameterAssert(0); return nil; }
+        if (!primary) return nil;
         switch (cls.primaryProperty.encodingType&UniEncodingTypeMask) {
             case UniEncodingTypeBool:
             case UniEncodingTypeInt8:
@@ -512,7 +512,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     for (NSDictionary * dict in arr){
         if (![dict isKindOfClass:[NSDictionary class]]) { NSParameterAssert(0); continue; }
         id model = [self _uni_parseJsonDict:dict cls:cls];
-        [models addObject:model];
+        if (model) [models addObject:model];
     }
     return models;
 }
