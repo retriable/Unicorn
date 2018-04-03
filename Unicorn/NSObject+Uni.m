@@ -97,12 +97,12 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
             else if(value==(id)kCFNull) ((void (*)(id, SEL,double))(void *) objc_msgSend)(target, property.setter,0);
             else NSCParameterAssert(0);
         } break;
-        case UniEncodingTypeLongDouble:{
+        case UniEncodingTypeLongDouble:
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,long double))(void *) objc_msgSend)(target, property.setter,(long double)[value doubleValue]);
             else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,long double))(void *) objc_msgSend)(target, property.setter,(long double)[value doubleValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,long double))(void *) objc_msgSend)(target, property.setter,0);
             else NSCParameterAssert(0);
-        } break;
+            break;
         case UniEncodingTypeNSString:
             if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
             else if ([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[NSNumberFormatter uni_default] stringFromNumber:value]);
@@ -442,6 +442,38 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         }
         if (cls.primaryProperty.jsonValueTransformer) primary=[cls.primaryProperty.jsonValueTransformer transformedValue:primary];
         if (!primary) { NSParameterAssert(0); return nil; }
+        switch (cls.primaryProperty.encodingType&UniEncodingTypeMask) {
+            case UniEncodingTypeBool:
+            case UniEncodingTypeInt8:
+            case UniEncodingTypeUInt8:
+            case UniEncodingTypeInt16:
+            case UniEncodingTypeUInt16:
+            case UniEncodingTypeInt32:
+            case UniEncodingTypeUInt32:
+            case UniEncodingTypeInt64:
+            case UniEncodingTypeUInt64:
+            case UniEncodingTypeFloat:
+            case UniEncodingTypeDouble:
+            case UniEncodingTypeLongDouble:
+            case UniEncodingTypeNSNumber:
+                if ([primary isKindOfClass:NSNumber.class]) ;
+                else if ([primary isKindOfClass:NSString.class]) primary=[[NSNumberFormatter uni_default]numberFromString:primary];
+                else NSParameterAssert(0);
+                break;
+            case UniEncodingTypeNSString:
+                if ([primary isKindOfClass:NSString.class]) ;
+                else if([primary isKindOfClass:NSNumber.class]) primary=[[NSNumberFormatter uni_default]stringFromNumber:primary];
+                else primary=[primary description];
+                break;
+            case UniEncodingTypeNSURL:
+                if ([primary isKindOfClass:NSURL.class]) ;
+                else if ([primary isKindOfClass:NSString.class]) primary=[NSURL URLWithString:primary];
+                else NSParameterAssert(0);
+                break;
+            default:
+                NSParameterAssert(0);
+                break;
+        }
         model = [self _uni_queryOne:primary cls:cls];
         int count=(int)cls.dbPropertyArr.count;
         NSError *err;
