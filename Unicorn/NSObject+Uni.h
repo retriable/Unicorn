@@ -14,16 +14,16 @@
  */
 @property (readonly)NSDictionary * uni_jsonDictionary;
 /**
+ reverse model to json string
+ */
+@property (readonly)NSString * uni_jsonString;
+/**
  reverse models to array of json dictionary
-
+ 
  @param models models
  @return array of json dictionary
  */
 + (NSArray*)uni_jsonDictionaryFromModels:(NSArray*)models;
-/**
- reverse model to json string
- */
-@property (readonly)NSString * uni_jsonString;
 /**
  User *user = [User uni_parseJson:jsonString]
  User *user = [User uni_parseJson:jsonDictionary]

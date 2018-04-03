@@ -104,23 +104,17 @@ static __inline__ __attribute__((always_inline)) UniEncodingType UniPropertyGetT
 static __inline__ __attribute__((always_inline)) bool uni_check_column(UniDB *db, NSString *table, NSString *column){
     BOOL ret = NO;
     NSArray *sets = [db executeQuery:@"SELECT * FROM sqlite_master WHERE tbl_name=? AND type='table'" arguments:@[table] error:nil];
-    if (sets.count > 0) {
-        for (NSDictionary *set in sets) {
+    if (sets.count > 0) for (NSDictionary *set in sets) {
             NSString *createSql = set[@"sql"];
             if (createSql && [createSql rangeOfString:[NSString stringWithFormat:@"'%@'", column]].location != NSNotFound) ret = YES; break;
         }
-    }
     return ret;
 }
 
 static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db, NSString *table, NSString *index){
     __block BOOL ret = NO;
     NSArray *sets = [db executeQuery:@"SELECT * FROM sqlite_master WHERE tbl_name=? AND type='index'" arguments:@[table] error:nil];
-    if (sets.count > 0) {
-        for (NSDictionary *set in sets) {
-            if ([set[@"name"] isEqualToString:index]) return YES;
-        }
-    }
+    if (sets.count > 0) for (NSDictionary *set in sets) if ([set[@"name"] isEqualToString:index]) return YES;
     return ret;
 }
 
@@ -193,7 +187,6 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
         self.dbColumnArr=[cls uni_columns];
         dbPropertyArr=[NSMutableArray array];
     }
-  
     [self enumeratePropertiesUsingBlock:^(objc_property_t p) {
         UniProperty *property = [[UniProperty alloc] initWithProperty:p];
         if (((property.encodingType&UniEncodingTypePropertyMask)&UniEncodingTypePropertyReadonly)) return;
@@ -204,24 +197,18 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
             NSString *propertyClassName;
             propertyClassName=NSStringFromClass(property.cls);
             propertyCls=context[propertyClassName];
-            if (![propertyCls isKindOfClass:UniClass.class]){
-                propertyCls=[[UniClass alloc]initWithClass:property.cls context:context];
-            }else{
-                if (propertyCls.isConformsToUniMM) NSLog(@"****\n\nwarning!circular reference maybe happen between %@ and %@\n\n****",propertyClassName,self.name);
-            }
+            if (![propertyCls isKindOfClass:UniClass.class]) propertyCls=[[UniClass alloc]initWithClass:property.cls context:context];
+            else if (propertyCls.isConformsToUniMM) NSLog(@"****\n\nwarning!circular reference maybe happen between %@ and %@\n\n****",propertyClassName,self.name);
         }
         if (self.isConformsToUniJSON) {
             NSArray *jsonKeyPathArr=self.jsonKeyPathsDict[property.name];
             if (jsonKeyPathArr) {
                 NSMutableArray *jsonKeyPathArrParsed=[NSMutableArray array];
-                for (NSString *jsonKeyPath in jsonKeyPathArr){
-                    [jsonKeyPathArrParsed addObject:[jsonKeyPath componentsSeparatedByString:@"."]];
-                }
+                for (NSString *jsonKeyPath in jsonKeyPathArr) [jsonKeyPathArrParsed addObject:[jsonKeyPath componentsSeparatedByString:@"."]];
                 property.jsonKeyPathArr=jsonKeyPathArrParsed;
                 if ([cls respondsToSelector:@selector(uni_jsonValueTransformer:)]) {
                     property.jsonValueTransformer=[cls uni_jsonValueTransformer:property.name];
-                    if (property.jsonValueTransformer) {
-                        for (NSString *className in [property.jsonValueTransformer anonymousClassNames]){\
+                    if (property.jsonValueTransformer) for (NSString *className in [property.jsonValueTransformer anonymousClassNames]){\
                             if (!context[className]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
@@ -229,15 +216,12 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
 #pragma clang diagnostic pop
                             }
                         }
-                    }
                 }
                 [jsonPropertyArr addObject:property];
             }
         }
         if (self.isConformsToUniMM) {
-            if ([property.name isEqualToString:self.primaryKey]) {
-                self.primaryProperty = property;
-            }
+            if ([property.name isEqualToString:self.primaryKey]) self.primaryProperty = property;
         }
         if (self.isConformsToUniDB) {
             if ([self.dbColumnArr containsObject:property.name]) {
@@ -248,14 +232,12 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
                         UniColumnType columnType=[self.cls uni_columnType:property.name];
                         property.columnType=columnType;
                         NSParameterAssert(property.columnType);
-                        for (NSString *className in [property.dbValueTransformer anonymousClassNames]){\
-                            if (!context[className]) {
+                        for (NSString *className in [property.dbValueTransformer anonymousClassNames]) if (!context[className]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
                                 [[UniClass alloc]initWithClass:NSClassFromString(className) context:context];
 #pragma clang diagnostic pop
                             }
-                        }
                         return;
                     }
                 }
@@ -415,14 +397,13 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
     dispatch_semaphore_signal(lock);
     if (!clz) {
         clz = [[UniClass alloc] initWithClass:cls context:NULL];
-        if (clz) {
-            dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
-            if (!CFDictionaryGetValue(classCache, (__bridge const void *)(cls))) {
-                [clz prepare];
-                CFDictionarySetValue(classCache, (__bridge const void *)(cls), (__bridge const void *)(clz));
-            }
-            dispatch_semaphore_signal(lock);
+        if (!clz) return nil;
+        dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
+        if (!CFDictionaryGetValue(classCache, (__bridge const void *)(cls))) {
+            [clz prepare];
+            CFDictionarySetValue(classCache, (__bridge const void *)(cls), (__bridge const void *)(clz));
         }
+        dispatch_semaphore_signal(lock);
     }
     return clz;
 }
@@ -441,12 +422,8 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
         lock=[mt objectForKey:clsName];
         if (lock) break;
     }
-    if (!lock) {
-        lock=[[NSRecursiveLock alloc]init];
-    }
-    for (NSString *clsName in self.relatedClassNameSet){
-        [mt setObject:lock forKey:clsName];
-    }
+    if (!lock) lock=[[NSRecursiveLock alloc]init];
+    for (NSString *clsName in self.relatedClassNameSet) [mt setObject:lock forKey:clsName];
     dispatch_semaphore_signal(semaphore);
     [lock lock];
     for (NSString *clsName in self.relatedClassNameSet){
@@ -475,25 +452,17 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
     for (UniProperty *property in self.jsonPropertyArr){
         NSMutableString *a=[NSMutableString string];
         [a appendString:@"["];
-        for (NSArray *jsonKeyPath in property.jsonKeyPathArr){
-                for (id keyPath in jsonKeyPath){
-                    [a appendFormat:@"%@.",keyPath];
-                }
-        }
+        for (NSArray *jsonKeyPath in property.jsonKeyPathArr) for (id keyPath in jsonKeyPath) [a appendFormat:@"%@.",keyPath];
         if (a.length>0) [a deleteCharactersInRange:NSMakeRange(a.length-1, 1)];
         [a appendString:@"]"];
         [s appendFormat:@"%@:%@,",property.name,a];
     }
     if (s.length>0) [s deleteCharactersInRange:NSMakeRange(s.length-1, 1)];
     NSMutableString *ss=[NSMutableString string];
-    for (UniProperty *property in self.dbPropertyArr){
-        [ss appendFormat:@"%@,",property.name];
-    }
+    for (UniProperty *property in self.dbPropertyArr) [ss appendFormat:@"%@,",property.name];
     if (ss.length>0) [ss deleteCharactersInRange:NSMakeRange(ss.length-1, 1)];
     NSMutableString *r = [NSMutableString string];
-    for (NSString * c in self.relatedClassNameSet){
-        [r appendFormat:@"%@,",c];
-    }
+    for (NSString * c in self.relatedClassNameSet) [r appendFormat:@"%@,",c];
     if (r.length>0) [r deleteCharactersInRange:NSMakeRange(r.length-1, 1)];
     NSString * desc= [NSString stringWithFormat:@"****\n\
 class name      : %@\n\
@@ -583,9 +552,7 @@ properties      : \n%@\n\
 - (NSString*)description{
     NSMutableString *s=[NSMutableString string];
     for (NSArray *jsonKeyPath in self.jsonKeyPathArr){
-        for (NSString * keyPath in jsonKeyPath){
-            [s appendFormat:@"%@.",keyPath];
-        }
+        for (NSString * keyPath in jsonKeyPath) [s appendFormat:@"%@.",keyPath];
         [s deleteCharactersInRange:NSMakeRange(s.length-1, 1)];
         [s appendString:@","];
     }
