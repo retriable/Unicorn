@@ -697,6 +697,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     }
     return dict;
 }
+
 + (NSArray*)uni_jsonDictionaryFromModels:(NSArray*)models{
     NSMutableArray *dicts=[NSMutableArray array];
     for (id model in models){
@@ -705,6 +706,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     }
     return dicts;
 }
+
 + (BOOL)uni_open:(NSString*)file error:(NSError* __autoreleasing *)error{
     __block BOOL suc;
     UniClass *cls=[UniClass classWithClass:self];
