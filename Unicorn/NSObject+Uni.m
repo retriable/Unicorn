@@ -154,7 +154,7 @@ static __inline__ __attribute__((always_inline)) id uni_get_value(id target,UniP
         case UniTypeEncodingInt64: return @(((int64_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
         case UniTypeEncodingUInt64: return @(((uint64_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
         case UniTypeEncodingFloat: return @(((float (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniTypeEncodingDouble: return @(((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingDouble:
         case UniTypeEncodingLongDouble: return @(((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
         case UniTypeEncodingNSString:
         case UniTypeEncodingNSMutableString:
@@ -315,64 +315,69 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                 } break;
                 case UniTypeEncodingInt8:{
                     switch (type) {
-                        case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(int8_t)sqlite3_column_int64(stmt, i)); break;
+                        case SQLITE_INTEGER: ((void (*)(id, SEL,int8_t))(void *) objc_msgSend)(target, property.setter,(int8_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
                 case UniTypeEncodingUInt8:{
                     switch (type) {
-                        case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(uint8_t)sqlite3_column_int64(stmt, i)); break;
+                        case SQLITE_INTEGER: ((void (*)(id, SEL,uint8_t))(void *) objc_msgSend)(target, property.setter,(uint8_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
                 case UniTypeEncodingInt16:{
                     switch (type) {
-                        case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(int16_t)sqlite3_column_int64(stmt, i)); break;
+                        case SQLITE_INTEGER: ((void (*)(id, SEL,int16_t))(void *) objc_msgSend)(target, property.setter,(int16_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
                 case UniTypeEncodingUInt16:{
                     switch (type) {
-                        case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(uint16_t)sqlite3_column_int64(stmt, i)); break;
+                        case SQLITE_INTEGER: ((void (*)(id, SEL,uint16_t))(void *) objc_msgSend)(target, property.setter,(uint16_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
                 case UniTypeEncodingInt32:{
                     switch (type) {
-                        case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(int32_t)sqlite3_column_int64(stmt, i)); break;
+                        case SQLITE_INTEGER: ((void (*)(id, SEL,int32_t))(void *) objc_msgSend)(target, property.setter,(int32_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
                 case UniTypeEncodingUInt32:{
                     switch (type) {
-                        case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(uint32_t)sqlite3_column_int64(stmt, i)); break;
+                        case SQLITE_INTEGER: ((void (*)(id, SEL,uint32_t))(void *) objc_msgSend)(target, property.setter,(uint32_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
                 case UniTypeEncodingInt64:
                     switch (type) {
-                        case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,sqlite3_column_int64(stmt, i)); break;
+                        case SQLITE_INTEGER: ((void (*)(id, SEL,int64_t))(void *) objc_msgSend)(target, property.setter,sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     } break;
                 case UniTypeEncodingUInt64:
                     switch (type) {
-                        case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(uint64_t)sqlite3_column_int64(stmt, i)); break;
+                        case SQLITE_INTEGER: {
+                            int64_t v=sqlite3_column_int64(stmt, i);
+                            uint64_t dst;
+                            memcpy(&dst, &v, sizeof(uint64_t));
+                            ((void (*)(id, SEL,uint64_t))(void *) objc_msgSend)(target, property.setter,dst);
+                        }break;
                         default: break;
                     }  break;
                 case UniTypeEncodingFloat:
                     switch (type) {
-                        case SQLITE_FLOAT: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(float)sqlite3_column_double(stmt, i)); break;
+                        case SQLITE_FLOAT: ((void (*)(id, SEL,float))(void *) objc_msgSend)(target, property.setter,(float)sqlite3_column_double(stmt, i)); break;
                         default: break;
                     } break;
                 case UniTypeEncodingDouble:
                     switch (type) {
-                        case SQLITE_FLOAT: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,sqlite3_column_double(stmt, i));
+                        case SQLITE_FLOAT: ((void (*)(id, SEL,double))(void *) objc_msgSend)(target, property.setter,sqlite3_column_double(stmt, i));
                             break;
                         default: break;
                     } break;
                 case UniTypeEncodingLongDouble:
                     switch (type) {
-                        case SQLITE_FLOAT: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(long double)sqlite3_column_double(stmt, i)); break;
+                        case SQLITE_FLOAT: ((void (*)(id, SEL,long double))(void *) objc_msgSend)(target, property.setter,(long double)sqlite3_column_double(stmt, i)); break;
                         default:break;
                     } break;
                 case UniTypeEncodingNSString:
