@@ -27,13 +27,7 @@
 }
 
 - (void)testExample {
-//    UniClass *cls=[UniClass classWithClass:Article.class];
-//    NSLog(@"%@",cls);
-//    cls=[UniClass classWithClass:Author.class];
-//    NSLog(@"%@",cls);
-//    cls=[UniClass classWithClass:User.class];
-//    NSLog(@"%@",cls);
- 
+    NSLog(@"%@",[UniClass classWithClass:Article.class]);
 }
 
 - (void)testPerformanceExample {

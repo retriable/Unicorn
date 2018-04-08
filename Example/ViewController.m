@@ -11,14 +11,6 @@
 #import "Article.h"
 #import <sys/time.h>
 
-#ifndef XXXXXX
-#define XXXXXX
-
-#define uni_array(...) [[[@#__VA_ARGS__ stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByReplacingOccurrencesOfString: @" " withString: @""] componentsSeparatedByString:@","]
-#define uni_package(x,...) @#x:uni_array(__VA_ARGS__)
-#define uni_dictionary(...) @{__VA_ARGS__}
-#endif
-
 @interface ViewController ()
 
 @end
@@ -42,6 +34,7 @@ static inline void Benchmark(void (^block)(void), void (^complete)(double ms)) {
     Benchmark(^{
         Article *a=[Article uni_parseJson:article];
         NSLog(@"%@",[a uni_jsonDictionary]);
+        NSLog(@"%ld",sizeof(long double));
     }, ^(double ms) {
         NSLog(@"%.2f ms",ms);
     });

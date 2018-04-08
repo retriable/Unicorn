@@ -11,46 +11,51 @@
 #import "UniBlockValueTransformer.h"
 #import "UniDB.h"
 
-typedef NS_OPTIONS(NSUInteger, UniEncodingType) {
-    UniEncodingTypeMask                 = 0xFF,
-    UniEncodingTypeUnknown              = 0,
-    UniEncodingTypeBool                 = 1,
-    UniEncodingTypeInt8                 = 2,
-    UniEncodingTypeUInt8                = 3,
-    UniEncodingTypeInt16                = 4,
-    UniEncodingTypeUInt16               = 5,
-    UniEncodingTypeInt32                = 6,
-    UniEncodingTypeUInt32               = 7,
-    UniEncodingTypeInt64                = 8,
-    UniEncodingTypeUInt64               = 9,
-    UniEncodingTypeFloat                = 10,
-    UniEncodingTypeDouble               = 11,
-    UniEncodingTypeLongDouble           = 12,
-    UniEncodingTypeNSString             = 13,
-    UniEncodingTypeNSURL                = 14,
-    UniEncodingTypeNSNumber             = 15,
-    UniEncodingTypeNSDate               = 16,
-    UniEncodingTypeNSData               = 17,
-    UniEncodingTypeNSObject             = 18,
+typedef NS_ENUM(NSInteger,UniTypeEncoding) {
+    UniTypeEncodingUnknown              = 0,
+    UniTypeEncodingBool                 = 1,
+    UniTypeEncodingInt8                 = 2,
+    UniTypeEncodingUInt8                = 3,
+    UniTypeEncodingInt16                = 4,
+    UniTypeEncodingUInt16               = 5,
+    UniTypeEncodingInt32                = 6,
+    UniTypeEncodingUInt32               = 7,
+    UniTypeEncodingInt64                = 8,
+    UniTypeEncodingUInt64               = 9,
+    UniTypeEncodingFloat                = 10,
+    UniTypeEncodingDouble               = 11,
+    UniTypeEncodingLongDouble           = 12,
+    UniTypeEncodingNSString             = 13,
+    UniTypeEncodingNSMutableString      = 14,
+    UniTypeEncodingNSURL                = 15,
+    UniTypeEncodingNSNumber             = 16,
+    UniTypeEncodingNSDate               = 17,
+    UniTypeEncodingNSData               = 18,
+    UniTypeEncodingNSMutableData        = 19,
+    UniTypeEncodingNSObject             = 20
+};
 
-    UniEncodingTypeQualifierMask        = 0xFF00,
-    UniEncodingTypeQualifierConst       = 1 << 8,
-    UniEncodingTypeQualifierIn          = 1 << 9,
-    UniEncodingTypeQualifierInout       = 1 << 10,
-    UniEncodingTypeQualifierOut         = 1 << 11,
-    UniEncodingTypeQualifierBycopy      = 1 << 12,
-    UniEncodingTypeQualifierByref       = 1 << 13,
-    UniEncodingTypeQualifierOneway      = 1 << 14,
+typedef NS_ENUM(NSInteger,UniMethodEncoding) {
+    UniMethodEncodingUnknown     = 0,
+    UniMethodEncodingConst       = 1 << 0,
+    UniMethodEncodingIn          = 1 << 1,
+    UniMethodEncodingInout       = 1 << 2,
+    UniMethodEncodingOut         = 1 << 3,
+    UniMethodEncodingBycopy      = 1 << 4,
+    UniMethodEncodingByref       = 1 << 5,
+    UniMethodEncodingOneway      = 1 << 6
+};
 
-    UniEncodingTypePropertyMask         = 0xFF0000,
-    UniEncodingTypePropertyReadonly     = 1 << 16,
-    UniEncodingTypePropertyCopy         = 1 << 17,
-    UniEncodingTypePropertyRetain       = 1 << 18,
-    UniEncodingTypePropertyNonatomic    = 1 << 19,
-    UniEncodingTypePropertyWeak         = 1 << 20,
-    UniEncodingTypePropertyCustomGetter = 1 << 21,
-    UniEncodingTypePropertyCustomSetter = 1 << 22,
-    UniEncodingTypePropertyDynamic      = 1 << 23,
+typedef NS_ENUM(NSInteger,UniPropertyEncoding) {
+    UniPropertyEncodingUnknown      = 0,
+    UniPropertyEncodingReadonly     = 1 << 0,
+    UniPropertyEncodingCopy         = 1 << 1,
+    UniPropertyEncodingRetain       = 1 << 2,
+    UniPropertyEncodingNonatomic    = 1 << 3,
+    UniPropertyEncodingWeak         = 1 << 4,
+    UniPropertyEncodingCustomGetter = 1 << 5,
+    UniPropertyEncodingCustomSetter = 1 << 6,
+    UniPropertyEncodingDynamic      = 1 << 7
 };
 
 typedef NS_ENUM(NSUInteger,UniColumnType){
@@ -67,25 +72,19 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 
 @property (readonly) Class        cls;
 @property (readonly) NSString     *name;
-
-@property (readonly) NSArray      *propertyArr;
 @property (readonly) NSDictionary *propertyDict;
+@property (readonly) NSArray      *propertyArr;
 @property (readonly) NSArray      *jsonPropertyArr;
-
-@property (readonly) UniProperty  *primaryProperty;
-
 @property (readonly) NSArray      *dbPropertyArr;
+@property (readonly) UniProperty  *primaryProperty;
 @property (readonly) NSString     *dbSelectSql;
 @property (readonly) NSString     *dbUpdateSql;
 @property (readonly) NSString     *dbInsertSql;
-
-@property (readonly) NSMapTable   *mm;
-@property (readonly) UniDB        *db;
-
 @property (readonly) BOOL         isConformsToUniJSON;
 @property (readonly) BOOL         isConformsToUniMM;
 @property (readonly) BOOL         isConformsToUniDB;
-
+@property (readonly) NSMapTable   *mm;
+@property (readonly) UniDB        *db;
 
 + (instancetype)classWithClass:(Class)cls;
 
@@ -98,14 +97,13 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 @interface UniProperty : NSObject
 
 @property (readonly) NSString                 *name;
-@property (readonly) UniEncodingType          encodingType;
+@property (readonly) UniTypeEncoding          typeEncoding;
 @property (readonly) Class                    cls;
 @property (readonly) SEL                      setter;
 @property (readonly) SEL                      getter;
 @property (readonly) NSArray                  *jsonKeyPathArr;
-@property (readonly) UniBlockValueTransformer *jsonValueTransformer;
-@property (readonly) NSNumberFormatter        *numberFormatter;
 @property (readonly) UniColumnType            columnType;
+@property (readonly) UniBlockValueTransformer *jsonValueTransformer;
 @property (readonly) UniBlockValueTransformer *dbValueTransformer;
 
 @end

@@ -34,7 +34,7 @@
 }
 
 + (NSArray*)uni_columns{
-    return uni_array(id,title);
+    return uni_array(id,title,authors);
 }
 
 + (UniBlockValueTransformer*)uni_dbValueTransformer:(NSString *)propertyName{

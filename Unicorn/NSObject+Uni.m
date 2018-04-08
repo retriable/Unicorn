@@ -24,8 +24,8 @@
 
 static __inline__ __attribute__((always_inline)) void uni_set_value(id target,UniProperty *property,id value){
     if (!value) return;
-    switch (property.encodingType&UniEncodingTypeMask) {
-        case UniEncodingTypeBool:{
+    switch (property.typeEncoding) {
+        case UniTypeEncodingBool:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,[value boolValue]);
             else if ([value isKindOfClass:NSString.class]) {
                 NSString *low=[value lowercaseString];
@@ -33,96 +33,109 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
             }else if(value==(id)kCFNull) ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,false);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
-        case UniEncodingTypeInt8:{
+        case UniTypeEncodingInt8:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,int8_t))(void *) objc_msgSend)(target, property.setter,[value charValue]);
             else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,int8_t))(void *) objc_msgSend)(target, property.setter,(int8_t)[value longLongValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,int8_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
-        case UniEncodingTypeUInt8:{
+        case UniTypeEncodingUInt8:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,uint8_t))(void *) objc_msgSend)(target, property.setter,[value unsignedCharValue]);
             else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,uint8_t))(void *) objc_msgSend)(target, property.setter,(uint8_t)[value longLongValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,uint8_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
-        case UniEncodingTypeInt16:{
+        case UniTypeEncodingInt16:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,int16_t))(void *) objc_msgSend)(target, property.setter,[value shortValue]);
             else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,int16_t))(void *) objc_msgSend)(target, property.setter,(int16_t)[value longLongValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,int16_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
-        case UniEncodingTypeUInt16:{
+        case UniTypeEncodingUInt16:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,uint16_t))(void *) objc_msgSend)(target, property.setter,[value unsignedShortValue]);
             else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,uint16_t))(void *) objc_msgSend)(target, property.setter,(uint16_t)[value longLongValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,uint16_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
-        case UniEncodingTypeInt32:{
+        case UniTypeEncodingInt32:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,int32_t))(void *) objc_msgSend)(target, property.setter,[value intValue]);
             else if ([value isKindOfClass:NSString.class]) {
-                value=[property.numberFormatter numberFromString:value];
+                value=[[NSNumberFormatter uni_default] numberFromString:value];
                 ((void (*)(id, SEL,int32_t))(void *) objc_msgSend)(target, property.setter,[value intValue]);
             }else if(value==(id)kCFNull) ((void (*)(id, SEL,int32_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
-        case UniEncodingTypeUInt32:{
+        case UniTypeEncodingUInt32:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,uint32_t))(void *) objc_msgSend)(target, property.setter,[value unsignedIntValue]);
             else if ([value isKindOfClass:NSString.class]) {
-                value=[property.numberFormatter numberFromString:value];
+                value=[[NSNumberFormatter uni_default] numberFromString:value];
                 ((void (*)(id, SEL,uint32_t))(void *) objc_msgSend)(target, property.setter,(uint32_t)[value longLongValue]);
             }else if(value==(id)kCFNull) ((void (*)(id, SEL,uint32_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
-        case UniEncodingTypeInt64:{
+        case UniTypeEncodingInt64:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,int64_t))(void *) objc_msgSend)(target, property.setter,[value longLongValue]);
             else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,int64_t))(void *) objc_msgSend)(target, property.setter,[value longLongValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,int64_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         }break;
-        case UniEncodingTypeUInt64:{
+        case UniTypeEncodingUInt64:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,uint64_t))(void *) objc_msgSend)(target, property.setter,[value unsignedLongLongValue]);
             else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,uint64_t))(void *) objc_msgSend)(target, property.setter,(uint64_t)[value longLongValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,uint64_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
-        case UniEncodingTypeFloat:{
+        case UniTypeEncodingFloat:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,float))(void *) objc_msgSend)(target, property.setter,[value floatValue]);
             else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,float))(void *) objc_msgSend)(target, property.setter,[value floatValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,float))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
-        case UniEncodingTypeDouble:{
+        case UniTypeEncodingDouble:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,double))(void *) objc_msgSend)(target, property.setter,[value doubleValue]);
             else if ([value isKindOfClass:NSString.class])  ((void (*)(id, SEL,double))(void *) objc_msgSend)(target, property.setter,[value doubleValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,double))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
-        case UniEncodingTypeLongDouble:
+        case UniTypeEncodingLongDouble:
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,long double))(void *) objc_msgSend)(target, property.setter,(long double)[value doubleValue]);
             else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,long double))(void *) objc_msgSend)(target, property.setter,(long double)[value doubleValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,long double))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
             break;
-        case UniEncodingTypeNSString:
+        case UniTypeEncodingNSString:
             if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
             else if ([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[NSNumberFormatter uni_default] stringFromNumber:value]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
             else ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[value description]);
             break;
-        case UniEncodingTypeNSURL:
+        case UniTypeEncodingNSMutableString:
+            if([value isKindOfClass:NSMutableString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
+            else if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[value mutableCopy]);
+            else if ([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[[NSNumberFormatter uni_default] stringFromNumber:value] mutableCopy]);
+            else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
+            else ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[value description] mutableCopy]);
+            break;
+        case UniTypeEncodingNSURL:
             if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[NSURL URLWithString:value]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
             break;
-        case UniEncodingTypeNSNumber:
+        case UniTypeEncodingNSNumber:
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
             else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[NSNumberFormatter uni_default] numberFromString:value]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
             break;
-        case UniEncodingTypeNSDate:
-        case UniEncodingTypeNSData:
+        case UniTypeEncodingNSDate:
+        case UniTypeEncodingNSData:
             if ([value isKindOfClass:property.cls]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
+            else if (value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
+            else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
+            break;
+        case UniTypeEncodingNSMutableData:
+            if ([value isKindOfClass:NSMutableData.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
+            else if([value isKindOfClass:NSData.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[value mutableCopy]);
             else if (value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
             break;
@@ -131,25 +144,27 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
 }
 
 static __inline__ __attribute__((always_inline)) id uni_get_value(id target,UniProperty *property){
-    switch (property.encodingType&UniEncodingTypeMask) {
-        case UniEncodingTypeBool: return @(((BOOL (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeInt8: return @(((int8_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeUInt8: return @(((uint8_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeInt16: return @(((int16_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeUInt16: return @(((uint16_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeInt32: return @(((int32_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeUInt32: return @(((uint32_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeInt64: return @(((int64_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeUInt64: return @(((uint64_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeFloat: return @(((float (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeDouble: return @(((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeLongDouble: return @(((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
-        case UniEncodingTypeNSString:
-        case UniEncodingTypeNSURL:
-        case UniEncodingTypeNSNumber:
-        case UniEncodingTypeNSDate:
-        case UniEncodingTypeNSData:
-        case UniEncodingTypeNSObject: return ((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
+    switch (property.typeEncoding) {
+        case UniTypeEncodingBool: return @(((BOOL (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingInt8: return @(((int8_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingUInt8: return @(((uint8_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingInt16: return @(((int16_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingUInt16: return @(((uint16_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingInt32: return @(((int32_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingUInt32: return @(((uint32_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingInt64: return @(((int64_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingUInt64: return @(((uint64_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingFloat: return @(((float (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingDouble: return @(((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingLongDouble: return @(((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter));
+        case UniTypeEncodingNSString:
+        case UniTypeEncodingNSMutableString:
+        case UniTypeEncodingNSURL:
+        case UniTypeEncodingNSNumber:
+        case UniTypeEncodingNSDate:
+        case UniTypeEncodingNSData:
+        case UniTypeEncodingNSMutableData:
+        case UniTypeEncodingNSObject: return ((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
         default: return [target valueForKey:property.name];
     }
 }
@@ -175,50 +190,52 @@ static __inline__ __attribute__((always_inline)) void uni_bind_stmt(id target,Un
         id value = [property.dbValueTransformer reverseTransformedValue:((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)];
         _uni_bind_stmt(value, property.columnType, stmt, idx); return;
     }
-    switch (property.encodingType&UniEncodingTypeMask) {
-        case UniEncodingTypeBool: sqlite3_bind_int64(stmt, idx, (long long)((bool (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeInt8: sqlite3_bind_int64(stmt, idx, (long long)((char (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeUInt8: sqlite3_bind_int64(stmt, idx, (long long)((unsigned char (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeInt16: sqlite3_bind_int64(stmt, idx, (long long)((short (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeUInt16: sqlite3_bind_int64(stmt, idx, (long long)((UInt16 (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeInt32: sqlite3_bind_int64(stmt, idx, (long long)((int (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeUInt32: sqlite3_bind_int64(stmt, idx, (long long)((UInt32 (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeInt64: sqlite3_bind_int64(stmt, idx, ((long long (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeUInt64: {
+    switch (property.typeEncoding) {
+        case UniTypeEncodingBool: sqlite3_bind_int64(stmt, idx, (long long)((bool (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+        case UniTypeEncodingInt8: sqlite3_bind_int64(stmt, idx, (long long)((char (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+        case UniTypeEncodingUInt8: sqlite3_bind_int64(stmt, idx, (long long)((unsigned char (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+        case UniTypeEncodingInt16: sqlite3_bind_int64(stmt, idx, (long long)((short (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+        case UniTypeEncodingUInt16: sqlite3_bind_int64(stmt, idx, (long long)((UInt16 (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+        case UniTypeEncodingInt32: sqlite3_bind_int64(stmt, idx, (long long)((int (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+        case UniTypeEncodingUInt32: sqlite3_bind_int64(stmt, idx, (long long)((UInt32 (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+        case UniTypeEncodingInt64: sqlite3_bind_int64(stmt, idx, ((long long (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+        case UniTypeEncodingUInt64: {
             unsigned long long v = ((unsigned long long (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
             long long dst;
             memcpy(&dst, &v, sizeof(long long));
             sqlite3_bind_int64(stmt, idx, dst);
         } break;
-        case UniEncodingTypeFloat: sqlite3_bind_double(stmt, idx, (double)((float (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeDouble: sqlite3_bind_double(stmt, idx, ((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeLongDouble: sqlite3_bind_double(stmt, idx, ((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-        case UniEncodingTypeNSString: {
+        case UniTypeEncodingFloat: sqlite3_bind_double(stmt, idx, (double)((float (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+        case UniTypeEncodingDouble: sqlite3_bind_double(stmt, idx, ((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+        case UniTypeEncodingLongDouble: sqlite3_bind_double(stmt, idx, ((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+        case UniTypeEncodingNSString:
+        case UniTypeEncodingNSMutableString: {
             id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
             if (value&&[value isKindOfClass:NSString.class]) sqlite3_bind_text(stmt, idx, [value UTF8String], -1, SQLITE_STATIC);
             else sqlite3_bind_null(stmt, idx);
         }break;
-        case UniEncodingTypeNSURL: {
+        case UniTypeEncodingNSURL: {
             id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
             if (value&&[value isKindOfClass:NSURL.class]) sqlite3_bind_text(stmt, idx, [[value absoluteString] UTF8String], -1, SQLITE_STATIC);
             else sqlite3_bind_null(stmt, idx);
         }break;
-        case UniEncodingTypeNSNumber:{
+        case UniTypeEncodingNSNumber:{
             id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
             if (value&&[value isKindOfClass:NSNumber.class]) sqlite3_bind_text(stmt, idx, [[[NSNumberFormatter uni_default] stringFromNumber:value] UTF8String], -1, SQLITE_STATIC);
             else sqlite3_bind_null(stmt, idx);
         } break;
-        case UniEncodingTypeNSDate:{
+        case UniTypeEncodingNSDate:{
             id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
             if (value&&[value isKindOfClass:NSDate.class]) sqlite3_bind_double(stmt, idx, [value timeIntervalSince1970]);
             else sqlite3_bind_null(stmt, idx);
         } break;
-        case UniEncodingTypeNSData: {
+        case UniTypeEncodingNSData:
+        case UniTypeEncodingNSMutableData:{
             NSData *value = ((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
             if (value&&[value isKindOfClass:NSData.class])sqlite3_bind_blob(stmt, idx, [value bytes], (int)[value length], SQLITE_STATIC);
             else sqlite3_bind_null(stmt, idx);
         } break;
-        case UniEncodingTypeNSObject:{
+        case UniTypeEncodingNSObject:{
             UniClass *clz=[UniClass classWithClass:property.cls];
             if (clz.isConformsToUniDB) {
                 id value=uni_get_value(target, property);
@@ -231,25 +248,27 @@ static __inline__ __attribute__((always_inline)) void uni_bind_stmt(id target,Un
 
 static __inline__ __attribute__((always_inline)) void uni_merge_from_obj(id target,id source,UniClass *cls){
     for (UniProperty *property in cls.propertyArr){
-        switch (property.encodingType&UniEncodingTypeMask) {
-            case UniEncodingTypeBool: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,((bool (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeInt8: ((void (*)(id, SEL,int8_t))(void *) objc_msgSend)(target, property.setter,((int8_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeUInt8: ((void (*)(id, SEL,uint8_t))(void *) objc_msgSend)(target, property.setter,((uint8_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeInt16: ((void (*)(id, SEL,int16_t))(void *) objc_msgSend)(target, property.setter,((int16_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeUInt16: ((void (*)(id, SEL,uint16_t))(void *) objc_msgSend)(target, property.setter,((uint16_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeInt32: ((void (*)(id, SEL,int32_t))(void *) objc_msgSend)(target, property.setter,((int32_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeUInt32: ((void (*)(id, SEL,uint32_t))(void *) objc_msgSend)(target, property.setter,((uint32_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeInt64: ((void (*)(id, SEL,int64_t))(void *) objc_msgSend)(target, property.setter,((int64_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeUInt64: ((void (*)(id, SEL,uint64_t))(void *) objc_msgSend)(target, property.setter,((uint64_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeFloat: ((void (*)(id, SEL,float))(void *) objc_msgSend)(target, property.setter,((float (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeDouble: ((void (*)(id, SEL,double))(void *) objc_msgSend)(target, property.setter,((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeLongDouble: ((void (*)(id, SEL,long double))(void *) objc_msgSend)(target, property.setter,((long double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeNSString:
-            case UniEncodingTypeNSURL:
-            case UniEncodingTypeNSNumber:
-            case UniEncodingTypeNSDate:
-            case UniEncodingTypeNSData: ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
-            case UniEncodingTypeNSObject: {
+        switch (property.typeEncoding) {
+            case UniTypeEncodingBool: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,((bool (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingInt8: ((void (*)(id, SEL,int8_t))(void *) objc_msgSend)(target, property.setter,((int8_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingUInt8: ((void (*)(id, SEL,uint8_t))(void *) objc_msgSend)(target, property.setter,((uint8_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingInt16: ((void (*)(id, SEL,int16_t))(void *) objc_msgSend)(target, property.setter,((int16_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingUInt16: ((void (*)(id, SEL,uint16_t))(void *) objc_msgSend)(target, property.setter,((uint16_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingInt32: ((void (*)(id, SEL,int32_t))(void *) objc_msgSend)(target, property.setter,((int32_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingUInt32: ((void (*)(id, SEL,uint32_t))(void *) objc_msgSend)(target, property.setter,((uint32_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingInt64: ((void (*)(id, SEL,int64_t))(void *) objc_msgSend)(target, property.setter,((int64_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingUInt64: ((void (*)(id, SEL,uint64_t))(void *) objc_msgSend)(target, property.setter,((uint64_t (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingFloat: ((void (*)(id, SEL,float))(void *) objc_msgSend)(target, property.setter,((float (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingDouble: ((void (*)(id, SEL,double))(void *) objc_msgSend)(target, property.setter,((double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingLongDouble: ((void (*)(id, SEL,long double))(void *) objc_msgSend)(target, property.setter,((long double (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingNSString:
+            case UniTypeEncodingNSMutableString:
+            case UniTypeEncodingNSURL:
+            case UniTypeEncodingNSNumber:
+            case UniTypeEncodingNSDate:
+            case UniTypeEncodingNSData:
+            case UniTypeEncodingNSMutableData:((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+            case UniTypeEncodingNSObject: {
                 id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
                 if ([property.cls conformsToProtocol:@protocol(UniMM)]) {
 #pragma clang diagnostic push
@@ -288,96 +307,98 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                 uni_set_value(target, property, value);
                 return;
             }
-            switch (property.encodingType&UniEncodingTypeMask) {
-                case UniEncodingTypeBool:{
+            switch (property.typeEncoding) {
+                case UniTypeEncodingBool:{
                     switch (type) {
                         case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,sqlite3_column_int64(stmt, i)>0?true:false); break;
                         default: break;
                     }
                 } break;
-                case UniEncodingTypeInt8:{
+                case UniTypeEncodingInt8:{
                     switch (type) {
                         case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(int8_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
-                case UniEncodingTypeUInt8:{
+                case UniTypeEncodingUInt8:{
                     switch (type) {
                         case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(uint8_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
-                case UniEncodingTypeInt16:{
+                case UniTypeEncodingInt16:{
                     switch (type) {
                         case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(int16_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
-                case UniEncodingTypeUInt16:{
+                case UniTypeEncodingUInt16:{
                     switch (type) {
                         case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(uint16_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
-                case UniEncodingTypeInt32:{
+                case UniTypeEncodingInt32:{
                     switch (type) {
                         case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(int32_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
-                case UniEncodingTypeUInt32:{
+                case UniTypeEncodingUInt32:{
                     switch (type) {
                         case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(uint32_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }
                 } break;
-                case UniEncodingTypeInt64:
+                case UniTypeEncodingInt64:
                     switch (type) {
                         case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     } break;
-                case UniEncodingTypeUInt64:
+                case UniTypeEncodingUInt64:
                     switch (type) {
                         case SQLITE_INTEGER: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(uint64_t)sqlite3_column_int64(stmt, i)); break;
                         default: break;
                     }  break;
-                case UniEncodingTypeFloat:
+                case UniTypeEncodingFloat:
                     switch (type) {
                         case SQLITE_FLOAT: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(float)sqlite3_column_double(stmt, i)); break;
                         default: break;
                     } break;
-                case UniEncodingTypeDouble:
+                case UniTypeEncodingDouble:
                     switch (type) {
                         case SQLITE_FLOAT: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,sqlite3_column_double(stmt, i));
                             break;
                         default: break;
                     } break;
-                case UniEncodingTypeLongDouble:
+                case UniTypeEncodingLongDouble:
                     switch (type) {
                         case SQLITE_FLOAT: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,(long double)sqlite3_column_double(stmt, i)); break;
                         default:break;
                     } break;
-                case UniEncodingTypeNSString:
+                case UniTypeEncodingNSString:
+                case UniTypeEncodingNSMutableString:
                     switch (type) {
                         case SQLITE_TEXT: ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[property.cls alloc] initWithCString:(const char *)sqlite3_column_text(stmt, i) encoding:NSUTF8StringEncoding]); break;
                         default: break;
                     } break;
-                case UniEncodingTypeNSURL:
+                case UniTypeEncodingNSURL:
                     switch (type) {
                         case SQLITE_TEXT: ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[property.cls alloc]initWithString:[[NSString alloc] initWithCString:(const char *)sqlite3_column_text(stmt, i) encoding:NSUTF8StringEncoding]]); break;
                         default: break;
                     } break;
-                case UniEncodingTypeNSNumber:
+                case UniTypeEncodingNSNumber:
                     switch (type) {
                         case SQLITE_TEXT: ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[NSNumberFormatter uni_default] numberFromString:[[NSString alloc] initWithCString:(const char *)sqlite3_column_text(stmt, i) encoding:NSUTF8StringEncoding]]); break;
                         default: break;
                     } break;
-                case UniEncodingTypeNSDate:
+                case UniTypeEncodingNSDate:
                     switch (type) {
                         case SQLITE_FLOAT: ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[property.cls alloc]initWithTimeIntervalSince1970:sqlite3_column_double(stmt, i)]); break;
                         default: break;
                     } break;
-                case UniEncodingTypeNSData:
+                case UniTypeEncodingNSData:
+                case UniTypeEncodingNSMutableData:
                     switch (type) {
                         case SQLITE_BLOB:{
                             int length = sqlite3_column_bytes(stmt, i);
@@ -386,7 +407,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                         } break;
                         default: break;
                     } break;
-                case UniEncodingTypeNSObject:{
+                case UniTypeEncodingNSObject:{
                     UniClass *clz = [UniClass classWithClass:property.cls];
                     if (!clz.isConformsToUniMM) { NSCParameterAssert(0); break; }
                     id value =nil;
@@ -413,7 +434,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                             obj = [[clz.cls alloc]init];
                             uni_merge_from_stmt(obj, stmt, clz);
                             [clz.mm setObject:obj forKey:value];
-                        } error:&err]) NSCAssert(0,@"db error:%@",err);
+                        } error:&err]) NSCAssert(0,@"db error %@",err);
                     }
                     ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,obj);
                 } break;
@@ -439,7 +460,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     if ([json isKindOfClass:[NSString class]]) return [self _uni_parseJsonString:json cls:cls];
     else if([json isKindOfClass:[NSDictionary class]]) return [self _uni_parseJsonDict:json cls:cls];
     else if([json isKindOfClass:[NSArray class]]) return [self _uni_parseJsonArr:json cls:cls];
-    else NSAssert(0,@"unsupported json:%@",json);
+    else NSAssert(0,@"unsupported json %@",json);
     return nil;
 }
 
@@ -448,7 +469,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     if(!json) return nil;
     if ([json isKindOfClass:[NSDictionary class]]) return [self _uni_parseJsonDict:json cls:cls];
     else if([json isKindOfClass:[NSArray class]]) return [self _uni_parseJsonArr:json cls:cls];
-    else NSAssert(0,@"unsupported json:%@",json); return nil;
+    else NSAssert(0,@"unsupported json %@",json); return nil;
 }
 
 + (instancetype)_uni_parseJsonDict:(NSDictionary*)dict cls:(UniClass*)cls{
@@ -461,30 +482,30 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         }
         if (cls.primaryProperty.jsonValueTransformer) primary=[cls.primaryProperty.jsonValueTransformer transformedValue:primary];
         if (!primary) return nil;
-        switch (cls.primaryProperty.encodingType&UniEncodingTypeMask) {
-            case UniEncodingTypeBool:
-            case UniEncodingTypeInt8:
-            case UniEncodingTypeUInt8:
-            case UniEncodingTypeInt16:
-            case UniEncodingTypeUInt16:
-            case UniEncodingTypeInt32:
-            case UniEncodingTypeUInt32:
-            case UniEncodingTypeInt64:
-            case UniEncodingTypeUInt64:
-            case UniEncodingTypeFloat:
-            case UniEncodingTypeDouble:
-            case UniEncodingTypeLongDouble:
-            case UniEncodingTypeNSNumber:
+        switch (cls.primaryProperty.typeEncoding) {
+            case UniTypeEncodingBool:
+            case UniTypeEncodingInt8:
+            case UniTypeEncodingUInt8:
+            case UniTypeEncodingInt16:
+            case UniTypeEncodingUInt16:
+            case UniTypeEncodingInt32:
+            case UniTypeEncodingUInt32:
+            case UniTypeEncodingInt64:
+            case UniTypeEncodingUInt64:
+            case UniTypeEncodingFloat:
+            case UniTypeEncodingDouble:
+            case UniTypeEncodingLongDouble:
+            case UniTypeEncodingNSNumber:
                 if ([primary isKindOfClass:NSNumber.class]) ;
                 else if ([primary isKindOfClass:NSString.class]) primary=[[NSNumberFormatter uni_default]numberFromString:primary];
                 else { NSAssert(0,@"primary:%@ in dict is unsupported",primary); return nil; }
                 break;
-            case UniEncodingTypeNSString:
+            case UniTypeEncodingNSString:
                 if ([primary isKindOfClass:NSString.class]) ;
                 else if([primary isKindOfClass:NSNumber.class]) primary=[[NSNumberFormatter uni_default]stringFromNumber:primary];
                 else primary=[primary description];
                 break;
-            case UniEncodingTypeNSURL:
+            case UniTypeEncodingNSURL:
                 if ([primary isKindOfClass:NSURL.class]) ;
                 else if ([primary isKindOfClass:NSString.class]) primary=[NSURL URLWithString:primary];
                 else { NSAssert(0,@"primary:%@ in dict is unsupported",primary); return nil; }
@@ -500,7 +521,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                 if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
                  else if (idx == count+2) uni_bind_stmt(model, cls.primaryProperty, stmt, idx);
                  else uni_bind_stmt(model, cls.dbPropertyArr[idx-1], stmt, idx);
-            } error:&err]) { NSAssert(0,@"db error:%@",err); return nil; }
+            } error:&err]) { NSAssert(0,@"db error %@",err); return nil; }
         }else{
             model=[[self alloc]init];
             [model _uni_mergeWithJsonDict:dict cls:cls];
@@ -514,7 +535,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                     if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
                     else if (idx == count+2) uni_bind_stmt(model, cls.primaryProperty, stmt, idx);
                     else uni_bind_stmt(model, cls.dbPropertyArr[idx-1], stmt, idx);
-                } error:&err]){ NSAssert(0,@"db error:%@",err); return nil; }
+                } error:&err]){ NSAssert(0,@"db error %@",err); return nil; }
             }
         }
     }else{
@@ -543,7 +564,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             if (value) break;
         }
         if (property.jsonValueTransformer) value=[property.jsonValueTransformer transformedValue:value];
-        else if ((property.encodingType&UniEncodingTypeMask)==UniEncodingTypeNSObject) {
+        else if ((property.typeEncoding)==UniTypeEncodingNSObject) {
             UniClass *clz=[UniClass classWithClass:property.cls];
             if (clz.isConformsToUniJSON) value=[property.cls _uni_parseJson:value cls:clz];
             else { NSAssert(0,@"property %@ 's class should confroms to UniJSON",property.name); value=nil ;}
@@ -592,11 +613,11 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             id m = [[self alloc]init];
             uni_merge_from_stmt(m, s, cls);
             id primary=uni_get_value(m, cls.primaryProperty);
-            if (!primary) { NSAssert(0,@"can not find primary value in model"); return; }
+            if (!primary) { NSAssert(0,@"can not find primary value in model %@",m); return; }
             id model=[cls.mm objectForKey:primary];
             if (!model) { model=m; [cls.mm setObject:model forKey:primary]; }
             [arr addObject:model];
-        } error:&err]) NSAssert(0,@"db err %@",err);
+        } error:&err]) NSAssert(0,@"db error %@",err);
     }];
     return arr;
 }
@@ -660,7 +681,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     for (UniProperty *property in cls.jsonPropertyArr){
         id value=uni_get_value(self, property);
         if (property.jsonValueTransformer) value=[property.jsonValueTransformer reverseTransformedValue:value];
-        else if ((property.encodingType&UniEncodingTypeMask)==UniEncodingTypeNSObject) value=[value uni_jsonDictionary];
+        else if (property.typeEncoding==UniTypeEncodingNSObject) value=[value uni_jsonDictionary];
         if (!value) continue;
         NSArray *keyPath=property.jsonKeyPathArr[0];
         if (keyPath.count==1) dict[keyPath[0]]=value;

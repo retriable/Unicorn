@@ -10,95 +10,54 @@
 #import <sqlite3.h>
 
 #import "UniClass.h"
-#import "UniDB.h"
 #import "UniProtocol.h"
 
-
-static __inline__ __attribute__((always_inline)) NSString * uni_encodingDesc(UniEncodingType encodingType){
+static __inline__ __attribute__((always_inline)) NSString * uni_encodingDesc(UniTypeEncoding typeEncoding,UniPropertyEncoding propertyEncoding,UniMethodEncoding methodEncoding){
     NSMutableString * type = [NSMutableString string];
-    UniEncodingType mask=encodingType&UniEncodingTypeMask;
-    switch (mask) {
-        case UniEncodingTypeBool: [type appendString:@"bool"]; break;
-        case UniEncodingTypeInt8: [type appendString:@"int8"]; break;
-        case UniEncodingTypeUInt8: [type appendString:@"uint8"]; break;
-        case UniEncodingTypeInt16: [type appendString:@"int16"]; break;
-        case UniEncodingTypeUInt16: [type appendString:@"uint16"]; break;
-        case UniEncodingTypeInt32: [type appendString:@"int32"]; break;
-        case UniEncodingTypeUInt32: [type appendString:@"uint32"]; break;
-        case UniEncodingTypeInt64: [type appendString:@"int64"]; break;
-        case UniEncodingTypeUInt64: [type appendString:@"uint64"]; break;
-        case UniEncodingTypeFloat: [type appendString:@"float"]; break;
-        case UniEncodingTypeDouble: [type appendString:@"double"]; break;
-        case UniEncodingTypeLongDouble: [type appendString:@"longDouble"]; break;
-        case UniEncodingTypeNSObject: [type appendString:@"object"]; break;
-        case UniEncodingTypeNSString: [type appendString:@"string"]; break;
-        case UniEncodingTypeNSNumber: [type appendString:@"number"]; break;
-        case UniEncodingTypeNSDate: [type appendString:@"date"]; break;
-        case UniEncodingTypeNSData: [type appendString:@"data"]; break;
+    switch (typeEncoding) {
+        case UniTypeEncodingBool: [type appendString:@"bool"]; break;
+        case UniTypeEncodingInt8: [type appendString:@"int8"]; break;
+        case UniTypeEncodingUInt8: [type appendString:@"uint8"]; break;
+        case UniTypeEncodingInt16: [type appendString:@"int16"]; break;
+        case UniTypeEncodingUInt16: [type appendString:@"uint16"]; break;
+        case UniTypeEncodingInt32: [type appendString:@"int32"]; break;
+        case UniTypeEncodingUInt32: [type appendString:@"uint32"]; break;
+        case UniTypeEncodingInt64: [type appendString:@"int64"]; break;
+        case UniTypeEncodingUInt64: [type appendString:@"uint64"]; break;
+        case UniTypeEncodingFloat: [type appendString:@"float"]; break;
+        case UniTypeEncodingDouble: [type appendString:@"double"]; break;
+        case UniTypeEncodingLongDouble: [type appendString:@"longDouble"]; break;
+        case UniTypeEncodingNSObject: [type appendString:@"object"]; break;
+        case UniTypeEncodingNSString: [type appendString:@"string"]; break;
+        case UniTypeEncodingNSMutableString: [type appendString:@"mutable string"]; break;
+        case UniTypeEncodingNSNumber: [type appendString:@"number"]; break;
+        case UniTypeEncodingNSDate: [type appendString:@"date"]; break;
+        case UniTypeEncodingNSData: [type appendString:@"data"]; break;
+        case UniTypeEncodingNSMutableData:[type appendString:@"mutable data"]; break;
         default: [type appendString:@"unknow"]; break;
     }
-    mask=encodingType&UniEncodingTypeQualifierMask;
-    if(mask&UniEncodingTypeQualifierConst) [type appendString:@" const"];
-    if(mask&UniEncodingTypeQualifierIn) [type appendString:@" in"];
-    if(mask&UniEncodingTypeQualifierInout) [type appendString:@" inout"];
-    if(mask&UniEncodingTypeQualifierBycopy) [type appendString:@" byCopy"];
-    if(mask&UniEncodingTypeQualifierByref) [type appendString:@" byref"];
-    if(mask&UniEncodingTypeQualifierOneway) [type appendString:@" oneway"];
-    mask=encodingType&UniEncodingTypePropertyMask;
-    if(mask&UniEncodingTypePropertyReadonly) [type appendString:@" readonly"];
-    if(mask&UniEncodingTypePropertyCopy) [type appendString:@" copy"];
-    if(mask&UniEncodingTypePropertyRetain) [type appendString:@" retain"];
-    if(mask&UniEncodingTypePropertyNonatomic) [type appendString:@" nonatomic"];
-    if(mask&UniEncodingTypePropertyWeak) [type appendString:@" weak"];
-    if(mask&UniEncodingTypePropertyCustomGetter) [type appendString:@" customGetter"];
-    if(mask&UniEncodingTypePropertyCustomSetter) [type appendString:@" customSetter"];
-    if(mask&UniEncodingTypePropertyDynamic) [type appendString:@" dynamic"];
+    if(methodEncoding&UniMethodEncodingConst) [type appendString:@" const"];
+    if(methodEncoding&UniMethodEncodingIn) [type appendString:@" in"];
+    if(methodEncoding&UniMethodEncodingInout) [type appendString:@" inout"];
+    if(methodEncoding&UniMethodEncodingBycopy) [type appendString:@" byCopy"];
+    if(methodEncoding&UniMethodEncodingByref) [type appendString:@" byref"];
+    if(methodEncoding&UniMethodEncodingOneway) [type appendString:@" oneway"];
+    if(propertyEncoding&UniPropertyEncodingReadonly) [type appendString:@" readonly"];
+    if(propertyEncoding&UniPropertyEncodingCopy) [type appendString:@" copy"];
+    if(propertyEncoding&UniPropertyEncodingRetain) [type appendString:@" retain"];
+    if(propertyEncoding&UniPropertyEncodingNonatomic) [type appendString:@" nonatomic"];
+    if(propertyEncoding&UniPropertyEncodingWeak) [type appendString:@" weak"];
+    if(propertyEncoding&UniPropertyEncodingCustomGetter) [type appendString:@" customGetter"];
+    if(propertyEncoding&UniPropertyEncodingCustomSetter) [type appendString:@" customSetter"];
+    if(propertyEncoding&UniPropertyEncodingDynamic) [type appendString:@" dynamic"];
     return type;
 }
-    
+
 static __inline__ __attribute__((always_inline)) NSString * uni_columnDesc(UniColumnType columnType){
     static NSArray * arr=nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{arr=@[@"unknown",@"integer",@"real",@"text",@"blob"];});
     return arr[columnType];
-}
-static __inline__ __attribute__((always_inline)) UniEncodingType UniPropertyGetType(const char *typeEncoding) {
-    char *type = (char *)typeEncoding;
-    if (!type) return UniEncodingTypeUnknown;
-    if (strlen(type) == 0) return UniEncodingTypeUnknown;
-    UniEncodingType qualifier = 0;
-    bool prefix = true;
-    while (prefix) {
-        switch (*type) {
-            case 'r': qualifier |= UniEncodingTypeQualifierConst; type++; break;
-            case 'n': qualifier |= UniEncodingTypeQualifierIn; type++; break;
-            case 'N': qualifier |= UniEncodingTypeQualifierInout; type++; break;
-            case 'o': qualifier |= UniEncodingTypeQualifierOut; type++; break;
-            case 'O': qualifier |= UniEncodingTypeQualifierBycopy; type++; break;
-            case 'R': qualifier |= UniEncodingTypeQualifierByref; type++; break;
-            case 'V': qualifier |= UniEncodingTypeQualifierOneway; type++; break;
-            default: prefix = false; break;
-        }
-    }
-    if (strlen(type) == 0)return UniEncodingTypeUnknown | qualifier;
-    switch (*type) {
-        case 'B': return UniEncodingTypeBool | qualifier;
-        case 'c': return UniEncodingTypeInt8 | qualifier;
-        case 'C': return UniEncodingTypeUInt8 | qualifier;
-        case 's': return UniEncodingTypeInt16 | qualifier;
-        case 'S': return UniEncodingTypeUInt16 | qualifier;
-        case 'i': return UniEncodingTypeInt32 | qualifier;
-        case 'I': return UniEncodingTypeUInt32 | qualifier;
-        case 'l': return UniEncodingTypeInt32 | qualifier;
-        case 'L': return UniEncodingTypeUInt32 | qualifier;
-        case 'q': return UniEncodingTypeInt64 | qualifier;
-        case 'Q': return UniEncodingTypeUInt64 | qualifier;
-        case 'f': return UniEncodingTypeFloat | qualifier;
-        case 'd': return UniEncodingTypeDouble | qualifier;
-        case 'D': return UniEncodingTypeLongDouble | qualifier;
-        case '@': return UniEncodingTypeNSObject | qualifier;
-        default: return UniEncodingTypeUnknown | qualifier;
-    }
 }
 
 static __inline__ __attribute__((always_inline)) bool uni_check_column(UniDB *db, NSString *table, NSString *column){
@@ -120,41 +79,41 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
 
 @interface UniClass ()
 
-@property (nonatomic, assign) Class cls;
-@property (nonatomic, strong) NSString      *name;
-@property (nonatomic, strong) NSArray       *propertyArr;
-@property (nonatomic, strong) NSDictionary  *propertyDict;
-@property (nonatomic, strong) NSArray       *jsonPropertyArr;
-@property (nonatomic, strong) UniProperty   *primaryProperty;
-@property (nonatomic, strong) NSArray       *dbPropertyArr;
-@property (nonatomic, copy  ) NSString      *dbSelectSql;
-@property (nonatomic, copy  ) NSString      *dbUpdateSql;
-@property (nonatomic, copy  ) NSString      *dbInsertSql;
-@property (nonatomic, strong) NSSet         *relatedClassNameSet;
-@property (nonatomic, strong) NSMapTable    *mm;
-@property (nonatomic, strong) UniDB         *db;
-@property (nonatomic, assign) BOOL          isConformsToUniJSON;
-@property (nonatomic, assign) BOOL          isConformsToUniMM;
-@property (nonatomic, assign) BOOL          isConformsToUniDB;
-@property (nonatomic, strong) NSDictionary  *jsonKeyPathsDict;
-@property (nonatomic, copy  ) NSString      *primaryKey;
-@property (nonatomic, strong) NSArray       *dbColumnArr;
+@property (nonatomic, assign) Class        cls;
+@property (nonatomic, strong) NSString     *name;
+@property (nonatomic, strong) NSDictionary *propertyDict;
+@property (nonatomic, strong) NSArray      *propertyArr;
+@property (nonatomic, strong) NSArray      *jsonPropertyArr;
+@property (nonatomic, strong) NSArray      *dbPropertyArr;
+@property (nonatomic, strong) UniProperty  *primaryProperty;
+@property (nonatomic, strong) NSString     *dbSelectSql;
+@property (nonatomic, strong) NSString     *dbUpdateSql;
+@property (nonatomic, strong) NSString     *dbInsertSql;
+@property (nonatomic, assign) BOOL         isConformsToUniJSON;
+@property (nonatomic, assign) BOOL         isConformsToUniMM;
+@property (nonatomic, assign) BOOL         isConformsToUniDB;
+@property (nonatomic, strong) NSMapTable   *mm;
+@property (nonatomic, strong) UniDB        *db;
+@property (nonatomic, strong) NSSet        *relatedClassNameSet;
+@property (nonatomic, strong) NSDictionary *jsonKeyPathsDict;
+@property (nonatomic, strong) NSString     *primaryKey;
+@property (nonatomic, strong) NSArray      *dbColumnArr;
 
 @end
 
 @interface UniProperty ()
-
-@property (nonatomic, strong) NSString *               name;
-@property (nonatomic, strong) NSString *               ivar;
-@property (nonatomic, assign) UniEncodingType          encodingType;
-@property (nonatomic, assign) SEL                      setter;
-@property (nonatomic, assign) SEL                      getter;
-@property (nonatomic, strong) NSNumberFormatter        *numberFormatter;
-@property (nonatomic, strong) NSArray                  *jsonKeyPathArr;
-@property (nonatomic, strong) UniBlockValueTransformer *jsonValueTransformer;
-@property (nonatomic, assign) UniColumnType            columnType;
-@property (nonatomic, strong) UniBlockValueTransformer *dbValueTransformer;
-@property (nonatomic, assign) Class                    cls;
+@property (nonatomic,strong) NSString                 *name;
+@property (nonatomic,assign) UniTypeEncoding          typeEncoding;
+@property (nonatomic,assign) UniPropertyEncoding      propertyEncoding;
+@property (nonatomic,assign) UniMethodEncoding        methodEncoding;
+@property (nonatomic,assign) Class                    cls;
+@property (nonatomic,assign) SEL                      setter;
+@property (nonatomic,assign) SEL                      getter;
+@property (nonatomic,strong) NSArray                  *jsonKeyPathArr;
+@property (nonatomic,assign) UniColumnType            columnType;
+@property (nonatomic,strong) UniBlockValueTransformer *jsonValueTransformer;
+@property (nonatomic,strong) UniBlockValueTransformer *dbValueTransformer;
+@property (nonatomic,strong) NSString *               ivar;
 
 - (instancetype)initWithProperty:(objc_property_t)property;
 
@@ -189,15 +148,14 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
     }
     [self enumeratePropertiesUsingBlock:^(objc_property_t p) {
         UniProperty *property = [[UniProperty alloc] initWithProperty:p];
-        if (((property.encodingType&UniEncodingTypePropertyMask)&UniEncodingTypePropertyReadonly)) return;
-        [propertyArr addObject:property];
+        if (property.propertyEncoding&UniPropertyEncodingReadonly) return;
         propertyDict[property.name]=property;
+        [propertyArr addObject:property];
         UniClass *propertyCls;
-        if ((property.encodingType&UniEncodingTypeMask)==UniEncodingTypeNSObject) {
-            NSString *propertyClassName;
-            propertyClassName=NSStringFromClass(property.cls);
+        if (property.typeEncoding==UniTypeEncodingNSObject) {
+            NSString *propertyClassName = NSStringFromClass(property.cls);
             propertyCls=context[propertyClassName];
-            if (![propertyCls isKindOfClass:UniClass.class]) propertyCls=[[UniClass alloc]initWithClass:property.cls context:context];
+            if (!propertyCls) propertyCls=[[UniClass alloc]initWithClass:property.cls context:context];
             else if (propertyCls.isConformsToUniMM) NSLog(@"****\n\nwarning!circular reference maybe happen between %@ and %@\n\n****",propertyClassName,self.name);
         }
         if (self.isConformsToUniJSON) {
@@ -229,8 +187,7 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
                 if ([cls respondsToSelector:@selector(uni_dbValueTransformer:)]){
                     property.dbValueTransformer=[self.cls uni_dbValueTransformer:property.name];
                     if (property.dbValueTransformer) {
-                        UniColumnType columnType=[self.cls uni_columnType:property.name];
-                        property.columnType=columnType;
+                        property.columnType=[self.cls uni_columnType:property.name];
                         NSAssert(property.columnType,@"should implement +uni_columnType for property %@ in class %@",property.name,self.name);
                         for (NSString *className in [property.dbValueTransformer anonymousClassNames]) if (!context[className]) {
 #pragma clang diagnostic push
@@ -241,62 +198,64 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
                         return;
                     }
                 }
-                switch (property.encodingType&UniEncodingTypeMask) {
-                    case UniEncodingTypeBool:
-                    case UniEncodingTypeInt8:
-                    case UniEncodingTypeUInt8:
-                    case UniEncodingTypeInt16:
-                    case UniEncodingTypeUInt16:
-                    case UniEncodingTypeInt32:
-                    case UniEncodingTypeUInt32:
-                    case UniEncodingTypeInt64:
-                    case UniEncodingTypeUInt64: property.columnType=UniColumnTypeInteger; break;
-                    case UniEncodingTypeFloat:
-                    case UniEncodingTypeDouble:
-                    case UniEncodingTypeLongDouble: property.columnType=UniColumnTypeReal; break;
-                    case UniEncodingTypeNSString: property.columnType=UniColumnTypeText; break;
-                    case UniEncodingTypeNSURL: property.columnType=UniColumnTypeText; break;
-                    case UniEncodingTypeNSNumber: property.columnType=UniColumnTypeText; break;
-                    case UniEncodingTypeNSDate: property.columnType=UniColumnTypeReal; break;
-                    case UniEncodingTypeNSData: property.columnType=UniColumnTypeBlob; break;
-                    case UniEncodingTypeNSObject: {
+                switch (property.typeEncoding) {
+                    case UniTypeEncodingBool:
+                    case UniTypeEncodingInt8:
+                    case UniTypeEncodingUInt8:
+                    case UniTypeEncodingInt16:
+                    case UniTypeEncodingUInt16:
+                    case UniTypeEncodingInt32:
+                    case UniTypeEncodingUInt32:
+                    case UniTypeEncodingInt64:
+                    case UniTypeEncodingUInt64: property.columnType=UniColumnTypeInteger; break;
+                    case UniTypeEncodingFloat:
+                    case UniTypeEncodingDouble:
+                    case UniTypeEncodingLongDouble: property.columnType=UniColumnTypeReal; break;
+                    case UniTypeEncodingNSString:
+                    case UniTypeEncodingNSMutableString:
+                    case UniTypeEncodingNSURL:
+                    case UniTypeEncodingNSNumber: property.columnType=UniColumnTypeText; break;
+                    case UniTypeEncodingNSDate: property.columnType=UniColumnTypeReal; break;
+                    case UniTypeEncodingNSData:
+                    case UniTypeEncodingNSMutableData:property.columnType=UniColumnTypeBlob;break;
+                    case UniTypeEncodingNSObject: {
                         if (propertyCls.isConformsToUniDB) {
                             property.columnType=propertyCls.primaryProperty.columnType;
                             property.dbValueTransformer=propertyCls.primaryProperty.dbValueTransformer;
                         }
                     } break;
                     default: {
-                        NSAssert(0,@"should implement +uni_dbValueTransformer: and +uni_columnType: for property:%@ in class:%@",property.name,self.name);
+                        NSAssert(0,@"should implement +uni_dbValueTransformer: and +uni_columnType: for property %@ in class %@",property.name,self.name);
                     } break;
                 }
             }
         }
     }];
     if (self.isConformsToUniMM) {
-        NSAssert(self.primaryProperty,@"you should implement +uni_primary: in class:%@",self.name);
+        NSAssert(self.primaryProperty,@"should implement +uni_primary: in class %@",self.name);
         NSAssert(({
             //Try to meet the requirements as much as possible and avoid certain problems,so only support the following types.
             BOOL valid=NO;
-            switch (self.primaryProperty.encodingType&UniEncodingTypeMask) {
-                case UniEncodingTypeBool:
-                case UniEncodingTypeInt8:
-                case UniEncodingTypeUInt8:
-                case UniEncodingTypeInt16:
-                case UniEncodingTypeUInt16:
-                case UniEncodingTypeInt32:
-                case UniEncodingTypeUInt32:
-                case UniEncodingTypeInt64:
-                case UniEncodingTypeUInt64:
-                case UniEncodingTypeFloat:
-                case UniEncodingTypeDouble:
-                case UniEncodingTypeLongDouble:
-                case UniEncodingTypeNSString:
-                case UniEncodingTypeNSNumber:
-                case UniEncodingTypeNSURL: valid=YES; break;
+            switch (self.primaryProperty.typeEncoding) {
+                case UniTypeEncodingBool:
+                case UniTypeEncodingInt8:
+                case UniTypeEncodingUInt8:
+                case UniTypeEncodingInt16:
+                case UniTypeEncodingUInt16:
+                case UniTypeEncodingInt32:
+                case UniTypeEncodingUInt32:
+                case UniTypeEncodingInt64:
+                case UniTypeEncodingUInt64:
+                case UniTypeEncodingFloat:
+                case UniTypeEncodingDouble:
+                case UniTypeEncodingLongDouble:
+                case UniTypeEncodingNSString:
+                case UniTypeEncodingNSNumber:
+                case UniTypeEncodingNSURL: valid=YES; break;
                 default: break;
             }
             valid;
-        }),@"primary only support bool int8 uint8 int16 uint16 int32 uint32 int64 uint64 float double longDouble NSString NSNumber NSURL");
+        }),@"primary only support bool int8 uint8 int16 uint16 int32 uint32 int64 uint64 float double long double NSString NSNumber NSURL");
     }
     self.propertyArr=propertyArr;
     self.propertyDict=propertyDict;
@@ -355,7 +314,7 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
 }
 
 - (BOOL)__open:(NSString*)file error:(NSError**)error{
-    if(![self.db open:file error:error]){ NSAssert(0,@"open db fail:%@",*error); return NO; }
+    if(![self.db open:file error:error]){ NSAssert(0,@"db error %@",*error); return NO; }
     NSString *dbColumnType = uni_columnDesc(self.primaryProperty.columnType);
    __block NSString *sql = nil;
     sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('%@' %@ NOT NULL PRIMARY KEY)", self.name, self.primaryProperty.name, dbColumnType];
@@ -492,61 +451,76 @@ properties      : \n%@\n\
     self.name = [NSString stringWithUTF8String:property_getName(property)];
     unsigned int count;
     objc_property_attribute_t *attrs = property_copyAttributeList(property, &count);
-    UniEncodingType type = 0;
-    for (unsigned int i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         objc_property_attribute_t attr=attrs[i];
         switch (attr.name[0]) {
             case 'T': {
-                if (attr.value) {
-                    type = UniPropertyGetType(attr.value);
-                    if ((type & UniEncodingTypeMask) == UniEncodingTypeNSObject) {
-                        NSScanner *scanner = [NSScanner scannerWithString:[NSString stringWithUTF8String:attr.value]];
-                        if (![scanner scanString:@"@\"" intoString:NULL])continue;
-                        NSString *clsName = nil;
-                        if ([scanner scanUpToCharactersFromSet: [NSCharacterSet characterSetWithCharactersInString:@"\"<"] intoString:&clsName]) {
-                            if (clsName.length) {
+                for (const char * v=attr.value;strlen(v)>0;){
+                    switch (v[0]) {
+                        case 'r': self.methodEncoding |= UniMethodEncodingConst;v++;break;
+                        case 'n': self.methodEncoding |= UniMethodEncodingIn;v++;break;
+                        case 'N': self.methodEncoding |= UniMethodEncodingInout;v++;break;
+                        case 'o': self.methodEncoding |= UniMethodEncodingOut;v++;break;
+                        case 'O': self.methodEncoding |= UniMethodEncodingBycopy;v++;break;
+                        case 'R': self.methodEncoding |= UniMethodEncodingByref;v++;break;
+                        case 'V': self.methodEncoding |= UniMethodEncodingOneway;v++;break;
+                        case 'B': self.typeEncoding = UniTypeEncodingBool;v++;break;
+                        case 'c': self.typeEncoding = UniTypeEncodingInt8;v++;break;
+                        case 'C': self.typeEncoding = UniTypeEncodingUInt8;v++;break;
+                        case 's': self.typeEncoding = UniTypeEncodingInt16;v++;break;
+                        case 'S': self.typeEncoding = UniTypeEncodingUInt16;v++;break;
+                        case 'i': self.typeEncoding = UniTypeEncodingInt32;v++;break;
+                        case 'I': self.typeEncoding = UniTypeEncodingUInt32;v++;break;
+                        case 'l': self.typeEncoding = UniTypeEncodingInt32;v++;break;
+                        case 'L': self.typeEncoding = UniTypeEncodingUInt32;v++;break;
+                        case 'q': self.typeEncoding = UniTypeEncodingInt64;v++;break;
+                        case 'Q': self.typeEncoding = UniTypeEncodingUInt64;v++;break;
+                        case 'f': self.typeEncoding = UniTypeEncodingFloat;v++;break;
+                        case 'd': self.typeEncoding = UniTypeEncodingDouble;v++;break;
+                        case 'D': self.typeEncoding = UniTypeEncodingLongDouble;v++;break;
+                        case '@': {
+                            self.typeEncoding = UniTypeEncodingNSObject;
+                            NSScanner *scanner = [NSScanner scannerWithString:[NSString stringWithUTF8String:attr.value]];
+                            if (![scanner scanString:@"@\"" intoString:NULL]){ v+=strlen(v);break; }
+                            NSString *clsName = nil;
+                            if ([scanner scanUpToCharactersFromSet: [NSCharacterSet characterSetWithCharactersInString:@"\"<"] intoString:&clsName]&&clsName.length) {
                                 self.cls = objc_getClass(clsName.UTF8String);
-                                if (self.cls==NSString.class) {
-                                    type=(type&0xFFFF00)|UniEncodingTypeNSString;
-                                }else if(self.cls==NSURL.class){
-                                    type=(type&0xFFFF00)|UniEncodingTypeNSURL;
-                                }else if(self.cls==NSNumber.class){
-                                    type=(type&0xFFFF00)|UniEncodingTypeNSNumber;
-                                }else if(self.cls==NSDate.class){
-                                    type=(type&0xFFFF00)|UniEncodingTypeNSDate;
-                                }else if(self.cls==NSData.class){
-                                    type=(type&0xFFFF00)|UniEncodingTypeNSData;
-                                }
+                                if (self.cls==NSString.class) self.typeEncoding=UniTypeEncodingNSString;
+                                else if(self.cls==NSMutableString.class) self.typeEncoding=UniTypeEncodingNSMutableString;
+                                else if(self.cls==NSURL.class) self.typeEncoding=UniTypeEncodingNSURL;
+                                else if(self.cls==NSNumber.class) self.typeEncoding=UniTypeEncodingNSNumber;
+                                else if(self.cls==NSDate.class) self.typeEncoding=UniTypeEncodingNSDate;
+                                else if(self.cls==NSData.class) self.typeEncoding=UniTypeEncodingNSData;
+                                else if(self.cls==NSMutableData.class) self.typeEncoding=UniTypeEncodingNSMutableData;
                             }
-                        }
+                        }default: v+=strlen(v);break;
                     }
                 }
             } break;
             case 'V': {
-                if (attr.value) self.ivar=[NSString stringWithUTF8String:attr.value];
+                if (strlen(attr.value)) self.ivar=[NSString stringWithUTF8String:attr.value];
             } break;
-            case 'R': type |= UniEncodingTypePropertyReadonly; break;
-            case 'C': type |= UniEncodingTypePropertyCopy; break;
-            case '&': type |= UniEncodingTypePropertyRetain; break;
-            case 'N': type |= UniEncodingTypePropertyNonatomic; break;
-            case 'D': type |= UniEncodingTypePropertyDynamic; break;
-            case 'W': type |= UniEncodingTypePropertyWeak; break;
+            case 'R': self.propertyEncoding|=UniPropertyEncodingReadonly; break;
+            case 'C': self.propertyEncoding|=UniPropertyEncodingCopy; break;
+            case '&': self.propertyEncoding|=UniPropertyEncodingRetain; break;
+            case 'N': self.propertyEncoding|=UniPropertyEncodingNonatomic; break;
+            case 'D': self.propertyEncoding|=UniPropertyEncodingDynamic; break;
+            case 'W': self.propertyEncoding|=UniPropertyEncodingWeak; break;
             case 'G': {
-                type |= UniEncodingTypePropertyCustomGetter;
-                if (attr.value) self.getter = NSSelectorFromString([NSString stringWithUTF8String:attrs[i].value]);
+                self.propertyEncoding|=UniPropertyEncodingCustomGetter;
+                if (strlen(attr.value)) self.getter = NSSelectorFromString([NSString stringWithUTF8String:attrs[i].value]);
             } break;
             case 'S': {
-                type |= UniEncodingTypePropertyCustomSetter;
-                if (attr.value) self.setter = NSSelectorFromString([NSString stringWithUTF8String:attrs[i].value]);
+                self.propertyEncoding|=UniPropertyEncodingCustomSetter;
+                if (strlen(attr.value)) self.setter = NSSelectorFromString([NSString stringWithUTF8String:attrs[i].value]);
             } break;
             default: break;
         }
     }
     if (attrs) free(attrs);
-    self.encodingType = type;
     if (self.name.length) {
         if (!self.getter) self.getter = NSSelectorFromString(self.name);
-        if (!self.setter&&!(self.encodingType&UniEncodingTypePropertyReadonly)) self.setter = NSSelectorFromString([NSString stringWithFormat:@"set%@%@:", [self.name substringToIndex:1].uppercaseString, [self.name substringFromIndex:1]]);
+        if (!self.setter&&!(self.propertyEncoding&UniPropertyEncodingReadonly)) self.setter = NSSelectorFromString([NSString stringWithFormat:@"set%@%@:", [self.name substringToIndex:1].uppercaseString, [self.name substringFromIndex:1]]);
     }
     return self;
 }
@@ -568,6 +542,6 @@ properties      : \n%@\n\
     column type            : %@\n\
     json value transformer : %@\n\
     db value transformer   : %@\n    \
-",self.name,uni_encodingDesc(self.encodingType),NSStringFromSelector(self.setter),NSStringFromSelector(self.getter),s,uni_columnDesc(self.columnType),self.jsonValueTransformer,self.dbValueTransformer];
+",self.name,uni_encodingDesc(self.typeEncoding,self.propertyEncoding,self.methodEncoding),NSStringFromSelector(self.setter),NSStringFromSelector(self.getter),s,uni_columnDesc(self.columnType),self.jsonValueTransformer,self.dbValueTransformer];
 }
 @end
