@@ -10,7 +10,6 @@
 
 #import "NSObject+Uni.h"
 #import "UniClass.h"
-#import "UniDB.h"
 #import "UniProtocol.h"
 
 @implementation NSNumberFormatter(Uni)
@@ -301,7 +300,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                         int bytes = sqlite3_column_bytes(stmt, i);
                         value = [NSData dataWithBytes:sqlite3_column_blob(stmt, i) length:bytes];
                     } break;
-                    default: value=(id)kCFNull; break;
+                    default: break;
                 }
                 value = [property.dbValueTransformer transformedValue:value];
                 uni_set_value(target, property, value);

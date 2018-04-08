@@ -213,12 +213,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AF93E2E207265390091F806 /* UniBlockValueTransformer.h in Headers */,
+				0A7655CA2022EF1B0061FEC8 /* Unicorn.h in Headers */,
 				0A8CECA72040F3820007FAA8 /* NSObject+Uni.h in Headers */,
-				0A7655DB2022EF5B0061FEC8 /* UniClass.h in Headers */,
 				0A7655DE2022F5E70061FEC8 /* UniProtocol.h in Headers */,
 				0AFC97AD2023F35400D6506E /* UniDB.h in Headers */,
-				0A7655CA2022EF1B0061FEC8 /* Unicorn.h in Headers */,
+				0A7655DB2022EF5B0061FEC8 /* UniClass.h in Headers */,
+				0AF93E2E207265390091F806 /* UniBlockValueTransformer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

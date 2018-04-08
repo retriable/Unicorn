@@ -34,7 +34,6 @@ static inline void Benchmark(void (^block)(void), void (^complete)(double ms)) {
     Benchmark(^{
         Article *a=[Article uni_parseJson:article];
         NSLog(@"%@",[a uni_jsonDictionary]);
-        NSLog(@"%ld",sizeof(long double));
     }, ^(double ms) {
         NSLog(@"%.2f ms",ms);
     });
