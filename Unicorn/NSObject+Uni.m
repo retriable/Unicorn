@@ -607,9 +607,10 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     return model;
 }
 
-+ (NSArray*)uni_query:(NSString*)sql args:(NSArray*)args{
++ (NSArray*)uni_query:(NSString*)sqlAfterWhere args:(NSArray*)args{
     UniClass *cls=[UniClass classWithClass:self];
     if (!cls.isConformsToUniDB) { NSAssert(0,@"class %@ should comforms to protocol UniDB",cls.name); return nil; }
+    NSString *sql=sqlAfterWhere.length?[NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@",cls.name,sqlAfterWhere]:[NSString stringWithFormat:@"SELECT * FROM %@",cls.name];
     NSMutableArray *arr=[NSMutableArray array];
     [cls sync:^{
         NSError *err;
@@ -672,6 +673,32 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         for (id model in models) [arr addObject:[model _uni_update:cls]];
     }];
     return arr;
+}
+
++ (BOOL)uni_delete:(NSString*)sqlAfterWhere args:(NSArray*)args{
+    __block BOOL res;
+    UniClass *cls=[UniClass classWithClass:self];
+    NSString *sql=sqlAfterWhere.length?[NSString stringWithFormat:@"DELETE FROM %@ WHERE %@",cls.name,sqlAfterWhere]:[NSString stringWithFormat:@"DELETE FROM %@",cls.name];
+    [cls sync:^{
+        NSError *error=nil;
+        res=[cls.db executeUpdate:sql arguments:args error:&error];
+        if (!res) {
+            NSLog(@"%@",error);
+        }
+    }];
+    return res;
+}
++ (BOOL)uni_deleteBeforeDate:(NSDate *)date{
+    __block BOOL res;
+    UniClass *cls=[UniClass classWithClass:self];
+    [cls sync:^{
+        NSError *error=nil;
+        res=[cls.db executeUpdate:[NSString stringWithFormat:@"DELETE FROM %@ WHERE uni_update_at<?",cls.name] arguments:@[@([[NSDate date] timeIntervalSince1970])] error:&error];
+        if (!res) {
+            NSLog(@"%@",error);
+        }
+    }];
+    return res;
 }
 
 - (NSString*)uni_jsonString{

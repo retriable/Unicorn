@@ -9,14 +9,17 @@
 #import <Foundation/Foundation.h>
 
 @interface NSObject (Uni)
+
 /**
  reverse model to json dictionary
  */
 @property (readonly)NSDictionary * uni_jsonDictionary;
+
 /**
  reverse model to json string
  */
 @property (readonly)NSString * uni_jsonString;
+
 /**
  reverse models to array of json dictionary
  
@@ -24,6 +27,7 @@
  @return array of json dictionary
  */
 + (NSArray*)uni_jsonDictionaryFromModels:(NSArray*)models;
+
 /**
  User *user = [User uni_parseJson:jsonString]
  User *user = [User uni_parseJson:jsonDictionary]
@@ -34,6 +38,7 @@
  @return model or models or nil
  */
 + (id)uni_parseJson:(id)json;
+
 /**
  query one by primary value
  User user = [User uni_queryOne:@(10086)]
@@ -42,15 +47,17 @@
  @return model or nil
  */
 + (id)uni_queryOne:(id)primary;
+
 /**
  query models from sql after "where"
  NSArray<User*> *users = [User uni_query:@"age<?" args:@[@(28)]];
  
- @param sql sql after "where"
+ @param sqlAfterWhere sql after "where"
  @param args args
  @return models
  */
-+ (NSArray*)uni_query:(NSString*)sql args:(NSArray*)args;
++ (NSArray*)uni_query:(NSString*)sqlAfterWhere args:(NSArray*)args;
+
 /**
  update model
  user = [user uni_update]
@@ -58,6 +65,7 @@
  @return model did updated
  */
 - (id)uni_update;
+
 /**
  update models
  users = [User uni_update:users]
@@ -66,6 +74,23 @@
  @return models updated
  */
 + (NSArray*)uni_update:(NSArray*)models;
+
+/**
+ delete models in database with sql
+
+ @param sqlAfterWhere sql after "where"
+ @param args args
+ @return success or failure
+ */
++ (BOOL)uni_delete:(NSString*)sqlAfterWhere args:(NSArray*)args;
+
+/**
+ delete models updated before date
+
+ @return success or failure
+ */
++ (BOOL)uni_deleteBeforeDate:(NSDate *)date;
+
 /**
  open a custom db file for current model class
  [User uni_open:file1 error:nil]
