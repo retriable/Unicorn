@@ -170,7 +170,9 @@ static __inline__ __attribute__((always_inline)) id uni_get_value(id target,UniP
 
 static __inline__ __attribute__((always_inline)) id uni_get_value_from_dict(NSDictionary *dict,NSArray * key){
     id value=dict;
-    for (NSString *k in key) value=value[k];
+    for (NSString *k in key) {
+        if(k.length>0) value=value[k];
+    }
     return value;
 }
 
@@ -563,7 +565,6 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
 - (void)_uni_mergeWithJsonDict:(NSDictionary *)dict cls:(UniClass *)cls {
     for (UniProperty *property in cls.jsonPropertyArr){
         id value;
-        if (property.jsonKeyPathArr.count==0) value=dict;
         else for (NSArray *keyPath in property.jsonKeyPathArr){
             value=uni_get_value_from_dict(dict, keyPath);
             if (value) break;
