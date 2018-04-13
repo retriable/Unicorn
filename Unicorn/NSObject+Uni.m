@@ -717,8 +717,17 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         else if (property.typeEncoding==UniTypeEncodingNSObject) value=[value uni_jsonDictionary];
         if (!value) continue;
         NSArray *keyPath=property.jsonKeyPathArr[0];
-        if (keyPath.count==1) dict[keyPath[0]]=value;
-        else{
+        if (keyPath.count==1) {
+            NSString *k=keyPath[0];
+            if (k.length>0) dict[k]=value;
+            else {
+                if([value isKindOfClass:NSDictionary.class]){
+                    [value enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                        dict[key]=obj;
+                    }];
+                }
+            }
+        }else{
             for (int i=0;i<[keyPath count]-1;i++){
                 id k=keyPath[i];
                 NSMutableDictionary *d=dict[k];
