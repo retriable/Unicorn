@@ -563,7 +563,8 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
 - (void)_uni_mergeWithJsonDict:(NSDictionary *)dict cls:(UniClass *)cls {
     for (UniProperty *property in cls.jsonPropertyArr){
         id value;
-        for (NSArray *keyPath in property.jsonKeyPathArr){
+        if (property.jsonKeyPathArr.count==0) value=dict;
+        else for (NSArray *keyPath in property.jsonKeyPathArr){
             value=uni_get_value_from_dict(dict, keyPath);
             if (value) break;
         }
