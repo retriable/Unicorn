@@ -8,5 +8,5 @@ Unique model cached in memory and in database(sqlite3),support json mapping.
 
 Add the following to your project's Podfile:
 ```ruby
-pod 'Unicorn', '~> 2.0.5'
+pod 'Unicorn'
 ```
