@@ -1,20 +1,19 @@
 //
-//  UnicornTests.m
-//  UnicornTests
+//  UnicornTests_iOS.m
+//  UnicornTests iOS
 //
-//  Created by emsihyo on 2018/2/1.
-//  Copyright © 2018年 emsihyo. All rights reserved.
+//  Created by emsihyo on 2018/5/8.
+//  Copyright © 2018 emsihyo. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>
 #import "Article.h"
-@import Unicorn;
 
-@interface UnicornTests : XCTestCase
+@interface UnicornTests_iOS : XCTestCase
 
 @end
 
-@implementation UnicornTests
+@implementation UnicornTests_iOS
 
 - (void)setUp {
     [super setUp];
@@ -27,7 +26,11 @@
 }
 
 - (void)testExample {
-    NSLog(@"%@",[UniClass classWithClass:Article.class]);
+    NSLog(@"****\n\n%@\n\n****",[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject]);
+    Article *article=[[Article alloc]init];
+    [article uni_update];
+    // This is an example of a functional test case.
+    // Use XCTAssert and related functions to verify your tests produce the correct results.
 }
 
 - (void)testPerformanceExample {

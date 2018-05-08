@@ -8,32 +8,57 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
-#import "UniBlockValueTransformer.h"
 #import "UniDB.h"
 
-typedef NS_ENUM(NSInteger,UniTypeEncoding) {
-    UniTypeEncodingUnknown              = 0,
-    UniTypeEncodingBool                 = 1,
-    UniTypeEncodingInt8                 = 2,
-    UniTypeEncodingUInt8                = 3,
-    UniTypeEncodingInt16                = 4,
-    UniTypeEncodingUInt16               = 5,
-    UniTypeEncodingInt32                = 6,
-    UniTypeEncodingUInt32               = 7,
-    UniTypeEncodingInt64                = 8,
-    UniTypeEncodingUInt64               = 9,
-    UniTypeEncodingFloat                = 10,
-    UniTypeEncodingDouble               = 11,
-    UniTypeEncodingLongDouble           = 12,
-    UniTypeEncodingNSString             = 13,
-    UniTypeEncodingNSMutableString      = 14,
-    UniTypeEncodingNSURL                = 15,
-    UniTypeEncodingNSNumber             = 16,
-    UniTypeEncodingNSDate               = 17,
-    UniTypeEncodingNSData               = 18,
-    UniTypeEncodingNSMutableData        = 19,
-    UniTypeEncodingNSObject             = 20
+typedef NS_ENUM(NSInteger,UniTypeEncoding){
+    UniTypeEncodingUnknown,
+    UniTypeEncodingVoid,
+    UniTypeEncodingBool,
+    UniTypeEncodingInt8,
+    UniTypeEncodingUInt8,
+    UniTypeEncodingInt16,
+    UniTypeEncodingUInt16,
+    UniTypeEncodingInt32,
+    UniTypeEncodingUInt32,
+    UniTypeEncodingInt64,
+    UniTypeEncodingUInt64,
+    UniTypeEncodingFloat,
+    UniTypeEncodingDouble,
+    UniTypeEncodingLongDouble,
+    UniTypeEncodingClass,
+    UniTypeEncodingSEL,
+    UniTypeEncodingNSRange,
+    UniTypeEncodingCATansform3D,
+    UniTypeEncodingPoint,
+    UniTypeEncodingSize,
+    UniTypeEncodingRect,
+    UniTypeEncodingEdgeInsets,
+    UniTypeEncodingCGVector,
+    UniTypeEncodingCGAffineTransform,
+    UniTypeEncodingUIOffset,
+    UniTypeEncodingNSDirectionalEdgeInsets,
+    UniTypeEncodingBlock,
+    UniTypeEncodingNSString,
+    UniTypeEncodingNSMutableString,
+    UniTypeEncodingNSURL,
+    UniTypeEncodingNSNumber,
+    UniTypeEncodingNSDate,
+    UniTypeEncodingNSData,
+    UniTypeEncodingNSMutableData,
+    UniTypeEncodingNSArray,
+    UniTypeEncodingNSMutableArray,
+    UniTypeEncodingNSSet,
+    UniTypeEncodingNSMutableSet,
+    UniTypeEncodingNSDictionary,
+    UniTypeEncodingNSMutableDictionary,
+    UniTypeEncodingPointer,
+    UniTypeEncodingStruct,
+    UniTypeEncodingUnion,
+    UniTypeEncodingCString,
+    UniTypeEncodingCArray,
+    UniTypeEncodingNSObject
 };
+
 
 typedef NS_ENUM(NSInteger,UniMethodEncoding) {
     UniMethodEncodingUnknown     = 0,
@@ -58,35 +83,33 @@ typedef NS_ENUM(NSInteger,UniPropertyEncoding) {
     UniPropertyEncodingDynamic      = 1 << 7
 };
 
-typedef NS_ENUM(NSUInteger,UniColumnType){
-    UniColumnTypeUnknown,
-    UniColumnTypeInteger,
-    UniColumnTypeReal,
-    UniColumnTypeText,
-    UniColumnTypeBlob
-};
-
 @class UniProperty;
 
 @interface UniClass : NSObject
 
-@property (readonly) Class        cls;
-@property (readonly) NSString     *name;
-@property (readonly) NSDictionary *propertyDict;
-@property (readonly) NSArray      *propertyArr;
-@property (readonly) NSArray      *jsonPropertyArr;
-@property (readonly) NSArray      *dbPropertyArr;
-@property (readonly) UniProperty  *primaryProperty;
-@property (readonly) NSString     *dbSelectSql;
-@property (readonly) NSString     *dbUpdateSql;
-@property (readonly) NSString     *dbInsertSql;
-@property (readonly) BOOL         isConformsToUniJSON;
-@property (readonly) BOOL         isConformsToUniMM;
-@property (readonly) BOOL         isConformsToUniDB;
-@property (readonly) NSMapTable   *mm;
-@property (readonly) UniDB        *db;
+@property (nonatomic, assign) BOOL         isConformingToUniDB;
+@property (nonatomic, assign) BOOL         isConformingToUniJSON;
+@property (nonatomic, assign) BOOL         isConformingToUniMM;
+@property (nonatomic, assign) Class        cls;
+@property (nonatomic, strong) NSArray      *dbPropertyArr;
+@property (nonatomic, strong) NSArray      *jsonPropertyArr;
+@property (nonatomic, strong) NSArray      *propertyArr;
+@property (nonatomic, strong) NSArray      *synchronizedClasses;
+@property (nonatomic, strong) NSDictionary *propertyDic;
+@property (nonatomic, strong) NSMapTable   *mm;
+@property (nonatomic, strong) NSString     *dbDeleteSql;
+@property (nonatomic, strong) NSString     *dbInsertSql;
+@property (nonatomic, strong) NSString     *dbSelectSql;
+@property (nonatomic, strong) NSString     *dbUpdateSql;
+@property (nonatomic, strong) NSString     *name;
+@property (nonatomic, strong) UniDB        *db;
+@property (nonatomic, strong) UniProperty  *primaryProperty;
 
 + (instancetype)classWithClass:(Class)cls;
+
+- (instancetype)initWithClass:(Class)cls;
+
+- (void)prepare;
 
 - (void)sync:(void(^)(void))block;
 
@@ -96,14 +119,17 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 
 @interface UniProperty : NSObject
 
-@property (readonly) NSString                 *name;
-@property (readonly) UniTypeEncoding          typeEncoding;
-@property (readonly) Class                    cls;
-@property (readonly) SEL                      setter;
-@property (readonly) SEL                      getter;
-@property (readonly) NSArray                  *jsonKeyPathArr;
-@property (readonly) UniColumnType            columnType;
-@property (readonly) UniBlockValueTransformer *jsonValueTransformer;
-@property (readonly) UniBlockValueTransformer *dbValueTransformer;
+@property (nonatomic,assign) Class               cls;
+@property (nonatomic,assign) SEL                 getter;
+@property (nonatomic,assign) SEL                 setter;
+@property (nonatomic,assign) UniColumnType       columnType;
+@property (nonatomic,assign) UniMethodEncoding   methodEncoding;
+@property (nonatomic,assign) UniPropertyEncoding propertyEncoding;
+@property (nonatomic,assign) UniTypeEncoding     typeEncoding;
+@property (nonatomic,strong) NSArray             *jsonKeyPathArr;
+@property (nonatomic,strong) NSString            *ivar;
+@property (nonatomic,strong) NSString            *name;
+@property (nonatomic,strong) UniTransformer      dbTransformer;
+@property (nonatomic,strong) UniTransformer      jsonTransformer;
 
 @end

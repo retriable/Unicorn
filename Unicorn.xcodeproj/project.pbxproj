@@ -7,61 +7,79 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A45FCF7206BF4A3002C2BA4 /* Article.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A45FCF6206BF4A3002C2BA4 /* Article.json */; };
-		0A45FCF8206BF4A3002C2BA4 /* Article.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A45FCF6206BF4A3002C2BA4 /* Article.json */; };
-		0A7655C32022EF1B0061FEC8 /* Unicorn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */; };
-		0A7655C82022EF1B0061FEC8 /* UnicornTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655C72022EF1B0061FEC8 /* UnicornTests.m */; };
+		0A473BF120A1BFF80052412B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BF020A1BFF80052412B /* AppDelegate.m */; };
+		0A473BF420A1BFF80052412B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BF320A1BFF80052412B /* ViewController.m */; };
+		0A473BF720A1BFF80052412B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A473BF520A1BFF80052412B /* Main.storyboard */; };
+		0A473BF920A1BFF90052412B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A473BF820A1BFF90052412B /* Assets.xcassets */; };
+		0A473BFC20A1BFF90052412B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A473BFA20A1BFF90052412B /* LaunchScreen.storyboard */; };
+		0A473BFF20A1BFF90052412B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BFE20A1BFF90052412B /* main.m */; };
+		0A473C0320A1C00C0052412B /* Unicorn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */; };
+		0A473C0420A1C00C0052412B /* Unicorn.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0A473C0820A1C0250052412B /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BE420A1BACB0052412B /* Article.m */; };
+		0A473C0920A1C0280052412B /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BE020A1BACB0052412B /* Comment.m */; };
+		0A473C0A20A1C02B0052412B /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BE220A1BACB0052412B /* User.m */; };
 		0A7655CA2022EF1B0061FEC8 /* Unicorn.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655BC2022EF1B0061FEC8 /* Unicorn.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0A7655DB2022EF5B0061FEC8 /* UniClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655D92022EF5B0061FEC8 /* UniClass.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A7655DB2022EF5B0061FEC8 /* UniClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655D92022EF5B0061FEC8 /* UniClass.h */; };
 		0A7655DC2022EF5B0061FEC8 /* UniClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655DA2022EF5B0061FEC8 /* UniClass.m */; };
-		0A7655DE2022F5E70061FEC8 /* UniProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655DD2022F5E70061FEC8 /* UniProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0A7655E1202307D00061FEC8 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655E0202307D00061FEC8 /* Article.m */; };
-		0A7655E7202307EC0061FEC8 /* Author.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655E6202307EC0061FEC8 /* Author.m */; };
-		0A7655EA202307FB0061FEC8 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655E9202307FB0061FEC8 /* User.m */; };
-		0A8334332043AAA100796062 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8334322043AAA100796062 /* AppDelegate.m */; };
-		0A8334362043AAA100796062 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8334352043AAA100796062 /* ViewController.m */; };
-		0A8334392043AAA100796062 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A8334372043AAA100796062 /* Main.storyboard */; };
-		0A83343B2043AAA100796062 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A83343A2043AAA100796062 /* Assets.xcassets */; };
-		0A83343E2043AAA100796062 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A83343C2043AAA100796062 /* LaunchScreen.storyboard */; };
-		0A8334412043AAA100796062 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8334402043AAA100796062 /* main.m */; };
-		0A8334472043AAD800796062 /* Unicorn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */; };
-		0A8334482043AAD800796062 /* Unicorn.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		0A83344C2043AAFF00796062 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655E0202307D00061FEC8 /* Article.m */; };
-		0A83344D2043AAFF00796062 /* Author.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655E6202307EC0061FEC8 /* Author.m */; };
-		0A83344E2043AAFF00796062 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655E9202307FB0061FEC8 /* User.m */; };
 		0A8CECA72040F3820007FAA8 /* NSObject+Uni.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A8CECA52040F3820007FAA8 /* NSObject+Uni.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A8CECA82040F3820007FAA8 /* NSObject+Uni.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */; };
-		0AF93E2E207265390091F806 /* UniBlockValueTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AF93E2C207265390091F806 /* UniBlockValueTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0AF93E2F207265390091F806 /* UniBlockValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF93E2D207265390091F806 /* UniBlockValueTransformer.m */; };
-		0AFC97AD2023F35400D6506E /* UniDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFC97AB2023F35400D6506E /* UniDB.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AD7F2AD20A0356F00592635 /* NSObject+Uni.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A8CECA52040F3820007FAA8 /* NSObject+Uni.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AD7F2AE20A0357000592635 /* NSObject+Uni.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A8CECA52040F3820007FAA8 /* NSObject+Uni.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AD7F2AF20A0357000592635 /* NSObject+Uni.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A8CECA52040F3820007FAA8 /* NSObject+Uni.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AD7F2B020A0357E00592635 /* UniClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655D92022EF5B0061FEC8 /* UniClass.h */; };
+		0AD7F2B120A0357E00592635 /* UniClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655D92022EF5B0061FEC8 /* UniClass.h */; };
+		0AD7F2B220A0357F00592635 /* UniClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655D92022EF5B0061FEC8 /* UniClass.h */; };
+		0AD7F2B320A0358300592635 /* UniClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655DA2022EF5B0061FEC8 /* UniClass.m */; };
+		0AD7F2B420A0358400592635 /* UniClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655DA2022EF5B0061FEC8 /* UniClass.m */; };
+		0AD7F2B520A0358400592635 /* UniClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655DA2022EF5B0061FEC8 /* UniClass.m */; };
+		0AD7F2B620A0358700592635 /* UniCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AD7F284209FF7B200592635 /* UniCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AD7F2B720A0358700592635 /* UniCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AD7F284209FF7B200592635 /* UniCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AD7F2B820A0358800592635 /* UniCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AD7F284209FF7B200592635 /* UniCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AD7F2B920A0358800592635 /* UniCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AD7F284209FF7B200592635 /* UniCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AD7F2BA20A0358E00592635 /* Unicorn.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655BC2022EF1B0061FEC8 /* Unicorn.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AD7F2BB20A0358F00592635 /* Unicorn.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655BC2022EF1B0061FEC8 /* Unicorn.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AD7F2BC20A0358F00592635 /* Unicorn.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655BC2022EF1B0061FEC8 /* Unicorn.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0AD7F2BD20A0359600592635 /* UniDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFC97AB2023F35400D6506E /* UniDB.h */; };
+		0AD7F2BE20A0359600592635 /* UniDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFC97AB2023F35400D6506E /* UniDB.h */; };
+		0AD7F2BF20A0359700592635 /* UniDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFC97AB2023F35400D6506E /* UniDB.h */; };
+		0AD7F2C020A0359C00592635 /* UniDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC97AC2023F35400D6506E /* UniDB.m */; };
+		0AD7F2C120A0359C00592635 /* UniDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC97AC2023F35400D6506E /* UniDB.m */; };
+		0AD7F2C220A0359D00592635 /* UniDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC97AC2023F35400D6506E /* UniDB.m */; };
+		0AD7F2C320A035AA00592635 /* NSObject+Uni.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */; };
+		0AD7F2C420A035AB00592635 /* NSObject+Uni.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */; };
+		0AD7F2C520A035AB00592635 /* NSObject+Uni.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */; };
+		0AD7F2EB20A1353B00592635 /* UnicornTests_macOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD7F2EA20A1353B00592635 /* UnicornTests_macOS.m */; };
+		0AD7F2FA20A1482900592635 /* UnicornTests_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD7F2F920A1482900592635 /* UnicornTests_iOS.m */; };
+		0AD7F2FC20A1482900592635 /* Unicorn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */; };
+		0AFC97AD2023F35400D6506E /* UniDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFC97AB2023F35400D6506E /* UniDB.h */; };
 		0AFC97AE2023F35400D6506E /* UniDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC97AC2023F35400D6506E /* UniDB.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		0A7655C42022EF1B0061FEC8 /* PBXContainerItemProxy */ = {
+		0A473C0520A1C00C0052412B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A7655B02022EF1B0061FEC8 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0A7655B82022EF1B0061FEC8;
-			remoteInfo = Unicorn;
+			remoteInfo = "Unicorn iOS";
 		};
-		0A8334492043AAD800796062 /* PBXContainerItemProxy */ = {
+		0AD7F2FD20A1482900592635 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A7655B02022EF1B0061FEC8 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0A7655B82022EF1B0061FEC8;
-			remoteInfo = Unicorn;
+			remoteInfo = "Unicorn iOS";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		0A83344B2043AAD800796062 /* Embed Frameworks */ = {
+		0A473C0720A1C00C0052412B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0A8334482043AAD800796062 /* Unicorn.framework in Embed Frameworks */,
+				0A473C0420A1C00C0052412B /* Unicorn.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -69,44 +87,52 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0A45FCF6206BF4A3002C2BA4 /* Article.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Article.json; sourceTree = "<group>"; };
+		0A473BE020A1BACB0052412B /* Comment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
+		0A473BE120A1BACB0052412B /* Comment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
+		0A473BE220A1BACB0052412B /* User.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		0A473BE320A1BACB0052412B /* Article.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
+		0A473BE420A1BACB0052412B /* Article.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
+		0A473BE520A1BACB0052412B /* User.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		0A473BED20A1BFF80052412B /* Unicorn Example iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Unicorn Example iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A473BEF20A1BFF80052412B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		0A473BF020A1BFF80052412B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		0A473BF220A1BFF80052412B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		0A473BF320A1BFF80052412B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		0A473BF620A1BFF80052412B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		0A473BF820A1BFF90052412B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0A473BFB20A1BFF90052412B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0A473BFD20A1BFF90052412B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0A473BFE20A1BFF90052412B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0A7655B92022EF1B0061FEC8 /* Unicorn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Unicorn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A7655BC2022EF1B0061FEC8 /* Unicorn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Unicorn.h; sourceTree = "<group>"; };
 		0A7655BD2022EF1B0061FEC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0A7655C22022EF1B0061FEC8 /* UnicornTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnicornTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0A7655C72022EF1B0061FEC8 /* UnicornTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnicornTests.m; sourceTree = "<group>"; };
-		0A7655C92022EF1B0061FEC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A7655D92022EF5B0061FEC8 /* UniClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UniClass.h; sourceTree = "<group>"; };
 		0A7655DA2022EF5B0061FEC8 /* UniClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniClass.m; sourceTree = "<group>"; };
-		0A7655DD2022F5E70061FEC8 /* UniProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UniProtocol.h; sourceTree = "<group>"; };
-		0A7655DF202307D00061FEC8 /* Article.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Article.h; sourceTree = "<group>"; };
-		0A7655E0202307D00061FEC8 /* Article.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Article.m; sourceTree = "<group>"; };
-		0A7655E5202307EC0061FEC8 /* Author.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Author.h; sourceTree = "<group>"; };
-		0A7655E6202307EC0061FEC8 /* Author.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Author.m; sourceTree = "<group>"; };
-		0A7655E8202307FB0061FEC8 /* User.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
-		0A7655E9202307FB0061FEC8 /* User.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
-		0A83342F2043AAA100796062 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0A8334312043AAA100796062 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		0A8334322043AAA100796062 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		0A8334342043AAA100796062 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		0A8334352043AAA100796062 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		0A8334382043AAA100796062 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		0A83343A2043AAA100796062 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		0A83343D2043AAA100796062 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		0A83343F2043AAA100796062 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0A8334402043AAA100796062 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0A8CECA52040F3820007FAA8 /* NSObject+Uni.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+Uni.h"; sourceTree = "<group>"; };
 		0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Uni.m"; sourceTree = "<group>"; };
-		0ABCBDBC206C910100B4CC20 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
-		0ABCBDBD206C910100B4CC20 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		0AF93E2C207265390091F806 /* UniBlockValueTransformer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UniBlockValueTransformer.h; sourceTree = "<group>"; };
-		0AF93E2D207265390091F806 /* UniBlockValueTransformer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniBlockValueTransformer.m; sourceTree = "<group>"; };
-		0AF93E30207290E10091F806 /* Unicorn.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Unicorn.podspec; sourceTree = SOURCE_ROOT; };
+		0AD7F284209FF7B200592635 /* UniCompat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UniCompat.h; sourceTree = "<group>"; };
+		0AD7F28A20A034A000592635 /* Unicorn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Unicorn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AD7F29820A034D100592635 /* Unicorn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Unicorn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AD7F2A520A034DD00592635 /* Unicorn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Unicorn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AD7F2E820A1353A00592635 /* UnicornTests macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UnicornTests macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AD7F2EA20A1353B00592635 /* UnicornTests_macOS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnicornTests_macOS.m; sourceTree = "<group>"; };
+		0AD7F2EC20A1353B00592635 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0AD7F2F720A1482900592635 /* UnicornTests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "UnicornTests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AD7F2F920A1482900592635 /* UnicornTests_iOS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnicornTests_iOS.m; sourceTree = "<group>"; };
+		0AD7F2FB20A1482900592635 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AFC97AB2023F35400D6506E /* UniDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UniDB.h; sourceTree = "<group>"; };
 		0AFC97AC2023F35400D6506E /* UniDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UniDB.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0A473BEA20A1BFF80052412B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A473C0320A1C00C0052412B /* Unicorn.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0A7655B52022EF1B0061FEC8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -114,31 +140,82 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0A7655BF2022EF1B0061FEC8 /* Frameworks */ = {
+		0AD7F28620A034A000592635 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A7655C32022EF1B0061FEC8 /* Unicorn.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0A83342C2043AAA100796062 /* Frameworks */ = {
+		0AD7F29420A034D100592635 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A8334472043AAD800796062 /* Unicorn.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F2A120A034DD00592635 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F2E520A1353A00592635 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F2F420A1482900592635 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AD7F2FC20A1482900592635 /* Unicorn.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A473BDF20A1BA790052412B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0A473BE320A1BACB0052412B /* Article.h */,
+				0A473BE420A1BACB0052412B /* Article.m */,
+				0A473BE120A1BACB0052412B /* Comment.h */,
+				0A473BE020A1BACB0052412B /* Comment.m */,
+				0A473BE520A1BACB0052412B /* User.h */,
+				0A473BE220A1BACB0052412B /* User.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0A473BEE20A1BFF80052412B /* Unicorn Example iOS */ = {
+			isa = PBXGroup;
+			children = (
+				0A473BEF20A1BFF80052412B /* AppDelegate.h */,
+				0A473BF020A1BFF80052412B /* AppDelegate.m */,
+				0A473BF220A1BFF80052412B /* ViewController.h */,
+				0A473BF320A1BFF80052412B /* ViewController.m */,
+				0A473BF520A1BFF80052412B /* Main.storyboard */,
+				0A473BF820A1BFF90052412B /* Assets.xcassets */,
+				0A473BFA20A1BFF90052412B /* LaunchScreen.storyboard */,
+				0A473BFD20A1BFF90052412B /* Info.plist */,
+				0A473BFE20A1BFF90052412B /* main.m */,
+			);
+			path = "Unicorn Example iOS";
+			sourceTree = "<group>";
+		};
 		0A7655AF2022EF1B0061FEC8 = {
 			isa = PBXGroup;
 			children = (
+				0A473BDF20A1BA790052412B /* Models */,
 				0A7655BB2022EF1B0061FEC8 /* Unicorn */,
-				0A7655C62022EF1B0061FEC8 /* UnicornTests */,
-				0A8334302043AAA100796062 /* Example */,
+				0AD7F2E920A1353B00592635 /* UnicornTests macOS */,
+				0AD7F2F820A1482900592635 /* UnicornTests iOS */,
+				0A473BEE20A1BFF80052412B /* Unicorn Example iOS */,
 				0A7655BA2022EF1B0061FEC8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -147,8 +224,12 @@
 			isa = PBXGroup;
 			children = (
 				0A7655B92022EF1B0061FEC8 /* Unicorn.framework */,
-				0A7655C22022EF1B0061FEC8 /* UnicornTests.xctest */,
-				0A83342F2043AAA100796062 /* Example.app */,
+				0AD7F28A20A034A000592635 /* Unicorn.framework */,
+				0AD7F29820A034D100592635 /* Unicorn.framework */,
+				0AD7F2A520A034DD00592635 /* Unicorn.framework */,
+				0AD7F2E820A1353A00592635 /* UnicornTests macOS.xctest */,
+				0AD7F2F720A1482900592635 /* UnicornTests iOS.xctest */,
+				0A473BED20A1BFF80052412B /* Unicorn Example iOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -156,54 +237,35 @@
 		0A7655BB2022EF1B0061FEC8 /* Unicorn */ = {
 			isa = PBXGroup;
 			children = (
+				0AD7F284209FF7B200592635 /* UniCompat.h */,
 				0A7655BD2022EF1B0061FEC8 /* Info.plist */,
 				0A8CECA52040F3820007FAA8 /* NSObject+Uni.h */,
 				0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */,
-				0AF93E2C207265390091F806 /* UniBlockValueTransformer.h */,
-				0AF93E2D207265390091F806 /* UniBlockValueTransformer.m */,
 				0A7655D92022EF5B0061FEC8 /* UniClass.h */,
 				0A7655DA2022EF5B0061FEC8 /* UniClass.m */,
 				0A7655BC2022EF1B0061FEC8 /* Unicorn.h */,
 				0AFC97AB2023F35400D6506E /* UniDB.h */,
 				0AFC97AC2023F35400D6506E /* UniDB.m */,
-				0A7655DD2022F5E70061FEC8 /* UniProtocol.h */,
 			);
 			path = Unicorn;
 			sourceTree = "<group>";
 		};
-		0A7655C62022EF1B0061FEC8 /* UnicornTests */ = {
+		0AD7F2E920A1353B00592635 /* UnicornTests macOS */ = {
 			isa = PBXGroup;
 			children = (
-				0A7655DF202307D00061FEC8 /* Article.h */,
-				0A7655E0202307D00061FEC8 /* Article.m */,
-				0A7655E5202307EC0061FEC8 /* Author.h */,
-				0A7655E6202307EC0061FEC8 /* Author.m */,
-				0A45FCF6206BF4A3002C2BA4 /* Article.json */,
-				0A7655C92022EF1B0061FEC8 /* Info.plist */,
-				0A7655C72022EF1B0061FEC8 /* UnicornTests.m */,
-				0A7655E8202307FB0061FEC8 /* User.h */,
-				0A7655E9202307FB0061FEC8 /* User.m */,
+				0AD7F2EA20A1353B00592635 /* UnicornTests_macOS.m */,
+				0AD7F2EC20A1353B00592635 /* Info.plist */,
 			);
-			path = UnicornTests;
+			path = "UnicornTests macOS";
 			sourceTree = "<group>";
 		};
-		0A8334302043AAA100796062 /* Example */ = {
+		0AD7F2F820A1482900592635 /* UnicornTests iOS */ = {
 			isa = PBXGroup;
 			children = (
-				0AF93E30207290E10091F806 /* Unicorn.podspec */,
-				0ABCBDBC206C910100B4CC20 /* LICENSE */,
-				0ABCBDBD206C910100B4CC20 /* README.md */,
-				0A8334312043AAA100796062 /* AppDelegate.h */,
-				0A8334322043AAA100796062 /* AppDelegate.m */,
-				0A8334342043AAA100796062 /* ViewController.h */,
-				0A8334352043AAA100796062 /* ViewController.m */,
-				0A8334372043AAA100796062 /* Main.storyboard */,
-				0A83343A2043AAA100796062 /* Assets.xcassets */,
-				0A83343C2043AAA100796062 /* LaunchScreen.storyboard */,
-				0A83343F2043AAA100796062 /* Info.plist */,
-				0A8334402043AAA100796062 /* main.m */,
+				0AD7F2F920A1482900592635 /* UnicornTests_iOS.m */,
+				0AD7F2FB20A1482900592635 /* Info.plist */,
 			);
-			path = Example;
+			path = "UnicornTests iOS";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,19 +277,73 @@
 			files = (
 				0A7655CA2022EF1B0061FEC8 /* Unicorn.h in Headers */,
 				0A8CECA72040F3820007FAA8 /* NSObject+Uni.h in Headers */,
-				0A7655DE2022F5E70061FEC8 /* UniProtocol.h in Headers */,
 				0AFC97AD2023F35400D6506E /* UniDB.h in Headers */,
+				0AD7F2B620A0358700592635 /* UniCompat.h in Headers */,
 				0A7655DB2022EF5B0061FEC8 /* UniClass.h in Headers */,
-				0AF93E2E207265390091F806 /* UniBlockValueTransformer.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F28720A034A000592635 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AD7F2B020A0357E00592635 /* UniClass.h in Headers */,
+				0AD7F2BD20A0359600592635 /* UniDB.h in Headers */,
+				0AD7F2BA20A0358E00592635 /* Unicorn.h in Headers */,
+				0AD7F2B720A0358700592635 /* UniCompat.h in Headers */,
+				0AD7F2AE20A0357000592635 /* NSObject+Uni.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F29520A034D100592635 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AD7F2B120A0357E00592635 /* UniClass.h in Headers */,
+				0AD7F2BE20A0359600592635 /* UniDB.h in Headers */,
+				0AD7F2BB20A0358F00592635 /* Unicorn.h in Headers */,
+				0AD7F2B820A0358800592635 /* UniCompat.h in Headers */,
+				0AD7F2AD20A0356F00592635 /* NSObject+Uni.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F2A220A034DD00592635 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AD7F2B220A0357F00592635 /* UniClass.h in Headers */,
+				0AD7F2BF20A0359700592635 /* UniDB.h in Headers */,
+				0AD7F2BC20A0358F00592635 /* Unicorn.h in Headers */,
+				0AD7F2B920A0358800592635 /* UniCompat.h in Headers */,
+				0AD7F2AF20A0357000592635 /* NSObject+Uni.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		0A7655B82022EF1B0061FEC8 /* Unicorn */ = {
+		0A473BEC20A1BFF80052412B /* Unicorn Example iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0A7655CD2022EF1B0061FEC8 /* Build configuration list for PBXNativeTarget "Unicorn" */;
+			buildConfigurationList = 0A473C0020A1BFF90052412B /* Build configuration list for PBXNativeTarget "Unicorn Example iOS" */;
+			buildPhases = (
+				0A473BE920A1BFF80052412B /* Sources */,
+				0A473BEA20A1BFF80052412B /* Frameworks */,
+				0A473BEB20A1BFF80052412B /* Resources */,
+				0A473C0720A1C00C0052412B /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0A473C0620A1C00C0052412B /* PBXTargetDependency */,
+			);
+			name = "Unicorn Example iOS";
+			productName = "Unicorn Example iOS";
+			productReference = 0A473BED20A1BFF80052412B /* Unicorn Example iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		0A7655B82022EF1B0061FEC8 /* Unicorn iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A7655CD2022EF1B0061FEC8 /* Build configuration list for PBXNativeTarget "Unicorn iOS" */;
 			buildPhases = (
 				0A7655B42022EF1B0061FEC8 /* Sources */,
 				0A7655B52022EF1B0061FEC8 /* Frameworks */,
@@ -238,47 +354,99 @@
 			);
 			dependencies = (
 			);
-			name = Unicorn;
+			name = "Unicorn iOS";
 			productName = Unicorn;
 			productReference = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		0A7655C12022EF1B0061FEC8 /* UnicornTests */ = {
+		0AD7F28920A034A000592635 /* Unicorn watchOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0A7655D02022EF1B0061FEC8 /* Build configuration list for PBXNativeTarget "UnicornTests" */;
+			buildConfigurationList = 0AD7F28F20A034A000592635 /* Build configuration list for PBXNativeTarget "Unicorn watchOS" */;
 			buildPhases = (
-				0A7655BE2022EF1B0061FEC8 /* Sources */,
-				0A7655BF2022EF1B0061FEC8 /* Frameworks */,
-				0A7655C02022EF1B0061FEC8 /* Resources */,
+				0AD7F28520A034A000592635 /* Sources */,
+				0AD7F28620A034A000592635 /* Frameworks */,
+				0AD7F28720A034A000592635 /* Headers */,
+				0AD7F28820A034A000592635 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				0A7655C52022EF1B0061FEC8 /* PBXTargetDependency */,
 			);
-			name = UnicornTests;
-			productName = UnicornTests;
-			productReference = 0A7655C22022EF1B0061FEC8 /* UnicornTests.xctest */;
+			name = "Unicorn watchOS";
+			productName = "Unicorn watchOS";
+			productReference = 0AD7F28A20A034A000592635 /* Unicorn.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0AD7F29720A034D100592635 /* Unicorn tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0AD7F29D20A034D100592635 /* Build configuration list for PBXNativeTarget "Unicorn tvOS" */;
+			buildPhases = (
+				0AD7F29320A034D100592635 /* Sources */,
+				0AD7F29420A034D100592635 /* Frameworks */,
+				0AD7F29520A034D100592635 /* Headers */,
+				0AD7F29620A034D100592635 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Unicorn tvOS";
+			productName = "Unicorn tvOS";
+			productReference = 0AD7F29820A034D100592635 /* Unicorn.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0AD7F2A420A034DD00592635 /* Unicorn macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0AD7F2AA20A034DD00592635 /* Build configuration list for PBXNativeTarget "Unicorn macOS" */;
+			buildPhases = (
+				0AD7F2A020A034DD00592635 /* Sources */,
+				0AD7F2A120A034DD00592635 /* Frameworks */,
+				0AD7F2A220A034DD00592635 /* Headers */,
+				0AD7F2A320A034DD00592635 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Unicorn macOS";
+			productName = "Unicorn macOS";
+			productReference = 0AD7F2A520A034DD00592635 /* Unicorn.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0AD7F2E720A1353A00592635 /* UnicornTests macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0AD7F2F020A1353B00592635 /* Build configuration list for PBXNativeTarget "UnicornTests macOS" */;
+			buildPhases = (
+				0AD7F2E420A1353A00592635 /* Sources */,
+				0AD7F2E520A1353A00592635 /* Frameworks */,
+				0AD7F2E620A1353A00592635 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "UnicornTests macOS";
+			productName = "UnicornTests macOS";
+			productReference = 0AD7F2E820A1353A00592635 /* UnicornTests macOS.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		0A83342E2043AAA100796062 /* Example */ = {
+		0AD7F2F620A1482900592635 /* UnicornTests iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0A8334442043AAA100796062 /* Build configuration list for PBXNativeTarget "Example" */;
+			buildConfigurationList = 0AD7F2FF20A1482900592635 /* Build configuration list for PBXNativeTarget "UnicornTests iOS" */;
 			buildPhases = (
-				0A83342B2043AAA100796062 /* Sources */,
-				0A83342C2043AAA100796062 /* Frameworks */,
-				0A83342D2043AAA100796062 /* Resources */,
-				0A83344B2043AAD800796062 /* Embed Frameworks */,
+				0AD7F2F320A1482900592635 /* Sources */,
+				0AD7F2F420A1482900592635 /* Frameworks */,
+				0AD7F2F520A1482900592635 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				0A83344A2043AAD800796062 /* PBXTargetDependency */,
+				0AD7F2FE20A1482900592635 /* PBXTargetDependency */,
 			);
-			name = Example;
-			productName = Example;
-			productReference = 0A83342F2043AAA100796062 /* Example.app */;
-			productType = "com.apple.product-type.application";
+			name = "UnicornTests iOS";
+			productName = "UnicornTests iOS";
+			productReference = 0AD7F2F720A1482900592635 /* UnicornTests iOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -289,17 +457,33 @@
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = emsihyo;
 				TargetAttributes = {
+					0A473BEC20A1BFF80052412B = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Manual;
+					};
 					0A7655B82022EF1B0061FEC8 = {
 						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Manual;
+					};
+					0AD7F28920A034A000592635 = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Manual;
+					};
+					0AD7F29720A034D100592635 = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Manual;
+					};
+					0AD7F2A420A034DD00592635 = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Manual;
+					};
+					0AD7F2E720A1353A00592635 = {
+						CreatedOnToolsVersion = 9.3;
 						ProvisioningStyle = Automatic;
 					};
-					0A7655C12022EF1B0061FEC8 = {
-						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Automatic;
-					};
-					0A83342E2043AAA100796062 = {
-						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Automatic;
+					0AD7F2F620A1482900592635 = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -316,14 +500,28 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0A7655B82022EF1B0061FEC8 /* Unicorn */,
-				0A7655C12022EF1B0061FEC8 /* UnicornTests */,
-				0A83342E2043AAA100796062 /* Example */,
+				0A7655B82022EF1B0061FEC8 /* Unicorn iOS */,
+				0AD7F28920A034A000592635 /* Unicorn watchOS */,
+				0AD7F29720A034D100592635 /* Unicorn tvOS */,
+				0AD7F2A420A034DD00592635 /* Unicorn macOS */,
+				0AD7F2E720A1353A00592635 /* UnicornTests macOS */,
+				0AD7F2F620A1482900592635 /* UnicornTests iOS */,
+				0A473BEC20A1BFF80052412B /* Unicorn Example iOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0A473BEB20A1BFF80052412B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A473BFC20A1BFF90052412B /* LaunchScreen.storyboard in Resources */,
+				0A473BF920A1BFF90052412B /* Assets.xcassets in Resources */,
+				0A473BF720A1BFF80052412B /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0A7655B72022EF1B0061FEC8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -331,91 +529,141 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0A7655C02022EF1B0061FEC8 /* Resources */ = {
+		0AD7F28820A034A000592635 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A45FCF7206BF4A3002C2BA4 /* Article.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0A83342D2043AAA100796062 /* Resources */ = {
+		0AD7F29620A034D100592635 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A45FCF8206BF4A3002C2BA4 /* Article.json in Resources */,
-				0A83343E2043AAA100796062 /* LaunchScreen.storyboard in Resources */,
-				0A83343B2043AAA100796062 /* Assets.xcassets in Resources */,
-				0A8334392043AAA100796062 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F2A320A034DD00592635 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F2E620A1353A00592635 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F2F520A1482900592635 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0A473BE920A1BFF80052412B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A473C0820A1C0250052412B /* Article.m in Sources */,
+				0A473BF420A1BFF80052412B /* ViewController.m in Sources */,
+				0A473C0A20A1C02B0052412B /* User.m in Sources */,
+				0A473BFF20A1BFF90052412B /* main.m in Sources */,
+				0A473C0920A1C0280052412B /* Comment.m in Sources */,
+				0A473BF120A1BFF80052412B /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0A7655B42022EF1B0061FEC8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AF93E2F207265390091F806 /* UniBlockValueTransformer.m in Sources */,
 				0AFC97AE2023F35400D6506E /* UniDB.m in Sources */,
 				0A7655DC2022EF5B0061FEC8 /* UniClass.m in Sources */,
 				0A8CECA82040F3820007FAA8 /* NSObject+Uni.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0A7655BE2022EF1B0061FEC8 /* Sources */ = {
+		0AD7F28520A034A000592635 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A7655EA202307FB0061FEC8 /* User.m in Sources */,
-				0A7655E1202307D00061FEC8 /* Article.m in Sources */,
-				0A7655C82022EF1B0061FEC8 /* UnicornTests.m in Sources */,
-				0A7655E7202307EC0061FEC8 /* Author.m in Sources */,
+				0AD7F2C020A0359C00592635 /* UniDB.m in Sources */,
+				0AD7F2B320A0358300592635 /* UniClass.m in Sources */,
+				0AD7F2C320A035AA00592635 /* NSObject+Uni.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0A83342B2043AAA100796062 /* Sources */ = {
+		0AD7F29320A034D100592635 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A83344C2043AAFF00796062 /* Article.m in Sources */,
-				0A8334362043AAA100796062 /* ViewController.m in Sources */,
-				0A83344E2043AAFF00796062 /* User.m in Sources */,
-				0A8334412043AAA100796062 /* main.m in Sources */,
-				0A8334332043AAA100796062 /* AppDelegate.m in Sources */,
-				0A83344D2043AAFF00796062 /* Author.m in Sources */,
+				0AD7F2C120A0359C00592635 /* UniDB.m in Sources */,
+				0AD7F2B420A0358400592635 /* UniClass.m in Sources */,
+				0AD7F2C420A035AB00592635 /* NSObject+Uni.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F2A020A034DD00592635 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AD7F2C220A0359D00592635 /* UniDB.m in Sources */,
+				0AD7F2B520A0358400592635 /* UniClass.m in Sources */,
+				0AD7F2C520A035AB00592635 /* NSObject+Uni.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F2E420A1353A00592635 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AD7F2EB20A1353B00592635 /* UnicornTests_macOS.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AD7F2F320A1482900592635 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AD7F2FA20A1482900592635 /* UnicornTests_iOS.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		0A7655C52022EF1B0061FEC8 /* PBXTargetDependency */ = {
+		0A473C0620A1C00C0052412B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0A7655B82022EF1B0061FEC8 /* Unicorn */;
-			targetProxy = 0A7655C42022EF1B0061FEC8 /* PBXContainerItemProxy */;
+			target = 0A7655B82022EF1B0061FEC8 /* Unicorn iOS */;
+			targetProxy = 0A473C0520A1C00C0052412B /* PBXContainerItemProxy */;
 		};
-		0A83344A2043AAD800796062 /* PBXTargetDependency */ = {
+		0AD7F2FE20A1482900592635 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0A7655B82022EF1B0061FEC8 /* Unicorn */;
-			targetProxy = 0A8334492043AAD800796062 /* PBXContainerItemProxy */;
+			target = 0A7655B82022EF1B0061FEC8 /* Unicorn iOS */;
+			targetProxy = 0AD7F2FD20A1482900592635 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		0A8334372043AAA100796062 /* Main.storyboard */ = {
+		0A473BF520A1BFF80052412B /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0A8334382043AAA100796062 /* Base */,
+				0A473BF620A1BFF80052412B /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		0A83343C2043AAA100796062 /* LaunchScreen.storyboard */ = {
+		0A473BFA20A1BFF90052412B /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0A83343D2043AAA100796062 /* Base */,
+				0A473BFB20A1BFF90052412B /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -423,6 +671,38 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0A473C0120A1BFF90052412B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "Unicorn Example iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.Unicorn-Example-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0A473C0220A1BFF90052412B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "Unicorn Example iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.Unicorn-Example-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		0A7655CB2022EF1B0061FEC8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -541,9 +821,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = PTW53PSWR7;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -552,7 +832,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.Unicorn;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = Unicorn;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -562,9 +843,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = PTW53PSWR7;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -573,66 +854,223 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.Unicorn;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = Unicorn;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
-		0A7655D12022EF1B0061FEC8 /* Debug */ = {
+		0AD7F29020A034A000592635 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PTW53PSWR7;
-				INFOPLIST_FILE = UnicornTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Unicorn/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.UnicornTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.Unicorn;
+				PRODUCT_NAME = Unicorn;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
-		0A7655D22022EF1B0061FEC8 /* Release */ = {
+		0AD7F29120A034A000592635 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PTW53PSWR7;
-				INFOPLIST_FILE = UnicornTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Unicorn/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.UnicornTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.Unicorn;
+				PRODUCT_NAME = Unicorn;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
-		0A8334422043AAA100796062 /* Debug */ = {
+		0AD7F29E20A034D100592635 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Unicorn/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.Unicorn;
+				PRODUCT_NAME = Unicorn;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		0AD7F29F20A034D100592635 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Unicorn/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.Unicorn;
+				PRODUCT_NAME = Unicorn;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Release;
+		};
+		0AD7F2AB20A034DD00592635 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "$(SRCROOT)/Unicorn/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.Unicorn;
+				PRODUCT_NAME = Unicorn;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		0AD7F2AC20A034DD00592635 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "$(SRCROOT)/Unicorn/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.Unicorn;
+				PRODUCT_NAME = Unicorn;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		0AD7F2F120A1353B00592635 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PTW53PSWR7;
-				INFOPLIST_FILE = Example/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.Example;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = N4WZ33Z6KM;
+				INFOPLIST_FILE = "UnicornTests macOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.UnicornTests-macOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0AD7F2F220A1353B00592635 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = N4WZ33Z6KM;
+				INFOPLIST_FILE = "UnicornTests macOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.UnicornTests-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		0AD7F30020A1482900592635 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "UnicornTests iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.UnicornTests-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		0A8334432043AAA100796062 /* Release */ = {
+		0AD7F30120A1482900592635 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PTW53PSWR7;
-				INFOPLIST_FILE = Example/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.emsihyo.Example;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "UnicornTests iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.UnicornTests-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -640,6 +1078,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0A473C0020A1BFF90052412B /* Build configuration list for PBXNativeTarget "Unicorn Example iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A473C0120A1BFF90052412B /* Debug */,
+				0A473C0220A1BFF90052412B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		0A7655B32022EF1B0061FEC8 /* Build configuration list for PBXProject "Unicorn" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -649,7 +1096,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0A7655CD2022EF1B0061FEC8 /* Build configuration list for PBXNativeTarget "Unicorn" */ = {
+		0A7655CD2022EF1B0061FEC8 /* Build configuration list for PBXNativeTarget "Unicorn iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A7655CE2022EF1B0061FEC8 /* Debug */,
@@ -658,20 +1105,47 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0A7655D02022EF1B0061FEC8 /* Build configuration list for PBXNativeTarget "UnicornTests" */ = {
+		0AD7F28F20A034A000592635 /* Build configuration list for PBXNativeTarget "Unicorn watchOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0A7655D12022EF1B0061FEC8 /* Debug */,
-				0A7655D22022EF1B0061FEC8 /* Release */,
+				0AD7F29020A034A000592635 /* Debug */,
+				0AD7F29120A034A000592635 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0A8334442043AAA100796062 /* Build configuration list for PBXNativeTarget "Example" */ = {
+		0AD7F29D20A034D100592635 /* Build configuration list for PBXNativeTarget "Unicorn tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0A8334422043AAA100796062 /* Debug */,
-				0A8334432043AAA100796062 /* Release */,
+				0AD7F29E20A034D100592635 /* Debug */,
+				0AD7F29F20A034D100592635 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0AD7F2AA20A034DD00592635 /* Build configuration list for PBXNativeTarget "Unicorn macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0AD7F2AB20A034DD00592635 /* Debug */,
+				0AD7F2AC20A034DD00592635 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0AD7F2F020A1353B00592635 /* Build configuration list for PBXNativeTarget "UnicornTests macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0AD7F2F120A1353B00592635 /* Debug */,
+				0AD7F2F220A1353B00592635 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0AD7F2FF20A1482900592635 /* Build configuration list for PBXNativeTarget "UnicornTests iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0AD7F30020A1482900592635 /* Debug */,
+				0AD7F30120A1482900592635 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

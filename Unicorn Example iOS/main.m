@@ -1,9 +1,9 @@
 //
 //  main.m
-//  Example
+//  Unicorn Example iOS
 //
-//  Created by emsihyo on 2018/2/26.
-//  Copyright © 2018年 emsihyo. All rights reserved.
+//  Created by emsihyo on 2018/5/8.
+//  Copyright © 2018 emsihyo. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

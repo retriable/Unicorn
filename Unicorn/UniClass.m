@@ -9,9 +9,91 @@
 #import <objc/message.h>
 #import <sqlite3.h>
 
+#import "UniCompat.h"
+#import "NSObject+Uni.h"
 #import "UniClass.h"
-#import "UniProtocol.h"
-
+static UniColumnType columnTypeOfProperty(Class cls,UniProperty* property){
+    switch (property.typeEncoding) {
+        case UniTypeEncodingBool:
+        case UniTypeEncodingInt8:
+        case UniTypeEncodingUInt8:
+        case UniTypeEncodingInt16:
+        case UniTypeEncodingUInt16:
+        case UniTypeEncodingInt32:
+        case UniTypeEncodingUInt32:
+        case UniTypeEncodingInt64:
+        case UniTypeEncodingUInt64:
+            if([cls respondsToSelector:@selector(uni_columnType:)]){
+                NSCAssert(![cls uni_columnType:property.name], @"property can be process automatically,you should not implement uni_columnType: for property: %@",property.name);
+            }
+            if([cls respondsToSelector:@selector(uni_dbTransformer:)]){
+                NSCAssert(![cls uni_dbTransformer:property.name], @"property can be process automatically,you should not implement uni_dbTransformer: for property: %@",property.name);
+            }
+            return UniColumnTypeInteger;
+        case UniTypeEncodingFloat:
+        case UniTypeEncodingDouble:
+        case UniTypeEncodingLongDouble:
+            if([cls respondsToSelector:@selector(uni_columnType:)]){
+                NSCAssert(![cls uni_columnType:property.name], @"property can be process automatically,you should not implement uni_columnType: for property: %@",property.name);
+            }
+            if([cls respondsToSelector:@selector(uni_dbTransformer:)]){
+                NSCAssert(![cls uni_dbTransformer:property.name], @"property can be process automatically,you should not implement uni_dbTransformer: for property: %@",property.name);
+            }
+            return UniColumnTypeReal;
+        case UniTypeEncodingClass:
+        case UniTypeEncodingSEL:
+        case UniTypeEncodingNSRange:
+        case UniTypeEncodingCATansform3D:
+        case UniTypeEncodingPoint:
+        case UniTypeEncodingSize:
+        case UniTypeEncodingRect:
+        case UniTypeEncodingEdgeInsets:
+        case UniTypeEncodingCGVector:
+        case UniTypeEncodingCGAffineTransform:
+        case UniTypeEncodingUIOffset:
+        case UniTypeEncodingNSDirectionalEdgeInsets:
+        case UniTypeEncodingNSString:
+        case UniTypeEncodingNSMutableString:
+        case UniTypeEncodingNSURL:
+        case UniTypeEncodingNSNumber:
+            if([cls respondsToSelector:@selector(uni_columnType:)]){
+                NSCAssert(![cls uni_columnType:property.name], @"property can be process automatically,you should not implement uni_columnType: for property: %@",property.name);
+            }
+            if([cls respondsToSelector:@selector(uni_dbTransformer:)]){
+                NSCAssert(![cls uni_dbTransformer:property.name], @"property can be process automatically,you should not implement uni_dbTransformer: for property: %@",property.name);
+            }
+            return UniColumnTypeText;
+        case UniTypeEncodingNSDate:
+            if([cls respondsToSelector:@selector(uni_columnType:)]){
+                NSCAssert(![cls uni_columnType:property.name], @"property can be process automatically,you should not implement uni_columnType: for property: %@",property.name);
+            }
+            if([cls respondsToSelector:@selector(uni_dbTransformer:)]){
+                NSCAssert(![cls uni_dbTransformer:property.name], @"property can be process automatically,you should not implement uni_dbTransformer: for property: %@",property.name);
+            }
+            return UniColumnTypeReal;
+        case UniTypeEncodingNSData:
+        case UniTypeEncodingNSMutableData:
+            if([cls respondsToSelector:@selector(uni_columnType:)]){
+                NSCAssert(![cls uni_columnType:property.name], @"property can be process automatically,you should not implement uni_columnType: for property: %@",property.name);
+            }
+            if([cls respondsToSelector:@selector(uni_dbTransformer:)]){
+                NSCAssert(![cls uni_dbTransformer:property.name], @"property can be process automatically,you should not implement uni_dbTransformer: for property: %@",property.name);
+            }
+            return UniColumnTypeBlob;
+        case UniTypeEncodingNSObject:{
+            UniClass *clz=[[UniClass alloc]initWithClass:property.cls];
+            if (clz.isConformingToUniDB||clz.isConformingToUniDB){
+                return columnTypeOfProperty(clz.cls, clz.primaryProperty);
+            }else{
+                property.dbTransformer = [cls uni_dbTransformer:property.name];
+                return [cls uni_columnType:property.name];
+            }
+        }
+        default:
+            property.dbTransformer = [cls uni_dbTransformer:property.name];
+            return [cls uni_columnType:property.name];
+    }
+}
 static __inline__ __attribute__((always_inline)) NSString * uni_encodingDesc(UniTypeEncoding typeEncoding,UniPropertyEncoding propertyEncoding,UniMethodEncoding methodEncoding){
     NSMutableString * type = [NSMutableString string];
     switch (typeEncoding) {
@@ -27,13 +109,37 @@ static __inline__ __attribute__((always_inline)) NSString * uni_encodingDesc(Uni
         case UniTypeEncodingFloat: [type appendString:@"float"]; break;
         case UniTypeEncodingDouble: [type appendString:@"double"]; break;
         case UniTypeEncodingLongDouble: [type appendString:@"longDouble"]; break;
-        case UniTypeEncodingNSObject: [type appendString:@"object"]; break;
+        case UniTypeEncodingClass: [type appendString:@"class"]; break;
+        case UniTypeEncodingSEL: [type appendString:@"sel"]; break;
+        case UniTypeEncodingNSRange: [type appendString:@"range"]; break;
+        case UniTypeEncodingCATansform3D: [type appendString:@"tansform3D"]; break;
+        case UniTypeEncodingPoint: [type appendString:@"point"]; break;
+        case UniTypeEncodingSize: [type appendString:@"size"]; break;
+        case UniTypeEncodingRect: [type appendString:@"rect"]; break;
+        case UniTypeEncodingEdgeInsets: [type appendString:@"edgeInsets"]; break;
+        case UniTypeEncodingCGVector: [type appendString:@"vector"]; break;
+        case UniTypeEncodingCGAffineTransform: [type appendString:@"affineTransform"]; break;
+        case UniTypeEncodingUIOffset: [type appendString:@"UIOffset"]; break;
+        case UniTypeEncodingNSDirectionalEdgeInsets: [type appendString:@"directionalEdgeInsets"]; break;
+        case UniTypeEncodingBlock: [type appendString:@"block"]; break;
         case UniTypeEncodingNSString: [type appendString:@"string"]; break;
         case UniTypeEncodingNSMutableString: [type appendString:@"mutable string"]; break;
         case UniTypeEncodingNSNumber: [type appendString:@"number"]; break;
         case UniTypeEncodingNSDate: [type appendString:@"date"]; break;
         case UniTypeEncodingNSData: [type appendString:@"data"]; break;
         case UniTypeEncodingNSMutableData:[type appendString:@"mutable data"]; break;
+        case UniTypeEncodingNSArray: [type appendString:@"array"]; break;
+        case UniTypeEncodingNSMutableArray: [type appendString:@"mutable array"]; break;
+        case UniTypeEncodingNSSet: [type appendString:@"set"]; break;
+        case UniTypeEncodingNSMutableSet: [type appendString:@"mutable set"]; break;
+        case UniTypeEncodingNSDictionary: [type appendString:@"dictionary"]; break;
+        case UniTypeEncodingNSMutableDictionary: [type appendString:@"mutable dictionary"]; break;
+        case UniTypeEncodingPointer: [type appendString:@"pointer"]; break;
+        case UniTypeEncodingStruct: [type appendString:@"struct"]; break;
+        case UniTypeEncodingUnion: [type appendString:@"union"]; break;
+        case UniTypeEncodingCString: [type appendString:@"cstring"]; break;
+        case UniTypeEncodingCArray: [type appendString:@"carray"]; break;
+        case UniTypeEncodingNSObject: [type appendString:@"object"]; break;
         default: [type appendString:@"unknow"]; break;
     }
     if(methodEncoding&UniMethodEncodingConst) [type appendString:@" const"];
@@ -56,64 +162,51 @@ static __inline__ __attribute__((always_inline)) NSString * uni_encodingDesc(Uni
 static __inline__ __attribute__((always_inline)) NSString * uni_columnDesc(UniColumnType columnType){
     static NSArray * arr=nil;
     static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{arr=@[@"unknown",@"integer",@"real",@"text",@"blob"];});
+    dispatch_once(&onceToken, ^{arr=@[@"automatically",@"integer",@"real",@"text",@"blob"];});
     return arr[columnType];
 }
 
-static __inline__ __attribute__((always_inline)) bool uni_check_column(UniDB *db, NSString *table, NSString *column){
-    BOOL ret = NO;
-    NSArray *sets = [db executeQuery:@"SELECT * FROM sqlite_master WHERE tbl_name=? AND type='table'" arguments:@[table] error:nil];
-    if (sets.count > 0) for (NSDictionary *set in sets) {
-            NSString *createSql = set[@"sql"];
-            if (createSql && [createSql rangeOfString:[NSString stringWithFormat:@"'%@'", column]].location != NSNotFound) ret = YES; break;
-        }
-    return ret;
+static __inline__ __attribute__((always_inline)) NSDictionary * uni_columns_of_table(UniDB *db, NSString *table){
+    NSArray *dics = [db executeQuery:@"SELECT * FROM sqlite_master WHERE tbl_name=? AND type='table'" arguments:@[table] error:nil];
+    NSDictionary *dic=dics.lastObject;
+    NSString *sql=dic[@"sql"];
+    if (!sql) return nil;
+    NSScanner *scanner=[NSScanner scannerWithString:sql];
+    if(![scanner scanUpToString:@"(" intoString:nil]) return nil;
+    NSMutableDictionary *dict=[NSMutableDictionary dictionary];
+    do {
+        NSString *column=nil;
+        NSString *type=nil;
+        if(![scanner scanString:@"'" intoString:nil]) break;
+        if(![scanner scanUpToString:@"'" intoString:&column]) break;
+        if(![scanner scanString:@" " intoString:nil]) break;
+        if(![scanner scanUpToString:@" " intoString:&type]) break;
+        dict[column]=@{@"column":column,@"type":type};
+    }while(YES);
+    return dict;
 }
 
-static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db, NSString *table, NSString *index){
-    __block BOOL ret = NO;
-    NSArray *sets = [db executeQuery:@"SELECT * FROM sqlite_master WHERE tbl_name=? AND type='index'" arguments:@[table] error:nil];
-    if (sets.count > 0) for (NSDictionary *set in sets) if ([set[@"name"] isEqualToString:index]) return YES;
-    return ret;
+static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_table(UniDB *db, NSString *table){
+    NSArray *dics = [db executeQuery:@"SELECT * FROM sqlite_master WHERE tbl_name=? AND type='index'" arguments:@[table] error:nil];
+    NSMutableDictionary *dict=[NSMutableDictionary dictionary];
+    for (NSDictionary *dic in dics){
+        NSString *name=dic[@"name"];
+        NSString *sql=dic[@"sql"];
+        if (!sql||!name) continue;
+        NSString *column=nil;
+        NSScanner *scanner=[NSScanner scannerWithString:sql];
+        if(![scanner scanString:@"(" intoString:nil]) continue;
+        if(![scanner scanUpToString:@")" intoString:&column]) continue;
+        dict[column]=@{@"index":name,@"column":column};
+    }
+    return dict;
 }
 
 @interface UniClass ()
 
-@property (nonatomic, assign) Class        cls;
-@property (nonatomic, strong) NSString     *name;
-@property (nonatomic, strong) NSDictionary *propertyDict;
-@property (nonatomic, strong) NSArray      *propertyArr;
-@property (nonatomic, strong) NSArray      *jsonPropertyArr;
-@property (nonatomic, strong) NSArray      *dbPropertyArr;
-@property (nonatomic, strong) UniProperty  *primaryProperty;
-@property (nonatomic, strong) NSString     *dbSelectSql;
-@property (nonatomic, strong) NSString     *dbUpdateSql;
-@property (nonatomic, strong) NSString     *dbInsertSql;
-@property (nonatomic, assign) BOOL         isConformsToUniJSON;
-@property (nonatomic, assign) BOOL         isConformsToUniMM;
-@property (nonatomic, assign) BOOL         isConformsToUniDB;
-@property (nonatomic, strong) NSMapTable   *mm;
-@property (nonatomic, strong) UniDB        *db;
-@property (nonatomic, strong) NSSet        *relatedClassNameSet;
-@property (nonatomic, strong) NSDictionary *jsonKeyPathsDict;
-@property (nonatomic, strong) NSString     *primaryKey;
-@property (nonatomic, strong) NSArray      *dbColumnArr;
-
 @end
 
 @interface UniProperty ()
-@property (nonatomic,strong) NSString                 *name;
-@property (nonatomic,assign) UniTypeEncoding          typeEncoding;
-@property (nonatomic,assign) UniPropertyEncoding      propertyEncoding;
-@property (nonatomic,assign) UniMethodEncoding        methodEncoding;
-@property (nonatomic,assign) Class                    cls;
-@property (nonatomic,assign) SEL                      setter;
-@property (nonatomic,assign) SEL                      getter;
-@property (nonatomic,strong) NSArray                  *jsonKeyPathArr;
-@property (nonatomic,assign) UniColumnType            columnType;
-@property (nonatomic,strong) UniBlockValueTransformer *jsonValueTransformer;
-@property (nonatomic,strong) UniBlockValueTransformer *dbValueTransformer;
-@property (nonatomic,strong) NSString *               ivar;
 
 - (instancetype)initWithProperty:(objc_property_t)property;
 
@@ -121,170 +214,81 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
 
 @implementation UniClass
 
-- (instancetype)initWithClass:(Class)cls context:(NSMutableDictionary *)context{
++ (instancetype)classWithClass:(Class)cls{
+    if (!cls) return nil;
+    static CFMutableDictionaryRef classCache;
+    static dispatch_once_t onceToken;
+    static dispatch_semaphore_t semaphore;
+    dispatch_once(&onceToken, ^{
+        classCache = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        semaphore = dispatch_semaphore_create(1);
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    UniClass *clz = CFDictionaryGetValue(classCache, (__bridge const void *)(cls));
+    dispatch_semaphore_signal(semaphore);
+    if (!clz) {
+        clz = [[UniClass alloc] initWithClass:cls];
+        if (!clz) return nil;
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+        if (!CFDictionaryGetValue(classCache, (__bridge const void *)(cls))) {
+            [clz prepare];
+            CFDictionarySetValue(classCache, (__bridge const void *)(cls), (__bridge const void *)(clz));
+        }
+        dispatch_semaphore_signal(semaphore);
+    }
+    return clz;
+}
+- (instancetype)initWithClass:(Class)cls{
     self=[self init];
     if (!self) return nil;
-    if (!context) context=[NSMutableDictionary dictionary];
     self.cls=cls;
     self.name=NSStringFromClass(cls);
-    NSMutableArray *propertyArr = [NSMutableArray array];
-    NSMutableDictionary *propertyDict=[NSMutableDictionary dictionary];
-    NSMutableArray *jsonPropertyArr;
-    NSMutableArray *dbPropertyArr;
-    if ([cls conformsToProtocol:@protocol(UniJSON)]) {
-        self.isConformsToUniJSON=YES;
-        self.jsonKeyPathsDict=[cls uni_keyPaths];
-        jsonPropertyArr=[NSMutableArray array];
-    }
-    if ([cls conformsToProtocol:@protocol(UniMM)]) {
-        context[self.name]=self;
-        self.isConformsToUniMM=YES;
-        self.primaryKey=[cls uni_primary];
-    }
-    if ([cls conformsToProtocol:@protocol(UniDB)]){
-        self.isConformsToUniDB=YES;
-        self.dbColumnArr=[cls uni_columns];
-        dbPropertyArr=[NSMutableArray array];
-    }
+    NSMutableArray *propertyArr=[NSMutableArray array];
+    NSMutableDictionary *propertyDic=[NSMutableDictionary dictionary];
     [self enumeratePropertiesUsingBlock:^(objc_property_t p) {
-        UniProperty *property = [[UniProperty alloc] initWithProperty:p];
-        if (property.propertyEncoding&UniPropertyEncodingReadonly) return;
-        propertyDict[property.name]=property;
+        UniProperty *property=[[UniProperty alloc]initWithProperty:p];
+        if (!property.setter) return;
         [propertyArr addObject:property];
-        UniClass *propertyCls;
-        if (property.typeEncoding==UniTypeEncodingNSObject) {
-            NSString *propertyClassName = NSStringFromClass(property.cls);
-            propertyCls=context[propertyClassName];
-            if (!propertyCls) propertyCls=[[UniClass alloc]initWithClass:property.cls context:context];
-            else if (propertyCls.isConformsToUniMM) NSLog(@"****\n\nwarning!circular reference maybe happen between %@ and %@\n\n****",propertyClassName,self.name);
-        }
-        if (self.isConformsToUniJSON) {
-            NSArray *jsonKeyPathArr=self.jsonKeyPathsDict[property.name];
-            if (jsonKeyPathArr) {
-                NSMutableArray *jsonKeyPathArrParsed=[NSMutableArray array];
-                for (NSString *jsonKeyPath in jsonKeyPathArr) [jsonKeyPathArrParsed addObject:[jsonKeyPath componentsSeparatedByString:@"."]];
-                property.jsonKeyPathArr=jsonKeyPathArrParsed;
-                if ([cls respondsToSelector:@selector(uni_jsonValueTransformer:)]) {
-                    property.jsonValueTransformer=[cls uni_jsonValueTransformer:property.name];
-                    if (property.jsonValueTransformer) for (NSString *className in [property.jsonValueTransformer anonymousClassNames]){\
-                            if (!context[className]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-value"
-                                [[UniClass alloc]initWithClass:NSClassFromString(className) context:context];
-#pragma clang diagnostic pop
-                            }
-                        }
-                }
-                [jsonPropertyArr addObject:property];
-            }
-        }
-        if (self.isConformsToUniMM) {
-            if ([property.name isEqualToString:self.primaryKey]) self.primaryProperty = property;
-        }
-        if (self.isConformsToUniDB) {
-            if ([self.dbColumnArr containsObject:property.name]) {
-                [dbPropertyArr addObject:property];
-                if ([cls respondsToSelector:@selector(uni_dbValueTransformer:)]){
-                    property.dbValueTransformer=[self.cls uni_dbValueTransformer:property.name];
-                    if (property.dbValueTransformer) {
-                        property.columnType=[self.cls uni_columnType:property.name];
-                        NSAssert(property.columnType,@"should implement +uni_columnType for property %@ in class %@",property.name,self.name);
-                        for (NSString *className in [property.dbValueTransformer anonymousClassNames]) if (!context[className]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-value"
-                                [[UniClass alloc]initWithClass:NSClassFromString(className) context:context];
-#pragma clang diagnostic pop
-                            }
-                        return;
-                    }
-                }
-                switch (property.typeEncoding) {
-                    case UniTypeEncodingBool:
-                    case UniTypeEncodingInt8:
-                    case UniTypeEncodingUInt8:
-                    case UniTypeEncodingInt16:
-                    case UniTypeEncodingUInt16:
-                    case UniTypeEncodingInt32:
-                    case UniTypeEncodingUInt32:
-                    case UniTypeEncodingInt64:
-                    case UniTypeEncodingUInt64: property.columnType=UniColumnTypeInteger; break;
-                    case UniTypeEncodingFloat:
-                    case UniTypeEncodingDouble:
-                    case UniTypeEncodingLongDouble: property.columnType=UniColumnTypeReal; break;
-                    case UniTypeEncodingNSString:
-                    case UniTypeEncodingNSMutableString:
-                    case UniTypeEncodingNSURL:
-                    case UniTypeEncodingNSNumber: property.columnType=UniColumnTypeText; break;
-                    case UniTypeEncodingNSDate: property.columnType=UniColumnTypeReal; break;
-                    case UniTypeEncodingNSData:
-                    case UniTypeEncodingNSMutableData:property.columnType=UniColumnTypeBlob;break;
-                    case UniTypeEncodingNSObject: {
-                        if (propertyCls.isConformsToUniDB) {
-                            property.columnType=propertyCls.primaryProperty.columnType;
-                            property.dbValueTransformer=propertyCls.primaryProperty.dbValueTransformer;
-                        }
-                    } break;
-                    default: {
-                        NSAssert(0,@"should implement +uni_dbValueTransformer: and +uni_columnType: for property %@ in class %@",property.name,self.name);
-                    } break;
-                }
-            }
-        }
+        propertyDic[property.name]=property;
     }];
-    if (self.isConformsToUniMM) {
-        NSAssert(self.primaryProperty,@"should implement +uni_primary: in class %@",self.name);
-        NSAssert(({
-            //Try to meet the requirements as much as possible and avoid certain problems,so only support the following types.
-            BOOL valid=NO;
-            switch (self.primaryProperty.typeEncoding) {
-                case UniTypeEncodingBool:
-                case UniTypeEncodingInt8:
-                case UniTypeEncodingUInt8:
-                case UniTypeEncodingInt16:
-                case UniTypeEncodingUInt16:
-                case UniTypeEncodingInt32:
-                case UniTypeEncodingUInt32:
-                case UniTypeEncodingInt64:
-                case UniTypeEncodingUInt64:
-                case UniTypeEncodingFloat:
-                case UniTypeEncodingDouble:
-                case UniTypeEncodingLongDouble:
-                case UniTypeEncodingNSString:
-                case UniTypeEncodingNSNumber:
-                case UniTypeEncodingNSURL: valid=YES; break;
-                default: break;
-            }
-            valid;
-        }),@"primary only support bool int8 uint8 int16 uint16 int32 uint32 int64 uint64 float double long double NSString NSNumber NSURL");
-    }
     self.propertyArr=propertyArr;
-    self.propertyDict=propertyDict;
-    self.jsonPropertyArr=jsonPropertyArr;
-    self.dbPropertyArr=dbPropertyArr;
-    self.relatedClassNameSet=[NSSet setWithArray:[context allKeys]];
+    self.propertyDic=propertyDic;
+    if ([cls conformsToProtocol:@protocol(UniJSON)]) self.isConformingToUniJSON=YES;
+    if ([cls conformsToProtocol:@protocol(UniMM)]) self.isConformingToUniMM=YES;
+    if ([cls conformsToProtocol:@protocol(UniDB)]) self.isConformingToUniDB=YES;
+    if (self.isConformingToUniMM||self.isConformingToUniJSON){
+        self.primaryProperty=self.propertyDic[[self.cls uni_primaryKey]];
+    }
     return self;
 }
 
-- (void)enumeratePropertiesUsingBlock:(void (^)(objc_property_t property))block {
-    Class cls = self.cls;
-    while (YES) {
-        if (cls == NSObject.class) break;
-        unsigned int count = 0;
-        objc_property_t *properties = class_copyPropertyList(cls, &count);
-        if (properties == NULL) { cls = cls.superclass; continue; }
-        for (unsigned i = 0; i < count; i++) {
-            objc_property_t property = properties[i];
-            block(property);
-        }
-        free(properties);
-        cls = cls.superclass;
-    }
-}
-
-
 - (void)prepare{
-    if (self.isConformsToUniMM) self.mm=[NSMapTable strongToWeakObjectsMapTable];
-    if(self.isConformsToUniDB){
+    if (self.isConformingToUniJSON) {
+        NSMutableArray *arr=[NSMutableArray array];
+        [[self.cls uni_keyPaths] enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            NSMutableArray *jsonKeyPathArr=[NSMutableArray array];
+            if ([obj isKindOfClass:NSString.class]) [jsonKeyPathArr addObject:[obj componentsSeparatedByString:@"."]];
+            else if([obj isKindOfClass:NSArray.class]) [obj enumerateObjectsUsingBlock:^(id  _Nonnull obj1, NSUInteger idx, BOOL * _Nonnull stop) {
+                [jsonKeyPathArr addObject:[obj1 componentsSeparatedByString:@"."]];
+            }];
+            UniProperty *property=self.propertyDic[key];
+            property.jsonKeyPathArr=jsonKeyPathArr;
+            [arr addObject:property];
+            if ([self.cls respondsToSelector:@selector(uni_jsonTransformer:)]) property.jsonTransformer=[self.cls uni_jsonTransformer:key];
+        }];
+        self.jsonPropertyArr=arr;
+    }
+    if (self.isConformingToUniMM) {
+        self.mm=[NSMapTable strongToWeakObjectsMapTable];
+    }
+    if (self.isConformingToUniDB) {
+        NSMutableArray *arr=[NSMutableArray array];
+        [[self.cls uni_columns] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            UniProperty *property=self.propertyDic[obj];
+            property.columnType=columnTypeOfProperty(self.cls, property);
+            [arr addObject:property];
+        }];
+        self.dbPropertyArr=arr;
         self.dbSelectSql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@=?;", self.name, self.primaryProperty.name];
         NSMutableString *sql = [NSMutableString stringWithFormat:@"UPDATE %@ SET ", self.name];
         NSMutableString *sql1 = [NSMutableString stringWithFormat:@"INSERT INTO %@ (", self.name];
@@ -305,68 +309,143 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
         [sql2 deleteCharactersInRange:NSMakeRange(sql2.length - 1, 1)];
         [sql2 appendFormat:@")"];
         self.dbInsertSql = [NSString stringWithFormat:@"%@%@;", sql1, sql2];
+        self.dbDeleteSql = [NSString stringWithFormat:@"DELETE FROM %@ WHERE %@=?;",self.name,self.primaryProperty.name];
         self.db=[[UniDB alloc]init];
-        NSString *path=[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:@"Unicorn"];
-        [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-        path=[path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.sqlite3",NSStringFromClass(self.cls)]];
-        [self __open:path error:nil];
+        [self openAndInit:[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:[NSString stringWithFormat:@"Unicorn/%@.sqlite3",self.name]] error:nil];
+    }
+    if (self.primaryProperty) {
+        NSAssert(!self.primaryProperty.jsonTransformer,@"primary property do not support transformer");
+        NSAssert(!self.primaryProperty.dbTransformer,@"primary property do not support transformer");
+        NSAssert({
+               BOOL valid=NO;
+            switch (self.primaryProperty.typeEncoding) {
+                case UniTypeEncodingBool:
+                case UniTypeEncodingInt8:
+                case UniTypeEncodingUInt8:
+                case UniTypeEncodingInt16:
+                case UniTypeEncodingUInt16:
+                case UniTypeEncodingInt32:
+                case UniTypeEncodingUInt32:
+                case UniTypeEncodingInt64:
+                case UniTypeEncodingUInt64:
+                case UniTypeEncodingFloat:
+                case UniTypeEncodingDouble:
+                case UniTypeEncodingLongDouble:
+                case UniTypeEncodingClass:
+                case UniTypeEncodingSEL:
+                case UniTypeEncodingNSString:
+                case UniTypeEncodingNSMutableString:
+                case UniTypeEncodingNSURL:
+                    valid=YES;
+                default:
+                    break;
+            }
+               valid;
+            }, @"primary property type must be above");
     }
 }
 
-- (BOOL)__open:(NSString*)file error:(NSError**)error{
+- (void)enumeratePropertiesUsingBlock:(void (^)(objc_property_t property))block {
+    Class cls = self.cls;
+    while (YES) {
+        if (cls == NSObject.class) break;
+        unsigned int count = 0;
+        objc_property_t *properties = class_copyPropertyList(cls, &count);
+        if (properties == NULL) { cls = cls.superclass; continue; }
+        for (unsigned i = 0; i < count; i++) {
+            objc_property_t property = properties[i];
+            block(property);
+        }
+        free(properties);
+        cls = cls.superclass;
+    }
+}
+
+- (BOOL)openAndInit:(NSString*)file error:(NSError**)error{
+    NSString *path=[file stringByDeletingLastPathComponent];
+    [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
     if(![self.db open:file error:error]){ NSAssert(0,@"db error %@",*error); return NO; }
     NSString *dbColumnType = uni_columnDesc(self.primaryProperty.columnType);
-   __block NSString *sql = nil;
-    sql = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('%@' %@ NOT NULL PRIMARY KEY)", self.name, self.primaryProperty.name, dbColumnType];
-    [self.db executeUpdate:sql arguments:nil error:nil];
-    NSString *format=@"ALTER TABLE '%@' ADD COLUMN '%@' %@";
+    NSMutableDictionary *columns = [uni_columns_of_table(self.db, self.name) mutableCopy];
+    NSMutableDictionary *indexes = [uni_indexes_of_table(self.db, self.name) mutableCopy];
+    NSMutableArray *addPropertyArr=[NSMutableArray array];
+    NSMutableArray *addIndexArr=[NSMutableArray array];
+    __block NSString *sql = nil;
+    if (columns.count>0&&(!columns[self.primaryProperty.name]||![columns[self.primaryProperty.name][@"type"] isEqualToString:dbColumnType])) {
+        NSAssert(0, @"dangerous operation,if the primary key changed,table will be drop and recreate");
+        [self.db executeUpdate:[NSString stringWithFormat:@"DROP TABLE '%@'", self.name] arguments:nil error:nil];
+    }
+    [self.db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('%@' %@ NOT NULL PRIMARY KEY)", self.name, self.primaryProperty.name, dbColumnType] arguments:nil error:nil];
+    NSString *add=@"ALTER TABLE '%@' ADD COLUMN '%@' %@";
+    NSString *drop=@"ALTER TABLE '%@' DROP COLUMN '%@'";
     for (UniProperty *property in self.dbPropertyArr){
         if (property==self.primaryProperty) continue;
-        if (!uni_check_column(self.db, self.name, property.name)) {
-            sql=[NSString stringWithFormat:format,self.name,property.name,uni_columnDesc(property.columnType)];
-            [self.db executeUpdate:sql arguments:nil error:nil];
+        NSDictionary *column=columns[property.name];
+        if (!column) [addPropertyArr addObject:property];
+        else{
+            columns[property.name]=nil;
+            if (![column[@"type"] isEqualToString:uni_columnDesc(property.columnType)]){
+                [self.db executeUpdate:[NSString stringWithFormat:drop,self.name,property.name] arguments:nil error:nil];
+                [addPropertyArr addObject:property];
+            }
         }
     }
-    if (!uni_check_column(self.db, self.name, @"uni_update_at")) {
-        sql=[NSString stringWithFormat:format,self.name,@"uni_update_at",uni_columnDesc(UniColumnTypeReal)];
+    //add necessary columns
+    for (UniProperty *property in addPropertyArr){
+        sql=[NSString stringWithFormat:add,self.name,property.name,uni_columnDesc(property.columnType)];
         [self.db executeUpdate:sql arguments:nil error:nil];
     }
-    NSMutableArray *indexes=[NSMutableArray array];
-    if ([self.cls respondsToSelector:@selector(uni_indexes)]) [indexes addObjectsFromArray:[self.cls uni_indexes]];
-    [indexes addObject:@"uni_update_at"];
-    for (NSString *idx in indexes){
-        NSString *index = [NSString stringWithFormat:@"%@_%@_index", self.name, idx];
-        if (!uni_check_index(self.db, self.name, index)) {
-            sql=[NSString stringWithFormat:@"CREATE INDEX %@ on %@(%@)", index, self.name, idx];
-            [self.db executeUpdate:sql arguments:nil error:nil];
-        }
+    //remove unnecessary columns
+    [columns enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        sql=[NSString stringWithFormat:drop,self.name,obj[@"column"]];
+        [self.db executeUpdate:sql arguments:nil error:nil];
+    }];
+    NSMutableArray *idxes=[NSMutableArray array];
+    if ([self.cls respondsToSelector:@selector(uni_indexes)]) [idxes addObjectsFromArray:[self.cls uni_indexes]];
+    [idxes addObject:@"uni_update_at"];
+    for (NSString *idx in idxes){
+        NSDictionary *index=indexes[idx];
+        if (!index) [addIndexArr addObject:idx];
+        else indexes[idx]=nil;
     }
+    //add necessary indexes
+    for (NSString * idx in addIndexArr) {
+        [self.db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX %@ on %@(%@)", idx, self.name, idx] arguments:nil error:nil];
+    }
+    //remove unnecessary indexes
+    [indexes enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        [self.db executeUpdate:[NSString stringWithFormat:@"DROP INDEX %@", obj[@"index"]] arguments:nil error:nil];
+    }];
     return YES;
 }
 
-+ (instancetype)classWithClass:(Class)cls{
-    if (!cls) return nil;
-    static CFMutableDictionaryRef classCache;
-    static dispatch_once_t onceToken;
-    static dispatch_semaphore_t lock;
-    dispatch_once(&onceToken, ^{
-        classCache = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        lock = dispatch_semaphore_create(1);
-    });
-    dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
-    UniClass *clz = CFDictionaryGetValue(classCache, (__bridge const void *)(cls));
-    dispatch_semaphore_signal(lock);
-    if (!clz) {
-        clz = [[UniClass alloc] initWithClass:cls context:NULL];
-        if (!clz) return nil;
-        dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);
-        if (!CFDictionaryGetValue(classCache, (__bridge const void *)(cls))) {
-            [clz prepare];
-            CFDictionarySetValue(classCache, (__bridge const void *)(cls), (__bridge const void *)(clz));
-        }
-        dispatch_semaphore_signal(lock);
+- (void)processedClassed:(NSMutableArray*)processed synchronizedClasses:(NSMutableArray*)synchronized{
+    NSString *selfCls=NSStringFromClass(self.cls);
+    [processed addObject:selfCls];
+    if (self.isConformingToUniMM||self.isConformingToUniDB) {
+        if (![synchronized containsObject:selfCls]) [synchronized addObject:selfCls];
     }
-    return clz;
+    if ([self.cls respondsToSelector:@selector(uni_delitescentClasses)]){
+        [[self.cls uni_delitescentClasses] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *clsName=[obj isKindOfClass:NSString.class]?obj:NSStringFromClass(obj);
+            if (![synchronized containsObject:clsName]) [synchronized addObject:clsName];
+        }];
+    }
+    [self.propertyArr enumerateObjectsUsingBlock:^(UniProperty *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (!obj.cls) return;
+        if ([processed containsObject:NSStringFromClass(obj.cls)]) return;
+        UniClass *cls=[[UniClass alloc]initWithClass:obj.cls];
+        [cls processedClassed:processed synchronizedClasses:synchronized];
+    }];
+}
+
+- (NSArray*)synchronizedClasses{
+    if (_synchronizedClasses) return _synchronizedClasses;
+    NSMutableArray *processed=[NSMutableArray array];
+    NSMutableArray *synchronized=[NSMutableArray array];
+    [self processedClassed:processed synchronizedClasses:synchronized];
+    _synchronizedClasses=synchronized;
+    return _synchronizedClasses;
 }
 
 - (void)sync:(void(^)(void))block{
@@ -379,20 +458,20 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
     });
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     NSRecursiveLock *lock;
-    for (NSString * clsName in self.relatedClassNameSet){
+    for (NSString * clsName in self.synchronizedClasses){
         lock=[mt objectForKey:clsName];
         if (lock) break;
     }
     if (!lock) lock=[[NSRecursiveLock alloc]init];
-    for (NSString *clsName in self.relatedClassNameSet) [mt setObject:lock forKey:clsName];
+    for (NSString *clsName in self.synchronizedClasses) [mt setObject:lock forKey:clsName];
     dispatch_semaphore_signal(semaphore);
     [lock lock];
-    for (NSString *clsName in self.relatedClassNameSet){
+    for (NSString *clsName in self.synchronizedClasses){
         UniClass *cls=[UniClass classWithClass:NSClassFromString(clsName)];
         if (cls.db) [cls.db beginTransaction];
     }
     block();
-    for (NSString *clsName in self.relatedClassNameSet){
+    for (NSString *clsName in self.synchronizedClasses){
         UniClass *cls=[UniClass classWithClass:NSClassFromString(clsName)];
         if (cls.db) [cls.db commit];
     }
@@ -403,7 +482,7 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
     __block BOOL suc;
     [self sync:^{
         [self.db close];
-        suc=[self __open:file error:error];
+        suc=[self openAndInit:file error:error];
     }];
     return suc;
 }
@@ -423,7 +502,7 @@ static __inline__ __attribute__((always_inline)) bool uni_check_index(UniDB *db,
     for (UniProperty *property in self.dbPropertyArr) [ss appendFormat:@"%@,",property.name];
     if (ss.length>0) [ss deleteCharactersInRange:NSMakeRange(ss.length-1, 1)];
     NSMutableString *r = [NSMutableString string];
-    for (NSString * c in self.relatedClassNameSet) [r appendFormat:@"%@,",c];
+    for (NSString * c in self.synchronizedClasses) [r appendFormat:@"%@,",c];
     if (r.length>0) [r deleteCharactersInRange:NSMakeRange(r.length-1, 1)];
     NSString * desc= [NSString stringWithFormat:@"****\n\
 class name      : %@\n\
@@ -445,7 +524,6 @@ properties      : \n%@\n\
 @implementation UniProperty
 
 - (instancetype)initWithProperty:(objc_property_t)property{
-    if (!property) return nil;
     self=[self init];
     if (!self) return nil;
     self.name = [NSString stringWithUTF8String:property_getName(property)];
@@ -455,51 +533,101 @@ properties      : \n%@\n\
         objc_property_attribute_t attr=attrs[i];
         switch (attr.name[0]) {
             case 'T': {
-                for (const char * v=attr.value;strlen(v)>0;){
-                    switch (v[0]) {
-                        case 'r': self.methodEncoding |= UniMethodEncodingConst;v++;break;
-                        case 'n': self.methodEncoding |= UniMethodEncodingIn;v++;break;
-                        case 'N': self.methodEncoding |= UniMethodEncodingInout;v++;break;
-                        case 'o': self.methodEncoding |= UniMethodEncodingOut;v++;break;
-                        case 'O': self.methodEncoding |= UniMethodEncodingBycopy;v++;break;
-                        case 'R': self.methodEncoding |= UniMethodEncodingByref;v++;break;
-                        case 'V': self.methodEncoding |= UniMethodEncodingOneway;v++;break;
-                        case 'B': self.typeEncoding = UniTypeEncodingBool;v++;break;
-                        case 'c': self.typeEncoding = UniTypeEncodingInt8;v++;break;
-                        case 'C': self.typeEncoding = UniTypeEncodingUInt8;v++;break;
-                        case 's': self.typeEncoding = UniTypeEncodingInt16;v++;break;
-                        case 'S': self.typeEncoding = UniTypeEncodingUInt16;v++;break;
-                        case 'i': self.typeEncoding = UniTypeEncodingInt32;v++;break;
-                        case 'I': self.typeEncoding = UniTypeEncodingUInt32;v++;break;
-                        case 'l': self.typeEncoding = UniTypeEncodingInt32;v++;break;
-                        case 'L': self.typeEncoding = UniTypeEncodingUInt32;v++;break;
-                        case 'q': self.typeEncoding = UniTypeEncodingInt64;v++;break;
-                        case 'Q': self.typeEncoding = UniTypeEncodingUInt64;v++;break;
-                        case 'f': self.typeEncoding = UniTypeEncodingFloat;v++;break;
-                        case 'd': self.typeEncoding = UniTypeEncodingDouble;v++;break;
-                        case 'D': self.typeEncoding = UniTypeEncodingLongDouble;v++;break;
-                        case '@': {
-                            self.typeEncoding = UniTypeEncodingNSObject;
-                            NSScanner *scanner = [NSScanner scannerWithString:[NSString stringWithUTF8String:attr.value]];
-                            if (![scanner scanString:@"@\"" intoString:NULL]){ v+=strlen(v);break; }
-                            NSString *clsName = nil;
-                            if ([scanner scanUpToCharactersFromSet: [NSCharacterSet characterSetWithCharactersInString:@"\"<"] intoString:&clsName]&&clsName.length) {
-                                self.cls = objc_getClass(clsName.UTF8String);
-                                if (self.cls==NSString.class) self.typeEncoding=UniTypeEncodingNSString;
-                                else if(self.cls==NSMutableString.class) self.typeEncoding=UniTypeEncodingNSMutableString;
-                                else if(self.cls==NSURL.class) self.typeEncoding=UniTypeEncodingNSURL;
-                                else if(self.cls==NSNumber.class) self.typeEncoding=UniTypeEncodingNSNumber;
-                                else if(self.cls==NSDate.class) self.typeEncoding=UniTypeEncodingNSDate;
-                                else if(self.cls==NSData.class) self.typeEncoding=UniTypeEncodingNSData;
-                                else if(self.cls==NSMutableData.class) self.typeEncoding=UniTypeEncodingNSMutableData;
+                const char * v=attr.value;
+                BOOL done=NO;
+                do switch (v[0]) {
+                    case 'r': self.methodEncoding |= UniMethodEncodingConst;v++;break;
+                    case 'n': self.methodEncoding |= UniMethodEncodingIn;v++;break;
+                    case 'N': self.methodEncoding |= UniMethodEncodingInout;v++;break;
+                    case 'o': self.methodEncoding |= UniMethodEncodingOut;v++;break;
+                    case 'O': self.methodEncoding |= UniMethodEncodingBycopy;v++;break;
+                    case 'R': self.methodEncoding |= UniMethodEncodingByref;v++;break;
+                    case 'V': self.methodEncoding |= UniMethodEncodingOneway;v++;break;
+                    default: done=YES;break;
+                }
+                while(!done);
+                switch (v[0]) {
+                    case 'v': self.typeEncoding = UniTypeEncodingVoid;break;
+                    case 'B': self.typeEncoding = UniTypeEncodingBool;break;
+                    case 'c': self.typeEncoding = UniTypeEncodingInt8;break;
+                    case 'C': self.typeEncoding = UniTypeEncodingUInt8;break;
+                    case 's': self.typeEncoding = UniTypeEncodingInt16;break;
+                    case 'S': self.typeEncoding = UniTypeEncodingUInt16;break;
+                    case 'i': self.typeEncoding = UniTypeEncodingInt32;break;
+                    case 'I': self.typeEncoding = UniTypeEncodingUInt32;break;
+                    case 'l': self.typeEncoding = UniTypeEncodingInt32;break;
+                    case 'L': self.typeEncoding = UniTypeEncodingUInt32;break;
+                    case 'q': self.typeEncoding = UniTypeEncodingInt64;break;
+                    case 'Q': self.typeEncoding = UniTypeEncodingUInt64;break;
+                    case 'f': self.typeEncoding = UniTypeEncodingFloat;break;
+                    case 'd': self.typeEncoding = UniTypeEncodingDouble;break;
+                    case 'D': self.typeEncoding = UniTypeEncodingLongDouble;break;
+                    case '#': self.typeEncoding = UniTypeEncodingClass;break;
+                    case ':': self.typeEncoding = UniTypeEncodingSEL;break;
+                    case '{': {
+                        if(strcmp(v,@encode(NSRange))==0) self.typeEncoding=UniTypeEncodingNSRange;
+                        else if(strcmp(v,@encode(NSPoint))==0) self.typeEncoding=UniTypeEncodingPoint;
+                        else if(strcmp(v,@encode(NSSize))==0) self.typeEncoding=UniTypeEncodingSize;
+                        else if(strcmp(v,@encode(NSRect))==0) self.typeEncoding=UniTypeEncodingRect;
+                        else if(strcmp(v,@encode(NSEdgeInsets))==0) self.typeEncoding=UniTypeEncodingEdgeInsets;
+#if TARGET_OS_IOS || TARGET_OS_TV
+                        else if(strcmp(v,@encode(CATransform3D))==0) self.typeEncoding=UniTypeEncodingCATansform3D;
+#endif
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
+                        else if(strcmp(v,@encode(CGVector))==0) self.typeEncoding=UniTypeEncodingCGVector;
+                        else if(strcmp(v,@encode(CGAffineTransform))==0) self.typeEncoding=UniTypeEncodingCGAffineTransform;
+                        else if(strcmp(v,@encode(UIOffset))==0) self.typeEncoding=UniTypeEncodingUIOffset;
+#endif
+                        else{
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
+                            if (@available(iOS 11.0, *)) {
+                                if(@available(tvOS 11.0,*)){
+                                    if (@available(watchOS 4.0, *)) {
+                                        if(strcmp(v,@encode(NSDirectionalEdgeInsets))==0){
+                                            self.typeEncoding=UniTypeEncodingNSDirectionalEdgeInsets;
+                                            break;
+                                        }
+                                    }
+                                }
                             }
-                        }default: v+=strlen(v);break;
+#endif
+                            self.typeEncoding=UniTypeEncodingStruct;
+                        }
+                    }break;
+                    case '*': self.typeEncoding = UniTypeEncodingCString;break;
+                    case '^': self.typeEncoding = UniTypeEncodingPointer;break;
+                    case '[': self.typeEncoding = UniTypeEncodingCArray;break;
+                    case '(': self.typeEncoding = UniTypeEncodingUnion;break;
+                    case '@': {
+                        if (strlen(v)==2&&v[1] =='?'){
+                            self.typeEncoding = UniTypeEncodingBlock;
+                            break;
+                        }
+                        NSScanner *scanner = [NSScanner scannerWithString:[NSString stringWithUTF8String:attr.value]];
+                        if (![scanner scanString:@"@\"" intoString:NULL]) break;
+                        NSString *clsName = nil;
+                        if (![scanner scanUpToCharactersFromSet: [NSCharacterSet characterSetWithCharactersInString:@"\"<"] intoString:&clsName]||!clsName.length) break;
+                        Class cls = NSClassFromString(clsName);
+                        if (cls==NSString.class) self.typeEncoding=UniTypeEncodingNSString;
+                        else if(cls==NSMutableString.class) self.typeEncoding=UniTypeEncodingNSMutableString;
+                        else if(cls==NSURL.class) self.typeEncoding=UniTypeEncodingNSURL;
+                        else if(cls==NSNumber.class) self.typeEncoding=UniTypeEncodingNSNumber;
+                        else if(cls==NSDate.class) self.typeEncoding=UniTypeEncodingNSDate;
+                        else if(cls==NSData.class) self.typeEncoding=UniTypeEncodingNSData;
+                        else if(cls==NSMutableData.class) self.typeEncoding=UniTypeEncodingNSMutableData;
+                        else if(cls==NSArray.class) self.typeEncoding=UniTypeEncodingNSArray;
+                        else if(cls==NSMutableArray.class) self.typeEncoding=UniTypeEncodingNSMutableArray;
+                        else if(cls==NSSet.class) self.typeEncoding=UniTypeEncodingNSSet;
+                        else if(cls==NSMutableSet.class) self.typeEncoding=UniTypeEncodingNSMutableSet;
+                        else if(cls==NSDictionary.class) self.typeEncoding=UniTypeEncodingNSDictionary;
+                        else if(cls==NSMutableDictionary.class) self.typeEncoding=UniTypeEncodingNSMutableDictionary;
+                        else self.typeEncoding=UniTypeEncodingNSObject;
+                        self.cls=cls;
                     }
+                    default: break;
                 }
             } break;
-            case 'V': {
-                if (strlen(attr.value)) self.ivar=[NSString stringWithUTF8String:attr.value];
-            } break;
+            case 'V': break; //ivar
             case 'R': self.propertyEncoding|=UniPropertyEncodingReadonly; break;
             case 'C': self.propertyEncoding|=UniPropertyEncodingCopy; break;
             case '&': self.propertyEncoding|=UniPropertyEncodingRetain; break;
@@ -518,10 +646,8 @@ properties      : \n%@\n\
         }
     }
     if (attrs) free(attrs);
-    if (self.name.length) {
-        if (!self.getter) self.getter = NSSelectorFromString(self.name);
-        if (!self.setter&&!(self.propertyEncoding&UniPropertyEncodingReadonly)) self.setter = NSSelectorFromString([NSString stringWithFormat:@"set%@%@:", [self.name substringToIndex:1].uppercaseString, [self.name substringFromIndex:1]]);
-    }
+    if (!self.getter) self.getter = NSSelectorFromString(self.name);
+    if (!self.setter&&!(self.propertyEncoding&UniPropertyEncodingReadonly)) self.setter = NSSelectorFromString([NSString stringWithFormat:@"set%@%@:", [self.name substringToIndex:1].uppercaseString, [self.name substringFromIndex:1]]);
     return self;
 }
 
@@ -542,6 +668,6 @@ properties      : \n%@\n\
     column type            : %@\n\
     json value transformer : %@\n\
     db value transformer   : %@\n    \
-",self.name,uni_encodingDesc(self.typeEncoding,self.propertyEncoding,self.methodEncoding),NSStringFromSelector(self.setter),NSStringFromSelector(self.getter),s,uni_columnDesc(self.columnType),self.jsonValueTransformer,self.dbValueTransformer];
+",self.name,uni_encodingDesc(self.typeEncoding,self.propertyEncoding,self.methodEncoding),NSStringFromSelector(self.setter),NSStringFromSelector(self.getter),s,uni_columnDesc(self.columnType),self.jsonTransformer,self.dbTransformer];
 }
 @end
