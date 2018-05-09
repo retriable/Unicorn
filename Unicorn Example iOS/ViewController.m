@@ -6,8 +6,9 @@
 //  Copyright © 2018 emsihyo. All rights reserved.
 //
 
-#import "Article.h"
 
+#import "Article.h"
+#import "Benchmark.h"
 #import "ViewController.h"
 
 @interface ViewController ()
@@ -19,8 +20,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"****\n\n%@\n\n****",[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject]);
-    Article *article=[[Article alloc]init];
-    [article uni_update];
+    NSString *s=[NSString stringWithContentsOfFile:[[NSBundle mainBundle]pathForResource:@"article" ofType:@"json"] encoding:NSUTF8StringEncoding error:nil];
+    NSMutableArray *ss=[NSMutableArray array];
+    for (int i=0;i<1000;i++){
+        [ss addObject:[NSJSONSerialization JSONObjectWithData:[s dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil]];
+    }
+    benchmark(^{
+        [Article uni_parseJson:ss];
+    }, ^(int ms) {
+        NSLog(@"%d ms",ms);
+    });
     // Do any additional setup after loading the view, typically from a nib.
 }
 

@@ -13,7 +13,7 @@
 + (NSDictionary * _Nonnull)uni_keyPaths{
     return @{
              @"id":@"id",
-             @"author":@"author",
+             @"author":@[@"author",@"user"],
              @"content":@"content",
              @"comments":@"comments"
              };
@@ -49,7 +49,7 @@
     if ([propertyName isEqualToString:@"comments"]){
         return UniColumnTypeText;
     }
-    return UniColumnTypeAutomatically;
+    return 0;
 }
 
 + (UniTransformer _Nullable)uni_dbTransformer:(NSString* _Nonnull)propertyName{

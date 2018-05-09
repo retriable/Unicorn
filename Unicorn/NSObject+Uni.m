@@ -913,6 +913,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
 }
 
 + (instancetype)_uni_parseJson:(id)json cls:(UniClass*)cls{
+    if (!json) return nil;
     if ([json isKindOfClass:[NSString class]]) return [self _uni_parseJsonString:json cls:cls];
     else if([json isKindOfClass:[NSDictionary class]]) return [self _uni_parseJsonDict:json cls:cls];
     else if([json isKindOfClass:[NSArray class]]) return [self _uni_parseJsonArr:json cls:cls];

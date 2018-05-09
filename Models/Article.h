@@ -6,10 +6,12 @@
 //  Copyright © 2018 emsihyo. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "User.h"
-#import "Comment.h"
 @import Unicorn;
+
+#import <Foundation/Foundation.h>
+
+#import "Comment.h"
+#import "User.h"
 
 @interface Article : NSObject<UniJSON,UniMM,UniDB>
 

@@ -11,8 +11,9 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
 
 @interface UniStmt : NSObject
 
+@property (nonatomic, assign) BOOL         using;
 @property (nonatomic, assign) sqlite3_stmt *stmt;
-@property (nonatomic, copy) NSString *sql;
+@property (nonatomic, copy  ) NSString     *sql;
 
 @end
 
@@ -72,9 +73,9 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
 #pragma mark--
 #pragma mark-- stmt
 
-- (sqlite3_stmt *)stmtForSql:(NSString *)sql error:(NSError **)error {
+- (UniStmt *)getStmtForSql:(NSString *)sql error:(NSError **)error {
     UniStmt *s = self.stmts[sql];
-    if (!s) {
+    if (!s){
         sqlite3_stmt *stmt;
         if (sqlite3_prepare_v2(self.db, [sql UTF8String], -1, &stmt, 0) != SQLITE_OK) {
             sqlite3_finalize(stmt);
@@ -84,15 +85,15 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
         s = [[UniStmt alloc] init];
         s.stmt = stmt;
         s.sql = sql;
-        self.stmts[sql] = s;
     }
     sqlite3_reset(s.stmt);
     sqlite3_clear_bindings(s.stmt);
-    return s.stmt;
+    return s;
 }
 
-- (void)removeStmtForSql:(NSString *)sql {
-    [self.stmts removeObjectForKey:sql];
+- (void)putStmt:(UniStmt*)s forSql:(NSString*)sql{
+    if (!s||!sql) return;
+    self.stmts[sql]=s;
 }
 
 - (void)removeAllStmt {
@@ -127,15 +128,16 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
 - (BOOL)executeQuery:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock resultBlock:(void (^)(sqlite3_stmt *stmt, bool *stop))resultBlock error:(NSError **)error {
     NSParameterAssert(stmtBlock);
     NSParameterAssert(resultBlock);
-    sqlite3_stmt *stmt = [self stmtForSql:sql error:error];
+    UniStmt *stmt = [self getStmtForSql:sql error:error];
     if (!stmt) return NO;
-    int count = sqlite3_bind_parameter_count(stmt);
-    for (int i = 0; i < count; i++) stmtBlock(stmt, i + 1);
+    int count = sqlite3_bind_parameter_count(stmt.stmt);
+    for (int i = 0; i < count; i++) stmtBlock(stmt.stmt, i + 1);
     bool stop = NO;
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
-        resultBlock(stmt, &stop);
+    while (sqlite3_step(stmt.stmt) == SQLITE_ROW) {
+        resultBlock(stmt.stmt, &stop);
         if (stop) break;
     }
+    [self putStmt:stmt forSql:sql];
     return YES;
 }
 
@@ -149,17 +151,16 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
 }
 
 - (BOOL)executeUpdate:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock error:(NSError **)error {
-    sqlite3_stmt *stmt = [self stmtForSql:sql error:error];
-    if (!stmt) {
+    UniStmt *stmt = [self getStmtForSql:sql error:error];
+    if (!stmt) return NO;
+    int count = sqlite3_bind_parameter_count(stmt.stmt);
+    for (int i = 0; i < count; i++) stmtBlock(stmt.stmt, i + 1);
+    if (sqlite3_step(stmt.stmt) != SQLITE_DONE) {
         if (error) *error = [self error];
+        [self putStmt:stmt forSql:sql];
         return NO;
     }
-    int count = sqlite3_bind_parameter_count(stmt);
-    for (int i = 0; i < count; i++) stmtBlock(stmt, i + 1);
-    if (sqlite3_step(stmt) != SQLITE_DONE) {
-        if (error) *error = [self error];
-        return NO;
-    }
+    [self putStmt:stmt forSql:sql];
     return YES;
 }
 

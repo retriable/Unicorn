@@ -174,15 +174,19 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_columns_of_t
     NSScanner *scanner=[NSScanner scannerWithString:sql];
     if(![scanner scanUpToString:@"(" intoString:nil]) return nil;
     NSMutableDictionary *dict=[NSMutableDictionary dictionary];
-    do {
+    while (![scanner isAtEnd]) {
         NSString *column=nil;
         NSString *type=nil;
-        if(![scanner scanString:@"'" intoString:nil]) break;
+        if(![scanner scanUpToString:@"'" intoString:nil]) break;
+        if (scanner.scanLocation>=scanner.string.length) break;
+        scanner.scanLocation++;
         if(![scanner scanUpToString:@"'" intoString:&column]) break;
-        if(![scanner scanString:@" " intoString:nil]) break;
-        if(![scanner scanUpToString:@" " intoString:&type]) break;
-        dict[column]=@{@"column":column,@"type":type};
-    }while(YES);
+        if (scanner.scanLocation>=scanner.string.length) break;
+        if(![scanner scanUpToString:@" " intoString:nil]) break;
+        scanner.scanLocation++;
+        if(![scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@" ,)"] intoString:&type]) break;
+        dict[column]=type;
+    }
     return dict;
 }
 
@@ -190,14 +194,16 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
     NSArray *dics = [db executeQuery:@"SELECT * FROM sqlite_master WHERE tbl_name=? AND type='index'" arguments:@[table] error:nil];
     NSMutableDictionary *dict=[NSMutableDictionary dictionary];
     for (NSDictionary *dic in dics){
-        NSString *name=dic[@"name"];
+        NSString *index=dic[@"name"];
         NSString *sql=dic[@"sql"];
-        if (!sql||!name) continue;
+        if (!sql||!index) continue;
         NSString *column=nil;
         NSScanner *scanner=[NSScanner scannerWithString:sql];
-        if(![scanner scanString:@"(" intoString:nil]) continue;
+        if(![scanner scanUpToString:@"(" intoString:nil]) continue;
+        if (scanner.scanLocation>=scanner.string.length) continue;
+        scanner.scanLocation++;
         if(![scanner scanUpToString:@")" intoString:&column]) continue;
-        dict[column]=@{@"index":name,@"column":column};
+        dict[column]=index;
     }
     return dict;
 }
@@ -256,9 +262,7 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
     if ([cls conformsToProtocol:@protocol(UniJSON)]) self.isConformingToUniJSON=YES;
     if ([cls conformsToProtocol:@protocol(UniMM)]) self.isConformingToUniMM=YES;
     if ([cls conformsToProtocol:@protocol(UniDB)]) self.isConformingToUniDB=YES;
-    if (self.isConformingToUniMM||self.isConformingToUniJSON){
-        self.primaryProperty=self.propertyDic[[self.cls uni_primaryKey]];
-    }
+    if (self.isConformingToUniMM||self.isConformingToUniJSON) self.primaryProperty=self.propertyDic[[self.cls uni_primaryKey]];
     return self;
 }
 
@@ -278,9 +282,7 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
         }];
         self.jsonPropertyArr=arr;
     }
-    if (self.isConformingToUniMM) {
-        self.mm=[NSMapTable strongToWeakObjectsMapTable];
-    }
+    if (self.isConformingToUniMM)  self.mm=[NSMapTable strongToWeakObjectsMapTable];
     if (self.isConformingToUniDB) {
         NSMutableArray *arr=[NSMutableArray array];
         [[self.cls uni_columns] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -365,29 +367,23 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
     NSString *path=[file stringByDeletingLastPathComponent];
     [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
     if(![self.db open:file error:error]){ NSAssert(0,@"db error %@",*error); return NO; }
-    NSString *dbColumnType = uni_columnDesc(self.primaryProperty.columnType);
-    NSMutableDictionary *columns = [uni_columns_of_table(self.db, self.name) mutableCopy];
-    NSMutableDictionary *indexes = [uni_indexes_of_table(self.db, self.name) mutableCopy];
+    NSString *primaryColumnType = uni_columnDesc(self.primaryProperty.columnType);
+    NSMutableDictionary *oldColumns = [uni_columns_of_table(self.db, self.name) mutableCopy];
+    NSMutableDictionary *oldIndexes = [uni_indexes_of_table(self.db, self.name) mutableCopy];
     NSMutableArray *addPropertyArr=[NSMutableArray array];
     NSMutableArray *addIndexArr=[NSMutableArray array];
     __block NSString *sql = nil;
-    if (columns.count>0&&(!columns[self.primaryProperty.name]||![columns[self.primaryProperty.name][@"type"] isEqualToString:dbColumnType])) {
+    if (oldColumns.count>0&&(!oldColumns[self.primaryProperty.name]||![oldColumns[self.primaryProperty.name] isEqualToString:primaryColumnType])) {
         NSAssert(0, @"dangerous operation,if the primary key changed,table will be drop and recreate");
         [self.db executeUpdate:[NSString stringWithFormat:@"DROP TABLE '%@'", self.name] arguments:nil error:nil];
     }
-    [self.db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('%@' %@ NOT NULL PRIMARY KEY)", self.name, self.primaryProperty.name, dbColumnType] arguments:nil error:nil];
+    [self.db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('%@' %@ NOT NULL PRIMARY KEY)", self.name, self.primaryProperty.name, primaryColumnType] arguments:nil error:nil];
     NSString *add=@"ALTER TABLE '%@' ADD COLUMN '%@' %@";
-    NSString *drop=@"ALTER TABLE '%@' DROP COLUMN '%@'";
     for (UniProperty *property in self.dbPropertyArr){
-        if (property==self.primaryProperty) continue;
-        NSDictionary *column=columns[property.name];
-        if (!column) [addPropertyArr addObject:property];
-        else{
-            columns[property.name]=nil;
-            if (![column[@"type"] isEqualToString:uni_columnDesc(property.columnType)]){
-                [self.db executeUpdate:[NSString stringWithFormat:drop,self.name,property.name] arguments:nil error:nil];
-                [addPropertyArr addObject:property];
-            }
+        NSString *type=oldColumns[property.name];
+        if (!type) [addPropertyArr addObject:property];
+        else if (![type isEqualToString:uni_columnDesc(property.columnType)]){
+                NSAssert(0, @"column: %@,old column type: %@,new column type: %@",property.name,type,uni_columnDesc(property.columnType));
         }
     }
     //add necessary columns
@@ -395,26 +391,23 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
         sql=[NSString stringWithFormat:add,self.name,property.name,uni_columnDesc(property.columnType)];
         [self.db executeUpdate:sql arguments:nil error:nil];
     }
-    //remove unnecessary columns
-    [columns enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        sql=[NSString stringWithFormat:drop,self.name,obj[@"column"]];
+    if (!oldColumns[@"uni_update_at"]) {
+        sql=[NSString stringWithFormat:add,self.name,@"uni_update_at",uni_columnDesc(UniColumnTypeReal)];
         [self.db executeUpdate:sql arguments:nil error:nil];
-    }];
-    NSMutableArray *idxes=[NSMutableArray array];
-    if ([self.cls respondsToSelector:@selector(uni_indexes)]) [idxes addObjectsFromArray:[self.cls uni_indexes]];
-    [idxes addObject:@"uni_update_at"];
-    for (NSString *idx in idxes){
-        NSDictionary *index=indexes[idx];
+    }
+    NSMutableArray *indexes=[NSMutableArray array];
+    if ([self.cls respondsToSelector:@selector(uni_indexes)]) [indexes addObjectsFromArray:[self.cls uni_indexes]];
+    [indexes addObject:@"uni_update_at"];
+    for (NSString *idx in indexes){
+        NSString *index=oldIndexes[idx];
         if (!index) [addIndexArr addObject:idx];
-        else indexes[idx]=nil;
+        else oldIndexes[idx]=nil;
     }
     //add necessary indexes
-    for (NSString * idx in addIndexArr) {
-        [self.db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX %@ on %@(%@)", idx, self.name, idx] arguments:nil error:nil];
-    }
+    for (NSString * idx in addIndexArr) [self.db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX %@ on %@(%@)", idx, self.name, idx] arguments:nil error:nil];
     //remove unnecessary indexes
-    [indexes enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        [self.db executeUpdate:[NSString stringWithFormat:@"DROP INDEX %@", obj[@"index"]] arguments:nil error:nil];
+    [oldIndexes enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        [self.db executeUpdate:[NSString stringWithFormat:@"DROP INDEX %@", key] arguments:nil error:nil];
     }];
     return YES;
 }

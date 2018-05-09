@@ -13,7 +13,7 @@
 + (NSDictionary * _Nonnull)uni_keyPaths{
     return @{
              @"id":@"id",
-             @"nickname":@"nickname",
+             @"nickname":@[@"nickname",@"name"],
              @"age":@"age"
              };
 }

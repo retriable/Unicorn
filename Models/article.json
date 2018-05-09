@@ -1,0 +1,59 @@
+{
+    "id": 1,
+    "author": {
+        "id": 10000,
+        "name": "author name",
+        "age": "28"
+    },
+    "content": "article content",
+    "title": "article title",
+    "comments": [
+                 {
+                 "id": 123,
+                 "content": "comment 123",
+                 "comments": [
+                              {
+                              "id": 133,
+                              "content": "comment 133",
+                              "user": {
+                              "id": 10001,
+                              "name": "user name",
+                              "age": "19"
+                              }
+                              },
+                              {
+                              "id": 134,
+                              "content": "comment 134",
+                              "user": {
+                              "id": 10001,
+                              "name": "user name",
+                              "age": "19"
+                              }
+                              }
+                              ],
+                 "user": {
+                 "id": 10001,
+                 "name": "user name",
+                 "age": "19"
+                 }
+                 },
+                 {
+                 "id": 124,
+                 "content": "comment 124",
+                 "user": {
+                 "id": 10001,
+                 "name": "user name",
+                 "age": "19"
+                 }
+                 },
+                 {
+                 "id": 125,
+                 "content": "comment 125",
+                 "user": {
+                 "id": 10001,
+                 "name": "user name",
+                 "age": "19"
+                 }
+                 }
+                 ]
+}

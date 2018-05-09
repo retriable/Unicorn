@@ -54,7 +54,7 @@
     if ([propertyName isEqualToString:@"comments"]){
         return UniColumnTypeText;
     }
-    return UniColumnTypeAutomatically;
+    return 0;
 }
 
 + (UniTransformer _Nullable)uni_dbTransformer:(NSString* _Nonnull)propertyName{
@@ -81,6 +81,8 @@
     return nil;
 }
 
-
+//+ (NSArray * )uni_indexes{
+//    return @[@"title"];
+//}
 
 @end
