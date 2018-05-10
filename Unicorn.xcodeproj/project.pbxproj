@@ -169,6 +169,10 @@
 		0AD7F28A20A034A000592635 /* Unicorn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Unicorn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AD7F29820A034D100592635 /* Unicorn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Unicorn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AD7F2A520A034DD00592635 /* Unicorn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Unicorn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0ADA381020A3F13700EE797D /* Unicorn.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Unicorn.podspec; sourceTree = SOURCE_ROOT; };
+		0ADA381120A3F13700EE797D /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
+		0ADA381220A3F13700EE797D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		0ADA381320A3F2FC00EE797D /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = SOURCE_ROOT; };
 		0AFC97AB2023F35400D6506E /* UniDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UniDB.h; sourceTree = "<group>"; };
 		0AFC97AC2023F35400D6506E /* UniDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UniDB.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -306,6 +310,10 @@
 		0A7655BB2022EF1B0061FEC8 /* Unicorn */ = {
 			isa = PBXGroup;
 			children = (
+				0ADA381320A3F2FC00EE797D /* .travis.yml */,
+				0ADA381120A3F13700EE797D /* LICENSE */,
+				0ADA381220A3F13700EE797D /* README.md */,
+				0ADA381020A3F13700EE797D /* Unicorn.podspec */,
 				0AD7F284209FF7B200592635 /* UniCompat.h */,
 				0A7655BD2022EF1B0061FEC8 /* Info.plist */,
 				0A8CECA52040F3820007FAA8 /* NSObject+Uni.h */,

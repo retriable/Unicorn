@@ -61,7 +61,7 @@ static __inline__ __attribute__((always_inline)) NSEdgeInsets uni_NSEdgeInsetsFr
     dispatch_once(&onceToken, ^{
         regex=[[NSRegularExpression alloc]initWithPattern:@"^\\{(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1}\\}$" options:0 error:nil];
     });
-    NSEdgeInsets insets=NSEdgeInsetsZero;
+    NSEdgeInsets insets=(NSEdgeInsets){0,0,0,0};
     if (string.length==0) return insets;
     NSTextCheckingResult *result = [regex firstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
     if (!result) return insets;
