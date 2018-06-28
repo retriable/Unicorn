@@ -1047,10 +1047,10 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     return model;
 }
 
-+ (NSArray*)uni_query:(NSString*)sqlAfterWhere args:(NSArray*)args{
++ (NSArray*)uni_query:(NSString*)sql args:(NSArray*)args{
     UniClass *cls=[UniClass classWithClass:self];
     if (!cls.isConformingToUniDB) { NSAssert(0,@"class %@ should comform to protocol UniDB",cls.name); return nil; }
-    NSString *sql=sqlAfterWhere.length?[NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@",cls.name,sqlAfterWhere]:[NSString stringWithFormat:@"SELECT * FROM %@",cls.name];
+    sql=sql.length?[NSString stringWithFormat:@"SELECT * FROM %@ %@",cls.name,sql]:[NSString stringWithFormat:@"SELECT * FROM %@",cls.name];
     NSMutableArray *arr=[NSMutableArray array];
     [cls sync:^{
         NSError *err;
@@ -1125,10 +1125,10 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     return arr;
 }
 
-+ (BOOL)uni_delete:(NSString*)sqlAfterWhere args:(NSArray*)args{
++ (BOOL)uni_delete:(NSString*)sql args:(NSArray*)args{
     __block BOOL res;
     UniClass *cls=[UniClass classWithClass:self];
-    NSString *sql=sqlAfterWhere.length?[NSString stringWithFormat:@"DELETE FROM %@ WHERE %@",cls.name,sqlAfterWhere]:[NSString stringWithFormat:@"DELETE FROM %@",cls.name];
+    sql=sql.length?[NSString stringWithFormat:@"DELETE FROM %@ %@",cls.name,sql]:[NSString stringWithFormat:@"DELETE FROM %@",cls.name];
     [cls sync:^{
         NSError *error=nil;
         res=[cls.db executeUpdate:sql arguments:args error:&error];

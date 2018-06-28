@@ -114,14 +114,14 @@ typedef id _Nullable (^UniTransformer) (id _Nullable value,BOOL reversed);
 + (id _Nullable)uni_queryOne:(id _Nullable)primary;
 
 /**
- query models from sql after "where"
- NSArray<User*> *users = [User uni_query:@"age<?" args:@[@(28)]];
+ query models
+ NSArray<User*> *users = [User uni_query:@"WHERE age<?" args:@[@(28)]];
  
- @param sqlAfterWhere sql after "where"
+ @param sql sql after "SELECT * FROM 'TABLE' ",if nil,select all.
  @param args args
  @return models
  */
-+ (NSArray* _Nullable)uni_query:(NSString* _Nullable)sqlAfterWhere args:(NSArray* _Nullable)args;
++ (NSArray* _Nullable)uni_query:(NSString* _Nullable)sql args:(NSArray* _Nullable)args;
 
 /**
  update model
@@ -143,11 +143,11 @@ typedef id _Nullable (^UniTransformer) (id _Nullable value,BOOL reversed);
 /**
  delete models in database with sql
 
- @param sqlAfterWhere sql after "where"
+ @param sql sql after "DELETE FROM ",if nil,will delete all
  @param args args
  @return success or failure
  */
-+ (BOOL)uni_delete:(NSString* _Nullable)sqlAfterWhere args:(NSArray* _Nullable)args;
++ (BOOL)uni_delete:(NSString* _Nullable)sql args:(NSArray* _Nullable)args;
 
 /**
  delete models updated before date
