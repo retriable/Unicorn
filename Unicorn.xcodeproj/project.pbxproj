@@ -13,24 +13,10 @@
 		0A473BF920A1BFF90052412B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A473BF820A1BFF90052412B /* Assets.xcassets */; };
 		0A473BFC20A1BFF90052412B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A473BFA20A1BFF90052412B /* LaunchScreen.storyboard */; };
 		0A473BFF20A1BFF90052412B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BFE20A1BFF90052412B /* main.m */; };
-		0A473C0320A1C00C0052412B /* Unicorn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */; };
-		0A473C0420A1C00C0052412B /* Unicorn.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0A473C0820A1C0250052412B /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BE420A1BACB0052412B /* Article.m */; };
 		0A473C0920A1C0280052412B /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BE020A1BACB0052412B /* Comment.m */; };
 		0A473C0A20A1C02B0052412B /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BE220A1BACB0052412B /* User.m */; };
 		0A668D9720A30FB7009F29B8 /* article.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A668D9620A30DFA009F29B8 /* article.json */; };
-		0A668D9E20A3265F009F29B8 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A668D9C20A3265F009F29B8 /* Interface.storyboard */; };
-		0A668DA020A32661009F29B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A668D9F20A32661009F29B8 /* Assets.xcassets */; };
-		0A668DA720A32661009F29B8 /* Unicorn Example watchOS Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0A668DA620A32661009F29B8 /* Unicorn Example watchOS Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		0A668DAD20A32661009F29B8 /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A668DAC20A32661009F29B8 /* InterfaceController.m */; };
-		0A668DB020A32661009F29B8 /* ExtensionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A668DAF20A32661009F29B8 /* ExtensionDelegate.m */; };
-		0A668DB320A32661009F29B8 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A668DB220A32661009F29B8 /* NotificationController.m */; };
-		0A668DB520A32661009F29B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A668DB420A32661009F29B8 /* Assets.xcassets */; };
-		0A668DBA20A32661009F29B8 /* Unicorn Example watchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 0A668D9A20A3265F009F29B8 /* Unicorn Example watchOS.app */; };
-		0A668DC320A32675009F29B8 /* Article.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BE420A1BACB0052412B /* Article.m */; };
-		0A668DC420A32678009F29B8 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BE020A1BACB0052412B /* Comment.m */; };
-		0A668DC520A3267A009F29B8 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BE220A1BACB0052412B /* User.m */; };
-		0A668DC620A3267E009F29B8 /* article.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A668D9620A30DFA009F29B8 /* article.json */; };
 		0A7655CA2022EF1B0061FEC8 /* Unicorn.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655BC2022EF1B0061FEC8 /* Unicorn.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7655DB2022EF5B0061FEC8 /* UniClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A7655D92022EF5B0061FEC8 /* UniClass.h */; };
 		0A7655DC2022EF5B0061FEC8 /* UniClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7655DA2022EF5B0061FEC8 /* UniClass.m */; };
@@ -61,66 +47,42 @@
 		0AD7F2C320A035AA00592635 /* NSObject+Uni.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */; };
 		0AD7F2C420A035AB00592635 /* NSObject+Uni.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */; };
 		0AD7F2C520A035AB00592635 /* NSObject+Uni.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */; };
+		0AFC31F620E4B45F0055D7FC /* Unicorn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */; };
+		0AFC31F720E4B45F0055D7FC /* Unicorn.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7655B92022EF1B0061FEC8 /* Unicorn.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0AFC97AD2023F35400D6506E /* UniDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFC97AB2023F35400D6506E /* UniDB.h */; };
 		0AFC97AE2023F35400D6506E /* UniDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFC97AC2023F35400D6506E /* UniDB.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		0A473C0520A1C00C0052412B /* PBXContainerItemProxy */ = {
+		0AFC31F820E4B45F0055D7FC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A7655B02022EF1B0061FEC8 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0A7655B82022EF1B0061FEC8;
 			remoteInfo = "Unicorn iOS";
 		};
-		0A668DA820A32661009F29B8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A7655B02022EF1B0061FEC8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0A668DA520A32661009F29B8;
-			remoteInfo = "Unicorn Example watchOS Extension";
-		};
-		0A668DB820A32661009F29B8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A7655B02022EF1B0061FEC8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0A668D9920A3265F009F29B8;
-			remoteInfo = "Unicorn Example watchOS";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		0A473C0720A1C00C0052412B /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				0A473C0420A1C00C0052412B /* Unicorn.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0A668DBE20A32661009F29B8 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				0A668DA720A32661009F29B8 /* Unicorn Example watchOS Extension.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		0A668DC220A32661009F29B8 /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				0A668DBA20A32661009F29B8 /* Unicorn Example watchOS.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0AFC31FA20E4B45F0055D7FC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				0AFC31F720E4B45F0055D7FC /* Unicorn.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -143,11 +105,9 @@
 		0A473BFD20A1BFF90052412B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A473BFE20A1BFF90052412B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0A668D9620A30DFA009F29B8 /* article.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = article.json; sourceTree = "<group>"; };
-		0A668D9A20A3265F009F29B8 /* Unicorn Example watchOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Unicorn Example watchOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A668D9D20A3265F009F29B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		0A668D9F20A32661009F29B8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0A668DA120A32661009F29B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0A668DA620A32661009F29B8 /* Unicorn Example watchOS Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Unicorn Example watchOS Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A668DAB20A32661009F29B8 /* InterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InterfaceController.h; sourceTree = "<group>"; };
 		0A668DAC20A32661009F29B8 /* InterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InterfaceController.m; sourceTree = "<group>"; };
 		0A668DAE20A32661009F29B8 /* ExtensionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtensionDelegate.h; sourceTree = "<group>"; };
@@ -182,14 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A473C0320A1C00C0052412B /* Unicorn.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0A668DA320A32661009F29B8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				0AFC31F620E4B45F0055D7FC /* Unicorn.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,7 +177,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0A473BDF20A1BA790052412B /* Models */ = {
+		0A473BDF20A1BA790052412B /* Classes */ = {
 			isa = PBXGroup;
 			children = (
 				0A473BE320A1BACB0052412B /* Article.h */,
@@ -236,7 +189,7 @@
 				0A668DC720A326EA009F29B8 /* Benchmark.h */,
 				0A668D9620A30DFA009F29B8 /* article.json */,
 			);
-			path = Models;
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		0A473BEE20A1BFF80052412B /* Unicorn Example iOS */ = {
@@ -284,7 +237,7 @@
 		0A7655AF2022EF1B0061FEC8 = {
 			isa = PBXGroup;
 			children = (
-				0A473BDF20A1BA790052412B /* Models */,
+				0A473BDF20A1BA790052412B /* Classes */,
 				0A7655BB2022EF1B0061FEC8 /* Unicorn */,
 				0A473BEE20A1BFF80052412B /* Unicorn Example iOS */,
 				0A668D9B20A3265F009F29B8 /* Unicorn Example watchOS */,
@@ -301,8 +254,6 @@
 				0AD7F29820A034D100592635 /* Unicorn.framework */,
 				0AD7F2A520A034DD00592635 /* Unicorn.framework */,
 				0A473BED20A1BFF80052412B /* Unicorn Example iOS.app */,
-				0A668D9A20A3265F009F29B8 /* Unicorn Example watchOS.app */,
-				0A668DA620A32661009F29B8 /* Unicorn Example watchOS Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -388,53 +339,18 @@
 				0A473BE920A1BFF80052412B /* Sources */,
 				0A473BEA20A1BFF80052412B /* Frameworks */,
 				0A473BEB20A1BFF80052412B /* Resources */,
-				0A473C0720A1C00C0052412B /* Embed Frameworks */,
 				0A668DC220A32661009F29B8 /* Embed Watch Content */,
+				0AFC31FA20E4B45F0055D7FC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				0A473C0620A1C00C0052412B /* PBXTargetDependency */,
-				0A668DB920A32661009F29B8 /* PBXTargetDependency */,
+				0AFC31F920E4B45F0055D7FC /* PBXTargetDependency */,
 			);
 			name = "Unicorn Example iOS";
 			productName = "Unicorn Example iOS";
 			productReference = 0A473BED20A1BFF80052412B /* Unicorn Example iOS.app */;
 			productType = "com.apple.product-type.application";
-		};
-		0A668D9920A3265F009F29B8 /* Unicorn Example watchOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0A668DBF20A32661009F29B8 /* Build configuration list for PBXNativeTarget "Unicorn Example watchOS" */;
-			buildPhases = (
-				0A668D9820A3265F009F29B8 /* Resources */,
-				0A668DBE20A32661009F29B8 /* Embed App Extensions */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				0A668DA920A32661009F29B8 /* PBXTargetDependency */,
-			);
-			name = "Unicorn Example watchOS";
-			productName = "Unicorn Example watchOS";
-			productReference = 0A668D9A20A3265F009F29B8 /* Unicorn Example watchOS.app */;
-			productType = "com.apple.product-type.application.watchapp2";
-		};
-		0A668DA520A32661009F29B8 /* Unicorn Example watchOS Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0A668DBB20A32661009F29B8 /* Build configuration list for PBXNativeTarget "Unicorn Example watchOS Extension" */;
-			buildPhases = (
-				0A668DA220A32661009F29B8 /* Sources */,
-				0A668DA320A32661009F29B8 /* Frameworks */,
-				0A668DA420A32661009F29B8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Unicorn Example watchOS Extension";
-			productName = "Unicorn Example watchOS Extension";
-			productReference = 0A668DA620A32661009F29B8 /* Unicorn Example watchOS Extension.appex */;
-			productType = "com.apple.product-type.watchkit2-extension";
 		};
 		0A7655B82022EF1B0061FEC8 /* Unicorn iOS */ = {
 			isa = PBXNativeTarget;
@@ -514,18 +430,10 @@
 		0A7655B02022EF1B0061FEC8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = emsihyo;
 				TargetAttributes = {
 					0A473BEC20A1BFF80052412B = {
-						CreatedOnToolsVersion = 9.3;
-						ProvisioningStyle = Manual;
-					};
-					0A668D9920A3265F009F29B8 = {
-						CreatedOnToolsVersion = 9.3;
-						ProvisioningStyle = Automatic;
-					};
-					0A668DA520A32661009F29B8 = {
 						CreatedOnToolsVersion = 9.3;
 						ProvisioningStyle = Automatic;
 					};
@@ -565,8 +473,6 @@
 				0AD7F29720A034D100592635 /* Unicorn tvOS */,
 				0AD7F2A420A034DD00592635 /* Unicorn macOS */,
 				0A473BEC20A1BFF80052412B /* Unicorn Example iOS */,
-				0A668D9920A3265F009F29B8 /* Unicorn Example watchOS */,
-				0A668DA520A32661009F29B8 /* Unicorn Example watchOS Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -580,24 +486,6 @@
 				0A473BFC20A1BFF90052412B /* LaunchScreen.storyboard in Resources */,
 				0A473BF920A1BFF90052412B /* Assets.xcassets in Resources */,
 				0A473BF720A1BFF80052412B /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0A668D9820A3265F009F29B8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0A668DA020A32661009F29B8 /* Assets.xcassets in Resources */,
-				0A668D9E20A3265F009F29B8 /* Interface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0A668DA420A32661009F29B8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0A668DC620A3267E009F29B8 /* article.json in Resources */,
-				0A668DB520A32661009F29B8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,19 +533,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0A668DA220A32661009F29B8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0A668DC320A32675009F29B8 /* Article.m in Sources */,
-				0A668DB020A32661009F29B8 /* ExtensionDelegate.m in Sources */,
-				0A668DC520A3267A009F29B8 /* User.m in Sources */,
-				0A668DAD20A32661009F29B8 /* InterfaceController.m in Sources */,
-				0A668DC420A32678009F29B8 /* Comment.m in Sources */,
-				0A668DB320A32661009F29B8 /* NotificationController.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		0A7655B42022EF1B0061FEC8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -701,20 +576,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		0A473C0620A1C00C0052412B /* PBXTargetDependency */ = {
+		0AFC31F920E4B45F0055D7FC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0A7655B82022EF1B0061FEC8 /* Unicorn iOS */;
-			targetProxy = 0A473C0520A1C00C0052412B /* PBXContainerItemProxy */;
-		};
-		0A668DA920A32661009F29B8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0A668DA520A32661009F29B8 /* Unicorn Example watchOS Extension */;
-			targetProxy = 0A668DA820A32661009F29B8 /* PBXContainerItemProxy */;
-		};
-		0A668DB920A32661009F29B8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0A668D9920A3265F009F29B8 /* Unicorn Example watchOS */;
-			targetProxy = 0A668DB820A32661009F29B8 /* PBXContainerItemProxy */;
+			targetProxy = 0AFC31F820E4B45F0055D7FC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -751,9 +616,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N4WZ33Z6KM;
 				INFOPLIST_FILE = "Unicorn Example iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.Unicorn-Example-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -767,86 +634,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N4WZ33Z6KM;
 				INFOPLIST_FILE = "Unicorn Example iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.Unicorn-Example-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		0A668DBC20A32661009F29B8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = N4WZ33Z6KM;
-				INFOPLIST_FILE = "Unicorn Example watchOS Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.Unicorn-Example-iOS.watchkitapp.watchkitextension";
-				PRODUCT_NAME = "${TARGET_NAME}";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.3;
-			};
-			name = Debug;
-		};
-		0A668DBD20A32661009F29B8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = N4WZ33Z6KM;
-				INFOPLIST_FILE = "Unicorn Example watchOS Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.Unicorn-Example-iOS.watchkitapp.watchkitextension";
-				PRODUCT_NAME = "${TARGET_NAME}";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.3;
-			};
-			name = Release;
-		};
-		0A668DC020A32661009F29B8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				IBSC_MODULE = Unicorn_Example_watchOS_Extension;
-				INFOPLIST_FILE = "Unicorn Example watchOS/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.Unicorn-Example-iOS.watchkitapp";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.3;
-			};
-			name = Debug;
-		};
-		0A668DC120A32661009F29B8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				IBSC_MODULE = Unicorn_Example_watchOS_Extension;
-				INFOPLIST_FILE = "Unicorn Example watchOS/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.emsihyo.Unicorn-Example-iOS.watchkitapp";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.3;
 			};
 			name = Release;
 		};
@@ -1110,7 +907,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -1135,7 +932,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -1164,24 +961,6 @@
 			buildConfigurations = (
 				0A473C0120A1BFF90052412B /* Debug */,
 				0A473C0220A1BFF90052412B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		0A668DBB20A32661009F29B8 /* Build configuration list for PBXNativeTarget "Unicorn Example watchOS Extension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0A668DBC20A32661009F29B8 /* Debug */,
-				0A668DBD20A32661009F29B8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		0A668DBF20A32661009F29B8 /* Build configuration list for PBXNativeTarget "Unicorn Example watchOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0A668DC020A32661009F29B8 /* Debug */,
-				0A668DC120A32661009F29B8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

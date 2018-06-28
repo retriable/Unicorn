@@ -22,7 +22,7 @@
     NSLog(@"****\n\n%@\n\n****",[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) lastObject]);
     NSString *s=[NSString stringWithContentsOfFile:[[NSBundle mainBundle]pathForResource:@"article" ofType:@"json"] encoding:NSUTF8StringEncoding error:nil];
     NSMutableArray *ss=[NSMutableArray array];
-    for (int i=0;i<1000;i++){
+    for (int i=0;i<20;i++){
         [ss addObject:[NSJSONSerialization JSONObjectWithData:[s dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil]];
     }
     benchmark(^{

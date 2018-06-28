@@ -378,6 +378,8 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
         [self.db executeUpdate:[NSString stringWithFormat:@"DROP TABLE '%@'", self.name] arguments:nil error:nil];
     }
     [self.db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('%@' %@ NOT NULL PRIMARY KEY)", self.name, self.primaryProperty.name, primaryColumnType] arguments:nil error:nil];
+    if (!oldColumns) oldColumns=[NSMutableDictionary dictionary];
+    oldColumns[self.primaryProperty.name]=primaryColumnType;
     NSString *add=@"ALTER TABLE '%@' ADD COLUMN '%@' %@";
     for (UniProperty *property in self.dbPropertyArr){
         NSString *type=oldColumns[property.name];
