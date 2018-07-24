@@ -1027,7 +1027,12 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         switch (cls.primaryProperty.columnType) {
             case UniColumnTypeInteger: sqlite3_bind_int64(s, idx, [primary longLongValue]); break;
             case UniColumnTypeReal: sqlite3_bind_double(s, idx, [primary doubleValue]); break;
-            case UniColumnTypeText: sqlite3_bind_text(s, idx, [primary UTF8String], -1, SQLITE_STATIC); break;
+            case UniColumnTypeText:
+                if ([primary isKindOfClass:NSString.class]){
+                    sqlite3_bind_text(s, idx, [primary UTF8String], -1, SQLITE_STATIC); break;
+                }else{
+                    sqlite3_bind_text(s, idx, [[NSString stringWithFormat:@"%@",primary] UTF8String], -1, SQLITE_STATIC); break;
+                }
             default: NSAssert(0,@"unsupported db column type in primary property: %@, class: %@",cls.primaryProperty.name,cls.name); sqlite3_bind_null(s, idx); break;
         }
     } resultBlock:^(sqlite3_stmt *s, bool *stop) {
