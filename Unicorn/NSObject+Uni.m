@@ -169,10 +169,7 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
         case UniTypeEncodingSEL:
             if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,SEL))(void *) objc_msgSend)(target, property.setter,NSSelectorFromString(value));
             else if(value==(id)kCFNull) ((void (*)(id, SEL,Class))(void *) objc_msgSend)(target, property.setter,nil);
-            else{
-                Class cls = object_getClass(value);
-                if (cls&&class_isMetaClass(cls)) ((void (*)(id, SEL,Class))(void *) objc_msgSend)(target, property.setter,cls);
-            }
+            else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
             break;
         case UniTypeEncodingNSRange:
             if([value isKindOfClass:NSValue.class]) ((void (*)(id, SEL,NSRange))(void *) objc_msgSend)(target, property.setter,[value rangeValue]);
@@ -293,6 +290,12 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
             else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
             break;
+        case UniTypeEncodingNSDecimalNumber:
+            if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[NSDecimalNumber decimalNumberWithString:[UNI_NumberFormatter() stringFromNumber:value]]);
+            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[NSDecimalNumber decimalNumberWithString:value]);
+            else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
+            else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
+            break;
         case UniTypeEncodingNSDate:
         case UniTypeEncodingNSData:
         case UniTypeEncodingNSArray:
@@ -389,6 +392,7 @@ static __inline__ __attribute__((always_inline)) id uni_get_value(id target,UniP
         case UniTypeEncodingNSMutableString:
         case UniTypeEncodingNSURL:
         case UniTypeEncodingNSNumber:
+        case UniTypeEncodingNSDecimalNumber:
         case UniTypeEncodingNSDate:
         case UniTypeEncodingNSData:
         case UniTypeEncodingNSMutableData:
@@ -497,6 +501,11 @@ static __inline__ __attribute__((always_inline)) void uni_bind_stmt_with_propert
         case UniTypeEncodingNSNumber:{
             id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
             if (value&&[value isKindOfClass:NSNumber.class]) sqlite3_bind_text(stmt, idx, [[UNI_NumberFormatter() stringFromNumber:value] UTF8String], -1, SQLITE_STATIC);
+            else sqlite3_bind_null(stmt, idx);
+        } break;
+        case UniTypeEncodingNSDecimalNumber:{
+            id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
+            if (value&&[value isKindOfClass:NSDecimalNumber.class]) sqlite3_bind_text(stmt, idx,[[(NSDecimalNumber*)value stringValue] UTF8String], -1, SQLITE_STATIC);
             else sqlite3_bind_null(stmt, idx);
         } break;
         case UniTypeEncodingNSDate:{
@@ -611,6 +620,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_obj(id targ
             case UniTypeEncodingNSMutableString:
             case UniTypeEncodingNSURL:
             case UniTypeEncodingNSNumber:
+            case UniTypeEncodingNSDecimalNumber:
             case UniTypeEncodingNSDate:
             case UniTypeEncodingNSData:
             case UniTypeEncodingNSMutableData:
@@ -840,6 +850,11 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                 case UniTypeEncodingNSNumber:
                     switch (type) {
                         case SQLITE_TEXT: ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[UNI_NumberFormatter()  numberFromString:[[NSString alloc] initWithCString:(const char *)sqlite3_column_text(stmt, i) encoding:NSUTF8StringEncoding]]); break;
+                        default: break;
+                    } break;
+                case UniTypeEncodingNSDecimalNumber:
+                    switch (type) {
+                        case SQLITE_TEXT: ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[NSDecimalNumber decimalNumberWithString:[[NSString alloc] initWithCString:(const char *)sqlite3_column_text(stmt, i) encoding:NSUTF8StringEncoding]]); break;
                         default: break;
                     } break;
                 case UniTypeEncodingNSDate:

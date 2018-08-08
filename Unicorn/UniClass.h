@@ -42,6 +42,7 @@ typedef NS_ENUM(NSInteger,UniTypeEncoding){
     UniTypeEncodingNSMutableString,
     UniTypeEncodingNSURL,
     UniTypeEncodingNSNumber,
+    UniTypeEncodingNSDecimalNumber,
     UniTypeEncodingNSDate,
     UniTypeEncodingNSData,
     UniTypeEncodingNSMutableData,

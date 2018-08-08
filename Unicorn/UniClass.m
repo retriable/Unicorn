@@ -56,6 +56,7 @@ static UniColumnType columnTypeOfProperty(Class cls,UniProperty* property){
         case UniTypeEncodingNSMutableString:
         case UniTypeEncodingNSURL:
         case UniTypeEncodingNSNumber:
+        case UniTypeEncodingNSDecimalNumber:
             if([cls respondsToSelector:@selector(uni_columnType:)]){
                 NSCAssert(![cls uni_columnType:property.name], @"property can be process automatically,you should not implement uni_columnType: for property: %@",property.name);
             }
@@ -125,6 +126,7 @@ static __inline__ __attribute__((always_inline)) NSString * uni_encodingDesc(Uni
         case UniTypeEncodingNSString: [type appendString:@"string"]; break;
         case UniTypeEncodingNSMutableString: [type appendString:@"mutable string"]; break;
         case UniTypeEncodingNSNumber: [type appendString:@"number"]; break;
+        case UniTypeEncodingNSDecimalNumber: [type appendString:@"decimal number"]; break;
         case UniTypeEncodingNSDate: [type appendString:@"date"]; break;
         case UniTypeEncodingNSData: [type appendString:@"data"]; break;
         case UniTypeEncodingNSMutableData:[type appendString:@"mutable data"]; break;
@@ -607,6 +609,7 @@ properties      : \n%@\n\
                         else if(cls==NSMutableString.class) self.typeEncoding=UniTypeEncodingNSMutableString;
                         else if(cls==NSURL.class) self.typeEncoding=UniTypeEncodingNSURL;
                         else if(cls==NSNumber.class) self.typeEncoding=UniTypeEncodingNSNumber;
+                        else if(cls==NSDecimalNumber.class)self.typeEncoding=UniTypeEncodingNSDecimalNumber;
                         else if(cls==NSDate.class) self.typeEncoding=UniTypeEncodingNSDate;
                         else if(cls==NSData.class) self.typeEncoding=UniTypeEncodingNSData;
                         else if(cls==NSMutableData.class) self.typeEncoding=UniTypeEncodingNSMutableData;
