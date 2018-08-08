@@ -264,7 +264,7 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
     if ([cls conformsToProtocol:@protocol(UniJSON)]) self.isConformingToUniJSON=YES;
     if ([cls conformsToProtocol:@protocol(UniMM)]) self.isConformingToUniMM=YES;
     if ([cls conformsToProtocol:@protocol(UniDB)]) self.isConformingToUniDB=YES;
-    if (self.isConformingToUniMM||self.isConformingToUniJSON) self.primaryProperty=self.propertyDic[[self.cls uni_primaryKey]];
+    if (self.isConformingToUniMM||self.isConformingToUniDB) self.primaryProperty=self.propertyDic[[self.cls uni_primaryKey]];
     return self;
 }
 
