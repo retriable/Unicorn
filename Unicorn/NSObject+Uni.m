@@ -1163,7 +1163,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     UniClass *cls=[UniClass classWithClass:self];
     [cls sync:^{
         NSError *error=nil;
-        res=[cls.db executeUpdate:[NSString stringWithFormat:@"DELETE FROM %@ WHERE uni_update_at<?",cls.name] arguments:@[@([[NSDate date] timeIntervalSince1970])] error:&error];
+        res=[cls.db executeUpdate:[NSString stringWithFormat:@"DELETE FROM %@ WHERE uni_update_at<?",cls.name] arguments:@[@([date timeIntervalSince1970])] error:&error];
         if (!res) {
             NSLog(@"%@",error);
         }
