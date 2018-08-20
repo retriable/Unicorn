@@ -1081,7 +1081,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             if(cls.isConformingToUniMM){
                 id primaryValue=forward_transform_primary_value(uni_get_value(m, cls.primaryProperty), nil, cls.primaryProperty);
                 if (!primaryValue) { NSAssert(0,@"can not find primary value in model %@",m); return; }
-                id model=[cls.mm objectForKey:primaryValue];
+                model=[cls.mm objectForKey:primaryValue];
                 if (!model) { model=m; [cls.mm setObject:model forKey:primaryValue]; }
             }else{
                 model=m;
