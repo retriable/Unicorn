@@ -70,6 +70,8 @@ typedef id _Nullable (^UniTransformer) (id _Nullable value,BOOL reversed);
 
 + (NSArray* _Nonnull)uni_indexes;
 
+- (BOOL) uni_persistent;
+
 @end
 
 

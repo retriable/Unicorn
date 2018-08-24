@@ -958,15 +958,17 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         if (model) {
             [model _uni_mergeWithJsonDict:dict cls:cls];
             if(cls.isConformingToUniDB){
-                if(![cls.db executeUpdate:cls.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
-                    if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
-                    else if (idx == count+2) uni_bind_stmt_with_property(model, cls.primaryProperty, stmt, idx);
-                    else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
-                } error:&err]) {
-                    if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
+                if (![model respondsToSelector:@selector(uni_persistent)] ||[model uni_persistent]){
+                    if(![cls.db executeUpdate:cls.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
                         if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
+                        else if (idx == count+2) uni_bind_stmt_with_property(model, cls.primaryProperty, stmt, idx);
                         else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
-                    } error:&err]){ NSAssert(0,@"db error %@",err); return nil; }
+                    } error:&err]) {
+                        if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
+                            if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
+                            else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
+                        } error:&err]){ NSAssert(0,@"db error %@",err); return nil; }
+                    }
                 }
             }
         }else{
@@ -974,6 +976,25 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             [model _uni_mergeWithJsonDict:dict cls:cls];
             [cls.mm setObject:model forKey:primaryValue];
             if(cls.isConformingToUniDB){
+                if (![model respondsToSelector:@selector(uni_persistent)] ||[model uni_persistent]){
+                    if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
+                        if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
+                        else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
+                    } error:&err]) {
+                        if(![cls.db executeUpdate:cls.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
+                            if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
+                            else if (idx == count+2) uni_bind_stmt_with_property(model, cls.primaryProperty, stmt, idx);
+                            else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
+                        } error:&err]){ NSAssert(0,@"db error %@",err); return nil; }
+                    }
+                }
+            }
+        }
+    }else{
+        model=[[self alloc]init];
+        [model _uni_mergeWithJsonDict:dict cls:cls];
+        if(cls.isConformingToUniDB){
+            if (![model respondsToSelector:@selector(uni_persistent)] ||[model uni_persistent]){
                 if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
                     if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
                     else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
@@ -984,21 +1005,6 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                         else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
                     } error:&err]){ NSAssert(0,@"db error %@",err); return nil; }
                 }
-            }
-        }
-    }else{
-        model=[[self alloc]init];
-        [model _uni_mergeWithJsonDict:dict cls:cls];
-        if(cls.isConformingToUniDB){
-            if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
-                if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
-                else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
-            } error:&err]) {
-                if(![cls.db executeUpdate:cls.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
-                    if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
-                    else if (idx == count+2) uni_bind_stmt_with_property(model, cls.primaryProperty, stmt, idx);
-                    else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
-                } error:&err]){ NSAssert(0,@"db error %@",err); return nil; }
             }
         }
     }
@@ -1111,16 +1117,18 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     }
     if (cls.isConformingToUniDB){
         NSError *err;
-        int count=(int)cls.dbPropertyArr.count;
-        if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
-            if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
-            else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
-        } error:nil]) {
-            if(![cls.db executeUpdate:cls.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
+        if (![model respondsToSelector:@selector(uni_persistent)] ||[model uni_persistent]){
+            int count=(int)cls.dbPropertyArr.count;
+            if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
                 if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
-                else if (idx == count+2) uni_bind_stmt_with_property(model, cls.primaryProperty, stmt, idx);
                 else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
-            } error:&err]) { NSAssert(0,@"db error %@",err); return self; }
+            } error:nil]) {
+                if(![cls.db executeUpdate:cls.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
+                    if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
+                    else if (idx == count+2) uni_bind_stmt_with_property(model, cls.primaryProperty, stmt, idx);
+                    else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
+                } error:&err]) { NSAssert(0,@"db error %@",err); return self; }
+            }
         }
     }
     return model;
