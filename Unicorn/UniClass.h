@@ -7,7 +7,7 @@
 //
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
-
+#import "UniTransformer.h"
 #import "UniDB.h"
 
 typedef NS_ENUM(NSInteger,UniTypeEncoding){
@@ -130,7 +130,7 @@ typedef NS_ENUM(NSInteger,UniPropertyEncoding) {
 @property (nonatomic,strong) NSArray             *jsonKeyPathArr;
 @property (nonatomic,strong) NSString            *ivar;
 @property (nonatomic,strong) NSString            *name;
-@property (nonatomic,strong) UniTransformer      dbTransformer;
-@property (nonatomic,strong) UniTransformer      jsonTransformer;
+@property (nonatomic,strong) UniTransformer      *dbTransformer;
+@property (nonatomic,strong) UniTransformer      *jsonTransformer;
 
 @end

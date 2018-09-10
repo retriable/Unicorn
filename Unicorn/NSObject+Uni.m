@@ -430,7 +430,7 @@ static __inline__ __attribute__((always_inline)) void uni_bind_stmt_with_obj(__u
 
 static __inline__ __attribute__((always_inline)) void uni_bind_stmt_with_property(id target,UniProperty *property, sqlite3_stmt *stmt, int idx) {
     if (property.dbTransformer) {
-        id value = property.dbTransformer(((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter),YES);
+        id value = [property.dbTransformer reverseTransformedValue:((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)];
         uni_bind_stmt_with_obj(value, property.columnType, stmt, idx); return;
     }
     switch (property.typeEncoding) {
@@ -530,9 +530,9 @@ static __inline__ __attribute__((always_inline)) void uni_bind_stmt_with_propert
     }
 }
 
-static __inline__ __attribute__((always_inline)) id forward_transform_primary_value(id value,UniTransformer transformer,UniProperty * property){
+static __inline__ __attribute__((always_inline)) id forward_transform_primary_value(id value,UniTransformer *transformer,UniProperty * property){
     //value class maybe NSString NSNumber
-    if (transformer) return transformer(value,NO);
+    if (transformer) return [transformer transformedValue:value];
     switch (property.typeEncoding) {
         case UniTypeEncodingBool:
         case UniTypeEncodingInt8:
@@ -666,7 +666,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                     } break;
                     default: break;
                 }
-                value = property.dbTransformer(value,NO);
+                value = [property.dbTransformer transformedValue:value];
                 uni_set_value(target, property, value);
                 return;
             }
@@ -1028,7 +1028,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             value=uni_get_value_from_dict(dict, keyPath);
             if (value) break;
         }
-        if (property.jsonTransformer) value=property.jsonTransformer(value,NO);
+        if (property.jsonTransformer) value=[property.jsonTransformer transformedValue:value];
         else if ((property.typeEncoding)==UniTypeEncodingNSObject) {
             UniClass *clz=[UniClass classWithClass:property.cls];
             if (clz.isConformingToUniJSON) value=[property.cls _uni_parseJson:value cls:clz];
@@ -1189,7 +1189,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     NSMutableDictionary *dict=[NSMutableDictionary dictionary];
     for (UniProperty *property in cls.jsonPropertyArr){
         id value=uni_get_value(self, property);
-        if (property.jsonTransformer) value=property.jsonTransformer(value,YES);
+        if (property.jsonTransformer) value=[property.jsonTransformer reverseTransformedValue:value];
         else if (property.typeEncoding==UniTypeEncodingNSObject) value=[value uni_jsonDictionary];
         if (!value) continue;
         NSArray *keyPath=property.jsonKeyPathArr[0];

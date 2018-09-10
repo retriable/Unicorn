@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A2A5B9F2146417900B6B32A /* UniTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A2A5B9D2146417900B6B32A /* UniTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A2A5BA02146417900B6B32A /* UniTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A2A5B9D2146417900B6B32A /* UniTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A2A5BA12146417900B6B32A /* UniTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A2A5B9D2146417900B6B32A /* UniTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A2A5BA22146417900B6B32A /* UniTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A2A5B9D2146417900B6B32A /* UniTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A2A5BA32146417900B6B32A /* UniTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A2A5B9E2146417900B6B32A /* UniTransformer.m */; };
+		0A2A5BA42146417900B6B32A /* UniTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A2A5B9E2146417900B6B32A /* UniTransformer.m */; };
+		0A2A5BA52146417900B6B32A /* UniTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A2A5B9E2146417900B6B32A /* UniTransformer.m */; };
+		0A2A5BA62146417900B6B32A /* UniTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A2A5B9E2146417900B6B32A /* UniTransformer.m */; };
 		0A473BF120A1BFF80052412B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BF020A1BFF80052412B /* AppDelegate.m */; };
 		0A473BF420A1BFF80052412B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A473BF320A1BFF80052412B /* ViewController.m */; };
 		0A473BF720A1BFF80052412B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A473BF520A1BFF80052412B /* Main.storyboard */; };
@@ -88,6 +96,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A2A5B9D2146417900B6B32A /* UniTransformer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UniTransformer.h; sourceTree = "<group>"; };
+		0A2A5B9E2146417900B6B32A /* UniTransformer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniTransformer.m; sourceTree = "<group>"; };
 		0A473BE020A1BACB0052412B /* Comment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
 		0A473BE120A1BACB0052412B /* Comment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
 		0A473BE220A1BACB0052412B /* User.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
@@ -262,16 +272,18 @@
 			isa = PBXGroup;
 			children = (
 				0ADA381320A3F2FC00EE797D /* .travis.yml */,
-				0ADA381120A3F13700EE797D /* LICENSE */,
-				0ADA381220A3F13700EE797D /* README.md */,
-				0ADA381020A3F13700EE797D /* Unicorn.podspec */,
-				0AD7F284209FF7B200592635 /* UniCompat.h */,
 				0A7655BD2022EF1B0061FEC8 /* Info.plist */,
+				0ADA381120A3F13700EE797D /* LICENSE */,
 				0A8CECA52040F3820007FAA8 /* NSObject+Uni.h */,
 				0A8CECA62040F3820007FAA8 /* NSObject+Uni.m */,
+				0ADA381220A3F13700EE797D /* README.md */,
 				0A7655D92022EF5B0061FEC8 /* UniClass.h */,
 				0A7655DA2022EF5B0061FEC8 /* UniClass.m */,
+				0A2A5B9D2146417900B6B32A /* UniTransformer.h */,
+				0A2A5B9E2146417900B6B32A /* UniTransformer.m */,
+				0AD7F284209FF7B200592635 /* UniCompat.h */,
 				0A7655BC2022EF1B0061FEC8 /* Unicorn.h */,
+				0ADA381020A3F13700EE797D /* Unicorn.podspec */,
 				0AFC97AB2023F35400D6506E /* UniDB.h */,
 				0AFC97AC2023F35400D6506E /* UniDB.m */,
 			);
@@ -288,6 +300,7 @@
 				0A7655CA2022EF1B0061FEC8 /* Unicorn.h in Headers */,
 				0A8CECA72040F3820007FAA8 /* NSObject+Uni.h in Headers */,
 				0AFC97AD2023F35400D6506E /* UniDB.h in Headers */,
+				0A2A5B9F2146417900B6B32A /* UniTransformer.h in Headers */,
 				0AD7F2B620A0358700592635 /* UniCompat.h in Headers */,
 				0A7655DB2022EF5B0061FEC8 /* UniClass.h in Headers */,
 			);
@@ -300,6 +313,7 @@
 				0AD7F2B020A0357E00592635 /* UniClass.h in Headers */,
 				0AD7F2BD20A0359600592635 /* UniDB.h in Headers */,
 				0AD7F2BA20A0358E00592635 /* Unicorn.h in Headers */,
+				0A2A5BA02146417900B6B32A /* UniTransformer.h in Headers */,
 				0AD7F2B720A0358700592635 /* UniCompat.h in Headers */,
 				0AD7F2AE20A0357000592635 /* NSObject+Uni.h in Headers */,
 			);
@@ -312,6 +326,7 @@
 				0AD7F2B120A0357E00592635 /* UniClass.h in Headers */,
 				0AD7F2BE20A0359600592635 /* UniDB.h in Headers */,
 				0AD7F2BB20A0358F00592635 /* Unicorn.h in Headers */,
+				0A2A5BA12146417900B6B32A /* UniTransformer.h in Headers */,
 				0AD7F2B820A0358800592635 /* UniCompat.h in Headers */,
 				0AD7F2AD20A0356F00592635 /* NSObject+Uni.h in Headers */,
 			);
@@ -324,6 +339,7 @@
 				0AD7F2B220A0357F00592635 /* UniClass.h in Headers */,
 				0AD7F2BF20A0359700592635 /* UniDB.h in Headers */,
 				0AD7F2BC20A0358F00592635 /* Unicorn.h in Headers */,
+				0A2A5BA22146417900B6B32A /* UniTransformer.h in Headers */,
 				0AD7F2B920A0358800592635 /* UniCompat.h in Headers */,
 				0AD7F2AF20A0357000592635 /* NSObject+Uni.h in Headers */,
 			);
@@ -539,6 +555,7 @@
 			files = (
 				0AFC97AE2023F35400D6506E /* UniDB.m in Sources */,
 				0A7655DC2022EF5B0061FEC8 /* UniClass.m in Sources */,
+				0A2A5BA32146417900B6B32A /* UniTransformer.m in Sources */,
 				0A8CECA82040F3820007FAA8 /* NSObject+Uni.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -549,6 +566,7 @@
 			files = (
 				0AD7F2C020A0359C00592635 /* UniDB.m in Sources */,
 				0AD7F2B320A0358300592635 /* UniClass.m in Sources */,
+				0A2A5BA42146417900B6B32A /* UniTransformer.m in Sources */,
 				0AD7F2C320A035AA00592635 /* NSObject+Uni.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -559,6 +577,7 @@
 			files = (
 				0AD7F2C120A0359C00592635 /* UniDB.m in Sources */,
 				0AD7F2B420A0358400592635 /* UniClass.m in Sources */,
+				0A2A5BA52146417900B6B32A /* UniTransformer.m in Sources */,
 				0AD7F2C420A035AB00592635 /* NSObject+Uni.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -569,6 +588,7 @@
 			files = (
 				0AD7F2C220A0359D00592635 /* UniDB.m in Sources */,
 				0AD7F2B520A0358400592635 /* UniClass.m in Sources */,
+				0A2A5BA62146417900B6B32A /* UniTransformer.m in Sources */,
 				0AD7F2C520A035AB00592635 /* NSObject+Uni.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "UniCompat.h"
+#import "UniTransformer.h"
 
 #if TARGET_OS_IOS || TARGET_OS_TV
 
@@ -32,15 +33,13 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
     UniColumnTypeBlob
 };
 
-typedef id _Nullable (^UniTransformer) (id _Nullable value,BOOL reversed);
-
 @protocol UniJSON<NSObject>
 
 + (NSDictionary *_Nonnull)uni_keyPaths;
 
 @optional
 
-+ (UniTransformer _Nullable)uni_jsonTransformer:(NSString * _Nonnull)propertyName;
++ (UniTransformer *_Nullable)uni_jsonTransformer:(NSString * _Nonnull)propertyName;
 
 @end
 
@@ -64,7 +63,7 @@ typedef id _Nullable (^UniTransformer) (id _Nullable value,BOOL reversed);
 
 + (NSArray * _Nonnull)uni_delitescentClasses;
 
-+ (UniTransformer _Nullable)uni_dbTransformer:(NSString * _Nonnull)propertyName;
++ (UniTransformer *_Nullable)uni_dbTransformer:(NSString * _Nonnull)propertyName;
 
 + (UniColumnType)uni_columnType:(NSString * _Nonnull)propertyName;
 

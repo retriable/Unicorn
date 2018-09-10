@@ -19,20 +19,18 @@
              };
 }
 
-+ (UniTransformer _Nullable)uni_jsonTransformer:(NSString* _Nonnull)propertyName{
++ (UniTransformer *_Nullable)uni_jsonTransformer:(NSString* _Nonnull)propertyName{
     if ([propertyName isEqualToString:@"comments"]){
-        return ^(id value,BOOL reversed){
-            if (reversed){
-                NSMutableArray *arr=[NSMutableArray array];
-                for (id comment in value){
-                    id json=[comment uni_jsonDictionary];
-                    if (json) [arr addObject:json];
-                }
-                return (id)arr;
-            }else{
-                return (id)[Comment uni_parseJson:value];
+        return [UniTransformer transformerWithForward:^id(id value) {
+            return (id)[Comment uni_parseJson:value];
+        } backward:^id(id value) {
+            NSMutableArray *arr=[NSMutableArray array];
+            for (id comment in value){
+                id json=[comment uni_jsonDictionary];
+                if (json) [arr addObject:json];
             }
-        };
+            return (id)arr;
+        }];
     }
     return nil;
 }
@@ -52,26 +50,23 @@
     return 0;
 }
 
-+ (UniTransformer _Nullable)uni_dbTransformer:(NSString* _Nonnull)propertyName{
++ (UniTransformer *_Nullable)uni_dbTransformer:(NSString* _Nonnull)propertyName{
     if ([propertyName isEqualToString:@"comments"]){
-        return ^(id value,BOOL reversed){
-            if (!value) return (id)nil;
-            if (reversed){
-                NSMutableArray *arr=[NSMutableArray array];
-                [value enumerateObjectsUsingBlock:^(Comment * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    [arr addObject:[NSString stringWithFormat:@"%llu",obj.id]];
-                }];
-                return (id)[arr componentsJoinedByString:@","];
-            }else{
-                NSArray *comps=[value componentsSeparatedByString:@","];
-                NSMutableArray *arr=[NSMutableArray array];
-                for (NSString * sid in comps){
-                    Comment *comment=[Comment uni_queryOne:@([sid integerValue])];
-                    if (comment) [arr addObject:comment];
-                }
-                return (id)arr;
+        return [UniTransformer transformerWithForward:^id(id value) {
+            NSArray *comps=[value componentsSeparatedByString:@","];
+            NSMutableArray *arr=[NSMutableArray array];
+            for (NSString * sid in comps){
+                Comment *comment=[Comment uni_queryOne:@([sid integerValue])];
+                if (comment) [arr addObject:comment];
             }
-        };
+            return (id)arr;
+        } backward:^id(id value) {
+            NSMutableArray *arr=[NSMutableArray array];
+            [value enumerateObjectsUsingBlock:^(Comment * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [arr addObject:[NSString stringWithFormat:@"%llu",obj.id]];
+            }];
+            return (id)[arr componentsJoinedByString:@","];
+        }];
     }
     return nil;
 }
