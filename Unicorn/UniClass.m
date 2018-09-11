@@ -298,22 +298,22 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
         NSMutableString *sql1 = [NSMutableString stringWithFormat:@"INSERT INTO %@ (", self.name];
         NSMutableString *sql2 = [NSMutableString stringWithFormat:@" VALUES ("];
         for (UniProperty *property in self.dbPropertyArr){
-            [sql appendFormat:@"%@=?,", property.name];
-            [sql1 appendFormat:@"%@,", property.name];
+            [sql appendFormat:@"`%@`=?,", property.name];
+            [sql1 appendFormat:@"`%@`,", property.name];
             [sql2 appendFormat:@"?,"];
         }
-        [sql appendFormat:@"%@=?,", @"uni_update_at"];
+        [sql appendFormat:@"`%@`=?,", @"uni_update_at"];
         [sql deleteCharactersInRange:NSMakeRange(sql.length - 1, 1)];
-        [sql appendFormat:@" WHERE %@=?;", self.primaryProperty.name];
+        [sql appendFormat:@" WHERE `%@`=?;", self.primaryProperty.name];
         self.dbUpdateSql = sql;
-        [sql1 appendFormat:@"%@,", @"uni_update_at"];
+        [sql1 appendFormat:@"`%@`,", @"uni_update_at"];
         [sql2 appendFormat:@"?,"];
         [sql1 deleteCharactersInRange:NSMakeRange(sql1.length - 1, 1)];
         [sql1 appendFormat:@")"];
         [sql2 deleteCharactersInRange:NSMakeRange(sql2.length - 1, 1)];
         [sql2 appendFormat:@")"];
         self.dbInsertSql = [NSString stringWithFormat:@"%@%@;", sql1, sql2];
-        self.dbDeleteSql = [NSString stringWithFormat:@"DELETE FROM %@ WHERE %@=?;",self.name,self.primaryProperty.name];
+        self.dbDeleteSql = [NSString stringWithFormat:@"DELETE FROM %@ WHERE `%@`=?;",self.name,self.primaryProperty.name];
         self.db=[[UniDB alloc]init];
         [self openAndInit:[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).lastObject stringByAppendingPathComponent:[NSString stringWithFormat:@"Unicorn/%@.sqlite3",self.name]] error:nil];
     }
@@ -377,12 +377,12 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
     __block NSString *sql = nil;
     if (oldColumns.count>0&&(!oldColumns[self.primaryProperty.name]||![oldColumns[self.primaryProperty.name] isEqualToString:primaryColumnType])) {
         NSAssert(0, @"dangerous operation,if the primary key changed,table will be drop and recreate");
-        [self.db executeUpdate:[NSString stringWithFormat:@"DROP TABLE '%@'", self.name] arguments:nil error:nil];
+        [self.db executeUpdate:[NSString stringWithFormat:@"DROP TABLE `%@`", self.name] arguments:nil error:nil];
     }
-    [self.db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS '%@' ('%@' %@ NOT NULL PRIMARY KEY)", self.name, self.primaryProperty.name, primaryColumnType] arguments:nil error:nil];
+    [self.db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS `%@` (`%@` %@ NOT NULL PRIMARY KEY)", self.name, self.primaryProperty.name, primaryColumnType] arguments:nil error:nil];
     if (!oldColumns) oldColumns=[NSMutableDictionary dictionary];
     oldColumns[self.primaryProperty.name]=primaryColumnType;
-    NSString *add=@"ALTER TABLE '%@' ADD COLUMN '%@' %@";
+    NSString *add=@"ALTER TABLE `%@` ADD COLUMN `%@` %@";
     for (UniProperty *property in self.dbPropertyArr){
         NSString *type=oldColumns[property.name];
         if (!type) [addPropertyArr addObject:property];
@@ -408,10 +408,10 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
         else oldIndexes[idx]=nil;
     }
     //add necessary indexes
-    for (NSString * idx in addIndexArr) [self.db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX %@ on %@(%@)", idx, self.name, idx] arguments:nil error:nil];
+    for (NSString * idx in addIndexArr) [self.db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX `%@` on `%@`(`%@`)", idx, self.name, idx] arguments:nil error:nil];
     //remove unnecessary indexes
     [oldIndexes enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        [self.db executeUpdate:[NSString stringWithFormat:@"DROP INDEX %@", key] arguments:nil error:nil];
+        [self.db executeUpdate:[NSString stringWithFormat:@"DROP INDEX `%@`", key] arguments:nil error:nil];
     }];
     return YES;
 }

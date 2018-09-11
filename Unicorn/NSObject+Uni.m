@@ -1133,9 +1133,13 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
 - (id)uni_update{
     __block id model = self;
     UniClass *cls=[UniClass classWithClass:self.class];
-    [cls sync:^{
+    if (cls.isConformingToUniMM||cls.isConformingToUniDB){
+        [cls sync:^{
+            model=[self _uni_update:cls];
+        }];
+    }else{
         model=[self _uni_update:cls];
-    }];
+    }
     return model;
 }
 
