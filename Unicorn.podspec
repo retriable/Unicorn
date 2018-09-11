@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name     = 'Unicorn'
-    spec.version  = '3.0.9'
+    spec.version  = '3.1.0'
     spec.license  = 'MIT'
     spec.summary  = 'Json model,single model,db model'
     spec.homepage = 'https://github.com/emsihyo/Unicorn'

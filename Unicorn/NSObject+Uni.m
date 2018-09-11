@@ -630,16 +630,8 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_obj(id targ
             case UniTypeEncodingNSMutableSet:
             case UniTypeEncodingNSDictionary:
             case UniTypeEncodingNSMutableDictionary:
-                ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
             case UniTypeEncodingNSObject: {
-                id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
-                if ([property.cls conformsToProtocol:@protocol(UniMM)]||[property.cls conformsToProtocol:@protocol(UniDB)]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-                    value=((id (*)(id, SEL,id))(void *) objc_msgSend)(value,@selector(_uni_update:),[UniClass classWithClass:property.cls]);
-#pragma clang diagnostic pop
-                }
-                ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
+                ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
             } break;
             default: [target setValue:[source valueForKey:property.name] forKey:property.name]; break;
         }
@@ -1100,6 +1092,9 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
 
 - (id)_uni_update:(UniClass *)cls{
     id model=self;
+    for (UniProperty *property in cls.propertyArr){
+        uni_set_value(self, property, [uni_get_value(self, property) uni_update]);
+    }
     if (cls.isConformingToUniMM){
         id primaryValue=forward_transform_primary_value(uni_get_value(self, cls.primaryProperty), nil, cls.primaryProperty);
         if (!primaryValue) {
