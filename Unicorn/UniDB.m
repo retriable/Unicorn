@@ -136,8 +136,8 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
     int res=SQLITE_ROW;
     while (res==SQLITE_ROW) {
         res=sqlite3_step(stmt.stmt);
-        if(res==SQLITE_DONE||res==SQLITE_ROW) resultBlock(stmt.stmt, &stop);
-        else{
+        if(res==SQLITE_ROW) resultBlock(stmt.stmt, &stop);
+        else if (res==SQLITE_ERROR){
             if(error) *error=[self error];
         }
         if (stop) break;
