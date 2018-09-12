@@ -279,13 +279,13 @@
 				0ADA381220A3F13700EE797D /* README.md */,
 				0A7655D92022EF5B0061FEC8 /* UniClass.h */,
 				0A7655DA2022EF5B0061FEC8 /* UniClass.m */,
-				0A2A5B9D2146417900B6B32A /* UniTransformer.h */,
-				0A2A5B9E2146417900B6B32A /* UniTransformer.m */,
 				0AD7F284209FF7B200592635 /* UniCompat.h */,
 				0A7655BC2022EF1B0061FEC8 /* Unicorn.h */,
 				0ADA381020A3F13700EE797D /* Unicorn.podspec */,
 				0AFC97AB2023F35400D6506E /* UniDB.h */,
 				0AFC97AC2023F35400D6506E /* UniDB.m */,
+				0A2A5B9D2146417900B6B32A /* UniTransformer.h */,
+				0A2A5B9E2146417900B6B32A /* UniTransformer.m */,
 			);
 			path = Unicorn;
 			sourceTree = "<group>";

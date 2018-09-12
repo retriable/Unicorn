@@ -179,10 +179,10 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_columns_of_t
     while (![scanner isAtEnd]) {
         NSString *column=nil;
         NSString *type=nil;
-        if(![scanner scanUpToString:@"'" intoString:nil]) break;
+        if(![scanner scanUpToString:@"`" intoString:nil]) break;
         if (scanner.scanLocation>=scanner.string.length) break;
         scanner.scanLocation++;
-        if(![scanner scanUpToString:@"'" intoString:&column]) break;
+        if(![scanner scanUpToString:@"`" intoString:&column]) break;
         if (scanner.scanLocation>=scanner.string.length) break;
         if(![scanner scanUpToString:@" " intoString:nil]) break;
         scanner.scanLocation++;
@@ -197,15 +197,7 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
     NSMutableDictionary *dict=[NSMutableDictionary dictionary];
     for (NSDictionary *dic in dics){
         NSString *index=dic[@"name"];
-        NSString *sql=dic[@"sql"];
-        if (!sql||!index) continue;
-        NSString *column=nil;
-        NSScanner *scanner=[NSScanner scannerWithString:sql];
-        if(![scanner scanUpToString:@"(" intoString:nil]) continue;
-        if (scanner.scanLocation>=scanner.string.length) continue;
-        scanner.scanLocation++;
-        if(![scanner scanUpToString:@")" intoString:&column]) continue;
-        dict[column]=index;
+        dict[index]=index;
     }
     return dict;
 }
@@ -293,9 +285,9 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
             [arr addObject:property];
         }];
         self.dbPropertyArr=arr;
-        self.dbSelectSql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE %@=?;", self.name, self.primaryProperty.name];
-        NSMutableString *sql = [NSMutableString stringWithFormat:@"UPDATE %@ SET ", self.name];
-        NSMutableString *sql1 = [NSMutableString stringWithFormat:@"INSERT INTO %@ (", self.name];
+        self.dbSelectSql = [NSString stringWithFormat:@"SELECT * FROM `%@` WHERE `%@`=?;", self.name, self.primaryProperty.name];
+        NSMutableString *sql = [NSMutableString stringWithFormat:@"UPDATE `%@` SET ", self.name];
+        NSMutableString *sql1 = [NSMutableString stringWithFormat:@"INSERT INTO `%@` (", self.name];
         NSMutableString *sql2 = [NSMutableString stringWithFormat:@" VALUES ("];
         for (UniProperty *property in self.dbPropertyArr){
             [sql appendFormat:@"`%@`=?,", property.name];
@@ -403,15 +395,16 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
     if ([self.cls respondsToSelector:@selector(uni_indexes)]) [indexes addObjectsFromArray:[self.cls uni_indexes]];
     [indexes addObject:@"uni_update_at"];
     for (NSString *idx in indexes){
-        NSString *index=oldIndexes[idx];
-        if (!index) [addIndexArr addObject:idx];
+        if (!oldIndexes[idx]){
+            [addIndexArr addObject:@{@"indexname":idx,@"index":[[idx componentsSeparatedByString:@","] componentsJoinedByString:@"`,`"]}];
+        }
         else oldIndexes[idx]=nil;
     }
     //add necessary indexes
-    for (NSString * idx in addIndexArr) [self.db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX `%@` on `%@`(`%@`)", idx, self.name, idx] arguments:nil error:nil];
+    for (NSDictionary * idx in addIndexArr) [self.db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX `%@` on `%@`(`%@`)", idx[@"indexname"], self.name, idx[@"index"]] arguments:nil error:nil];
     //remove unnecessary indexes
     [oldIndexes enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        [self.db executeUpdate:[NSString stringWithFormat:@"DROP INDEX `%@`", key] arguments:nil error:nil];
+        [self.db executeUpdate:[NSString stringWithFormat:@"DROP INDEX %@", key] arguments:nil error:nil];
     }];
     return YES;
 }
@@ -422,8 +415,8 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
     if (self.isConformingToUniMM||self.isConformingToUniDB) {
         if (![synchronized containsObject:selfCls]) [synchronized addObject:selfCls];
     }
-    if ([self.cls respondsToSelector:@selector(uni_delitescentClasses)]){
-        [[self.cls uni_delitescentClasses] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    if ([self.cls respondsToSelector:@selector(uni_synchronizedClasses)]){
+        [[self.cls uni_synchronizedClasses] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *clsName=[obj isKindOfClass:NSString.class]?obj:NSStringFromClass(obj);
             if (![synchronized containsObject:clsName]) [synchronized addObject:clsName];
         }];

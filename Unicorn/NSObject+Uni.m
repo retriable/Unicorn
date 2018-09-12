@@ -950,7 +950,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         if (model) {
             [model _uni_mergeWithJsonDict:dict cls:cls];
             if(cls.isConformingToUniDB){
-                if (![model respondsToSelector:@selector(uni_persistent)] ||[model uni_persistent]){
+                if (![model respondsToSelector:@selector(uni_nonPersistent)] ||![model uni_nonPersistent]){
                     if(![cls.db executeUpdate:cls.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
                         if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
                         else if (idx == count+2) uni_bind_stmt_with_property(model, cls.primaryProperty, stmt, idx);
@@ -968,7 +968,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             [model _uni_mergeWithJsonDict:dict cls:cls];
             [cls.mm setObject:model forKey:primaryValue];
             if(cls.isConformingToUniDB){
-                if (![model respondsToSelector:@selector(uni_persistent)] ||[model uni_persistent]){
+                if (![model respondsToSelector:@selector(uni_nonPersistent)] ||![model uni_nonPersistent]){
                     if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
                         if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
                         else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
@@ -986,7 +986,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         model=[[self alloc]init];
         [model _uni_mergeWithJsonDict:dict cls:cls];
         if(cls.isConformingToUniDB){
-            if (![model respondsToSelector:@selector(uni_persistent)] ||[model uni_persistent]){
+            if (![model respondsToSelector:@selector(uni_nonPersistent)] ||![model uni_nonPersistent]){
                 if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
                     if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
                     else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
@@ -1113,7 +1113,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     }
     if (cls.isConformingToUniDB){
         NSError *err;
-        if (![model respondsToSelector:@selector(uni_persistent)] ||[model uni_persistent]){
+        if (![model respondsToSelector:@selector(uni_nonPersistent)] ||![model uni_nonPersistent]){
             int count=(int)cls.dbPropertyArr.count;
             if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
                 if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
@@ -1171,7 +1171,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     UniClass *cls=[UniClass classWithClass:self];
     [cls sync:^{
         NSError *error=nil;
-        res=[cls.db executeUpdate:[NSString stringWithFormat:@"DELETE FROM %@ WHERE uni_update_at<?",cls.name] arguments:@[@([date timeIntervalSince1970])] error:&error];
+        res=[cls.db executeUpdate:[NSString stringWithFormat:@"DELETE FROM %@ WHERE `uni_update_at`<?",cls.name] arguments:@[@([date timeIntervalSince1970])] error:&error];
         if (!res) {
             NSLog(@"%@",error);
         }

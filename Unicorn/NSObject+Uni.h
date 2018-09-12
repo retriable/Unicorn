@@ -35,7 +35,7 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 
 @protocol UniJSON<NSObject>
 
-+ (NSDictionary *_Nonnull)uni_keyPaths;
++ (NSDictionary<NSString*,NSString*> *_Nonnull)uni_keyPaths;
 
 @optional
 
@@ -49,7 +49,7 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 
 @optional
 
-+ (NSArray * _Nonnull)uni_delitescentClasses;
++ (NSArray<NSString*> * _Nonnull)uni_synchronizedClasses;
 
 @end
 
@@ -57,19 +57,19 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 
 + (NSString * _Nonnull)uni_primaryKey;
 
-+ (NSArray * _Nonnull)uni_columns;
++ (NSArray<NSString*> * _Nonnull)uni_columns;
 
 @optional
 
-+ (NSArray * _Nonnull)uni_delitescentClasses;
++ (NSArray<Class> * _Nonnull)uni_synchronizedClasses;
 
 + (UniTransformer *_Nullable)uni_dbTransformer:(NSString * _Nonnull)propertyName;
 
 + (UniColumnType)uni_columnType:(NSString * _Nonnull)propertyName;
 
-+ (NSArray* _Nonnull)uni_indexes;
++ (NSArray<NSString*>*_Nonnull)uni_indexes;
 
-- (BOOL) uni_persistent;
+- (BOOL) uni_nonPersistent;
 
 @end
 

@@ -40,7 +40,7 @@
     return @"id";
 }
 
-+ (NSArray * _Nonnull)uni_delitescentClasses{
++ (NSArray * _Nonnull)uni_synchronizedClasses{
     return @[Comment.class];
 }
 
