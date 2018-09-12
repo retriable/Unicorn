@@ -1156,7 +1156,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
 + (BOOL)uni_delete:(NSString*)sql args:(NSArray*)args{
     __block BOOL res;
     UniClass *cls=[UniClass classWithClass:self];
-    sql=sql.length?[NSString stringWithFormat:@"DELETE FROM %@ %@",cls.name,sql]:[NSString stringWithFormat:@"DELETE FROM %@",cls.name];
+    sql=sql.length?[NSString stringWithFormat:@"DELETE FROM `%@` %@",cls.name,sql]:[NSString stringWithFormat:@"DELETE FROM `%@`",cls.name];
     [cls sync:^{
         NSError *error=nil;
         res=[cls.db executeUpdate:sql arguments:args error:&error];
@@ -1171,7 +1171,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     UniClass *cls=[UniClass classWithClass:self];
     [cls sync:^{
         NSError *error=nil;
-        res=[cls.db executeUpdate:[NSString stringWithFormat:@"DELETE FROM %@ WHERE `uni_update_at`<?",cls.name] arguments:@[@([date timeIntervalSince1970])] error:&error];
+        res=[cls.db executeUpdate:[NSString stringWithFormat:@"DELETE FROM `%@` WHERE `uni_update_at`<?",cls.name] arguments:@[@([date timeIntervalSince1970])] error:&error];
         if (!res) {
             NSLog(@"%@",error);
         }
