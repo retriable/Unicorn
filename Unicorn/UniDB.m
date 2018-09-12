@@ -133,12 +133,12 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
     int count = sqlite3_bind_parameter_count(stmt.stmt);
     for (int i = 0; i < count; i++) stmtBlock(stmt.stmt, i + 1);
     bool stop = NO;
-    int res=SQLITE_ROW;
-    while (res==SQLITE_ROW) {
+    int res;
+    do {
         res=sqlite3_step(stmt.stmt);
-        resultBlock(stmt.stmt, &stop);
+        if(res==SQLITE_ROW||res==SQLITE_DONE)resultBlock(stmt.stmt, &stop);
         if (stop) break;
-    }
+    }while(res==SQLITE_ROW);
     [self putStmt:stmt forSql:sql];
     return YES;
 }
