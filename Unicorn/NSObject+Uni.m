@@ -1100,9 +1100,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         }
         id m=[cls.mm objectForKey:primaryValue];
         if (m) {
-            if (m!=model) for (UniProperty *property in cls.propertyArr){
-                uni_merge_from_obj(m,property,uni_get_value(model, property));
-            }
+            if (m!=model) uni_merge_from_obj(m,model,cls);
             model=m;
         }else{
             [cls.mm setObject:model forKey:primaryValue];
