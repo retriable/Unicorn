@@ -1092,9 +1092,6 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
 
 - (id)_uni_update:(UniClass *)cls{
     id model=self;
-    for (UniProperty *property in cls.propertyArr){
-        uni_set_value(self, property, [uni_get_value(self, property) uni_update]);
-    }
     if (cls.isConformingToUniMM){
         id primaryValue=forward_transform_primary_value(uni_get_value(self, cls.primaryProperty), nil, cls.primaryProperty);
         if (!primaryValue) {
