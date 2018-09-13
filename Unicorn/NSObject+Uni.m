@@ -660,7 +660,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                 }
                 value = [property.dbTransformer transformedValue:value];
                 uni_set_value(target, property, value);
-                return;
+                continue;
             }
             switch (property.typeEncoding) {
                 case UniTypeEncodingBool:{
@@ -898,6 +898,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                         obj = [[clz.cls alloc]init];
                         uni_merge_from_stmt(obj, stmt, clz);
                         if (clz.isConformingToUniMM) [clz.mm setObject:obj forKey:value];
+                        ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,obj);
                     } error:&err]) NSCAssert(0,@"db error %@",err);
                 } break;
                 default: NSCAssert(0,@"unsupported encoding type in property %@",property.name); break;
