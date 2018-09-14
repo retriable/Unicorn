@@ -105,7 +105,7 @@ typedef NS_ENUM(NSInteger,UniPropertyEncoding) {
 @property (nonatomic, strong) NSString     *name;
 @property (nonatomic, strong) UniDB        *db;
 @property (nonatomic, strong) UniProperty  *primaryProperty;
-
+@property (nonatomic, strong) NSArray      *automaticallyUpdatedPropertynames;
 + (instancetype)classWithClass:(Class)cls;
 
 - (instancetype)initWithClass:(Class)cls;

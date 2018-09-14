@@ -71,6 +71,8 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 
 - (BOOL) uni_nonPersistent;
 
++ (NSArray<NSString*>*_Nonnull)uni_automaticallyUpdatedPropertynames;
+
 @end
 
 
