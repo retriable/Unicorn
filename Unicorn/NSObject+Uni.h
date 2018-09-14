@@ -128,7 +128,7 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
  update model
  user = [user uni_update]
 
- @return model did updated
+ @return model updated
  */
 - (id _Nullable)uni_update;
 
