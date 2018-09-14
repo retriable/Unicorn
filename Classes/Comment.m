@@ -15,7 +15,8 @@
              @"id":@"id",
              @"author":@[@"author",@"user"],
              @"content":@"content",
-             @"comments":@"comments"
+             @"comments":@"comments",
+             @"size":@"size"
              };
 }
 
@@ -26,7 +27,7 @@
         } backward:^id(id value) {
             NSMutableArray *arr=[NSMutableArray array];
             for (id comment in value){
-                id json=[comment uni_jsonDictionary];
+                id json=[comment uni_jsonObject];
                 if (json) [arr addObject:json];
             }
             return (id)arr;

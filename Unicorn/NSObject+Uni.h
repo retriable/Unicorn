@@ -10,7 +10,16 @@
 #import "UniCompat.h"
 #import "UniTransformer.h"
 
+typedef NS_ENUM(NSUInteger,UniColumnType){
+    UniColumnTypeAutomatically,
+    UniColumnTypeInteger,
+    UniColumnTypeReal,
+    UniColumnTypeText,
+    UniColumnTypeBlob
+};
+
 #if TARGET_OS_IOS || TARGET_OS_TV
+
 
 NSString * _Nonnull UNI_NSStringFromCATransform3D(CATransform3D transform3D);
 
@@ -24,14 +33,6 @@ NSString* _Nonnull UNI_NSStringFromNSEdgeInsets(NSEdgeInsets edgeInsets);
 NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
 
 #endif
-
-typedef NS_ENUM(NSUInteger,UniColumnType){
-    UniColumnTypeAutomatically,
-    UniColumnTypeInteger,
-    UniColumnTypeReal,
-    UniColumnTypeText,
-    UniColumnTypeBlob
-};
 
 @protocol UniJSON<NSObject>
 
@@ -79,9 +80,9 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 @interface NSObject (Uni)
 
 /**
- reverse model to json dictionary
+ reverse model to json object
  */
-@property (readonly)NSDictionary * _Nullable uni_jsonDictionary;
+@property (readonly)NSDictionary * _Nullable uni_jsonObject;
 
 /**
  reverse model to json string
@@ -89,12 +90,12 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 @property (readonly)NSString * _Nullable uni_jsonString;
 
 /**
- reverse models to array of json dictionary
+ reverse models to array of json object
  
  @param models models
- @return array of json dictionary
+ @return array of json object
  */
-+ (NSArray* _Nullable)uni_jsonDictionaryFromModels:(NSArray* _Nullable)models;
++ (NSArray* _Nullable)uni_jsonObjectsFromModels:(NSArray* _Nullable)models;
 
 /**
  User *user = [User uni_parseJson:jsonString]

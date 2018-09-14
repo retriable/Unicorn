@@ -11,27 +11,40 @@
 #import "NSObject+Uni.h"
 #import "UniClass.h"
 
+static __inline__ __attribute__((always_inline)) NSString* uni_regexPattern(NSInteger count){
+    if (count<1) return nil;
+    NSString *s1=@"(?:(\\d+\\.\\d+|\\.\\d+|\\d+)(?:\\s*,\\s*|\\s+))";
+    NSString *s2=@"(\\d+\\.\\d+|\\.\\d+|\\d+)";
+    NSMutableString *s=[NSMutableString string];
+    for (int i=0;i<count-1;i++){
+        [s appendString:s1];
+    }
+    [s appendString:s2];
+    return s;
+}
+
 #if TARGET_OS_IOS || TARGET_OS_TV
 
 static __inline__ __attribute__((always_inline)) NSString* uni_NSStringFromCATransform3D(CATransform3D transform3D){
     NSMutableArray *comps=[NSMutableArray array];
     CGFloat *p=(CGFloat *)&transform3D;
     for (int i=0;i<12;i++){ [comps addObject:[NSString stringWithFormat:@"%f",*p]]; p++; }
-    return [NSString stringWithFormat:@"{%@}",[comps componentsJoinedByString:@","]];
+    return [NSString stringWithFormat:@"{%@}",[comps componentsJoinedByString:@", "]];
 }
 
 static __inline__ __attribute__((always_inline)) CATransform3D uni_CATransform3DFromNSString(NSString *string){
     static NSRegularExpression *regex;
     static dispatch_once_t onceToken;
+    static NSInteger count=16;
     dispatch_once(&onceToken, ^{
-        regex=[[NSRegularExpression alloc]initWithPattern:@"^\\{(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1}\\}$" options:0 error:nil];
+        regex=[[NSRegularExpression alloc]initWithPattern:uni_regexPattern(count) options:0 error:nil];
     });
     CATransform3D transform3D=(CATransform3D){0};
     if (string.length==0) return transform3D;
     NSTextCheckingResult *result = [regex firstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
     if (!result) return transform3D;
     CGFloat *p=(CGFloat*)&transform3D;
-    for (NSInteger i=1;i<13;i++){ *p=[[string substringWithRange:[result rangeAtIndex:i]] doubleValue]; p++; }
+    for (NSInteger i=1;i<count+1;i++){ *p=[[string substringWithRange:[result rangeAtIndex:i]] doubleValue]; p++; }
     return transform3D;
 }
 
@@ -51,21 +64,22 @@ static __inline__ __attribute__((always_inline)) NSString* uni_NSStringFromNSEdg
     NSMutableArray *comps=[NSMutableArray array];
     CGFloat *p=(CGFloat *)&edgeInsets;
     for (int i=0;i<4;i++){ [comps addObject:[NSString stringWithFormat:@"%f",*p]];p++; }
-    return [NSString stringWithFormat:@"{%@}",[comps componentsJoinedByString:@","]];
+    return [NSString stringWithFormat:@"{%@}",[comps componentsJoinedByString:@", "]];
 }
 
 static __inline__ __attribute__((always_inline)) NSEdgeInsets uni_NSEdgeInsetsFromNSString(NSString *string){
     static NSRegularExpression *regex;
     static dispatch_once_t onceToken;
+    static NSInteger count=4;
     dispatch_once(&onceToken, ^{
-        regex=[[NSRegularExpression alloc]initWithPattern:@"^\\{(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1},(\\s*\\-?[0-9]+\\.?[0-9]*\\s*){1}\\}$" options:0 error:nil];
+        regex=[[NSRegularExpression alloc]initWithPattern:uni_regexPattern(count) options:0 error:nil];
     });
     NSEdgeInsets insets=(NSEdgeInsets){0,0,0,0};
     if (string.length==0) return insets;
     NSTextCheckingResult *result = [regex firstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
     if (!result) return insets;
     CGFloat *p=(CGFloat*)&insets;
-    for (NSInteger i=1;i<5;i++){ *p=[[string substringWithRange:[result rangeAtIndex:i]] doubleValue]; p++; }
+    for (NSInteger i=1;i<count+1;i++){ *p=[[string substringWithRange:[result rangeAtIndex:i]] doubleValue]; p++; }
     return insets;
 }
 
@@ -1180,17 +1194,93 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
 }
 
 - (NSString*)uni_jsonString{
-    return [[NSString alloc]initWithData:[NSJSONSerialization dataWithJSONObject:[self uni_jsonDictionary] options:0 error:nil] encoding:NSUTF8StringEncoding];
+    return [[NSString alloc]initWithData:[NSJSONSerialization dataWithJSONObject:[self uni_jsonObject] options:0 error:nil] encoding:NSUTF8StringEncoding];
 }
 
-- (NSDictionary*)uni_jsonDictionary{
+- (id)uni_jsonObject{
     UniClass *cls=[UniClass classWithClass:self.class];
-    if (!cls.isConformingToUniJSON) return nil;
+    if (!cls.isConformingToUniJSON) {
+        if([self isKindOfClass:NSString.class]){
+            return self;
+        }else if([self isKindOfClass:NSNumber.class]){
+            return self;
+        }else if([self isKindOfClass:NSSet.class]){
+            return [[(NSSet*)self allObjects] uni_jsonObject];
+        }else if([self isKindOfClass:NSArray.class]){
+            NSMutableArray *array=[NSMutableArray array];
+            [(NSArray*)self enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                id v=[obj uni_jsonObject];
+                if (v) [array addObject:v];
+            }];
+            return array.count>0?array:nil;
+        }else if([self isKindOfClass:NSDictionary.class]){
+            NSMutableDictionary *dic=[NSMutableDictionary dictionary];
+            [(NSDictionary*)self enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                id v=[obj uni_jsonObject];
+                if (v) dic[key]=v;
+            }];
+            return dic.count>0?dic:nil;
+        } else if([self isKindOfClass:NSValue.class]){
+            const char * type= [(NSValue*)self objCType];
+            if (strcmp(type,@encode(NSRange))==0){
+                return NSStringFromRange([(NSValue*)self rangeValue]);
+            }
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
+            else if(strcmp(type, @encode(CATransform3D))==0){
+                return UNI_NSStringFromCATransform3D([(NSValue*)self CATransform3DValue]);
+            }else if(strcmp(type, @encode(CGPoint))==0){
+                return NSStringFromCGPoint([(NSValue*)self CGPointValue]);
+            }else if(strcmp(type, @encode(CGSize))==0){
+                return NSStringFromCGSize([(NSValue*)self CGSizeValue]);
+            }else if(strcmp(type, @encode(CGRect))==0){
+                return NSStringFromCGRect([(NSValue*)self CGRectValue]);
+            }else if(strcmp(type, @encode(UIEdgeInsets))==0){
+                return NSStringFromUIEdgeInsets([(NSValue*)self UIEdgeInsetsValue]);
+            }else if(strcmp(type, @encode(CGVector))==0){
+                return NSStringFromCGVector([(NSValue*)self CGVectorValue]);
+            }else if(strcmp(type, @encode(CGAffineTransform))==0){
+                return NSStringFromCGAffineTransform([(NSValue*)self CGAffineTransformValue]);
+            }else if(strcmp(type, @encode(UIOffset))==0){
+                return NSStringFromUIOffset([(NSValue*)self UIOffsetValue]);
+            }
+#else
+            else if(strcmp(type, @encode(NSPoint))==0){
+                return NSStringFromPoint([(NSValue*)self pointValue]);
+            }else if(strcmp(type, @encode(NSSize))==0){
+                return NSStringFromSize([(NSValue*)self sizeValue]);
+            }else if(strcmp(type, @encode(NSRect))==0){
+                return NSStringFromRect([(NSValue*)self rectValue]);
+            }else if(strcmp(type, @encode(NSEdgeInsets))==0){
+                return UNI_NSStringFromNSEdgeInsets([(NSValue*)self edgeInsetsValue]);
+            }
+#endif
+            else{
+#if TARGET_OS_IOS
+                if (@available(iOS 11.0, *)) {
+                    if(strcmp(type, @encode(NSDirectionalEdgeInsets))==0){
+#endif
+#if TARGET_OS_TV
+                    if (@available(tvOS 11.0, *)) {
+                        if(strcmp(type, @encode(NSDirectionalEdgeInsets))==0){
+#endif
+#if TARGET_OS_WATCH
+                        if (@available(watchOS 4.0, *)) {
+                            if(strcmp(type, @encode(NSDirectionalEdgeInsets))==0){
+#endif
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
+                            return NSStringFromDirectionalEdgeInsets([(NSValue*)self directionalEdgeInsetsValue]);
+                        }
+                    }
+#endif
+                return self;
+           }
+        }
+    }
     NSMutableDictionary *dict=[NSMutableDictionary dictionary];
     for (UniProperty *property in cls.jsonPropertyArr){
         id value=uni_get_value(self, property);
         if (property.jsonTransformer) value=[property.jsonTransformer reverseTransformedValue:value];
-        else if (property.typeEncoding==UniTypeEncodingNSObject) value=[value uni_jsonDictionary];
+        else value=[value uni_jsonObject];
         if (!value) continue;
         NSArray *keyPath=property.jsonKeyPathArr[0];
         if (keyPath.count==1) {
@@ -1217,10 +1307,10 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     return dict;
 }
 
-+ (NSArray*)uni_jsonDictionaryFromModels:(NSArray*)models{
++ (NSArray*)uni_jsonObjectsFromModels:(NSArray*)models{
     NSMutableArray *dicts=[NSMutableArray array];
     for (id model in models){
-        NSDictionary *dict=[model uni_jsonDictionary];
+        NSDictionary *dict=[model uni_jsonObject];
         if(dict) [dicts addObject:dict];
     }
     return dicts;

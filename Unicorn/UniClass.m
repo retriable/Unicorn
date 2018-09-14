@@ -405,7 +405,8 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
     for (NSDictionary * idx in addIndexArr) [self.db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX `%@` on `%@`(`%@`)", idx[@"indexname"], self.name, idx[@"index"]] arguments:nil error:nil];
     //remove unnecessary indexes
     [oldIndexes enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        [self.db executeUpdate:[NSString stringWithFormat:@"DROP INDEX `%@`", key] arguments:nil error:nil];
+        //do not drop autoindex
+        if(![key hasPrefix:@"sqlite_autoindex_"])[self.db executeUpdate:[NSString stringWithFormat:@"DROP INDEX `%@`", key] arguments:nil error:nil];
     }];
     return YES;
 }

@@ -19,7 +19,6 @@
 @property (nonatomic,strong) User     *author;
 @property (nonatomic,strong) NSString *content;
 @property (nonatomic,strong) NSString *title;
-
 @property (nonatomic,strong) NSArray <Comment*> *comments;
 
 @end
