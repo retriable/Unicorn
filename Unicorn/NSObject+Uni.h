@@ -72,7 +72,7 @@ NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
 
 - (BOOL) uni_nonPersistent;
 
-+ (NSArray<NSString*>*_Nonnull)uni_automaticallyUpdatedPropertynames;
++ (NSArray<NSString*>*_Nonnull)uni_automaticalUpdatedPropertynames;
 
 @end
 
