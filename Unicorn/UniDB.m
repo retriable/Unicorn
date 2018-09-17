@@ -85,6 +85,8 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
         s = [[UniStmt alloc] init];
         s.stmt = stmt;
         s.sql = sql;
+    }else{
+        self.stmts[sql]=nil;
     }
     sqlite3_reset(s.stmt);
     sqlite3_clear_bindings(s.stmt);
@@ -93,7 +95,7 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
 
 - (void)putStmt:(UniStmt*)s forSql:(NSString*)sql{
     if (!s||!sql) return;
-    self.stmts[sql]=s;
+    if(!self.stmts[sql])self.stmts[sql]=s;
 }
 
 - (void)removeAllStmt {

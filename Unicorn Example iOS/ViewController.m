@@ -26,7 +26,8 @@
         [ss addObject:[NSJSONSerialization JSONObjectWithData:[s dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil]];
     }
     benchmark(^{
-        NSLog(@"#####:::::%@",[[Article uni_parseJson:ss] uni_jsonObject]);
+        [Article uni_parseJson:ss];
+//        NSLog(@"#####:::::%@",[[Article uni_parseJson:ss] uni_jsonObject]);
     }, ^(int ms) {
         NSLog(@"%d ms",ms);
     });
