@@ -10,7 +10,8 @@
 
 #import "NSObject+Uni.h"
 #import "UniClass.h"
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
 static __inline__ __attribute__((always_inline)) NSString* uni_regexPattern(NSInteger count){
     if (count<1) return nil;
     NSString *s1=@"(?:(\\d+\\.\\d+|\\.\\d+|\\d+)(?:\\s*,\\s*|\\s+))";
@@ -22,7 +23,7 @@ static __inline__ __attribute__((always_inline)) NSString* uni_regexPattern(NSIn
     [s appendString:s2];
     return s;
 }
-
+#pragma clang diagnostic pop
 #if TARGET_OS_IOS || TARGET_OS_TV
 
 static __inline__ __attribute__((always_inline)) NSString* uni_NSStringFromCATransform3D(CATransform3D transform3D){
