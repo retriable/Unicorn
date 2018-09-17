@@ -1225,10 +1225,13 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             if (strcmp(type,@encode(NSRange))==0){
                 return NSStringFromRange([(NSValue*)self rangeValue]);
             }
-#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
+#if TARGET_OS_IOS || TARGET_OS_TVOS
             else if(strcmp(type, @encode(CATransform3D))==0){
                 return UNI_NSStringFromCATransform3D([(NSValue*)self CATransform3DValue]);
-            }else if(strcmp(type, @encode(CGPoint))==0){
+            }
+#endif
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH
+            else if(strcmp(type, @encode(CGPoint))==0){
                 return NSStringFromCGPoint([(NSValue*)self CGPointValue]);
             }else if(strcmp(type, @encode(CGSize))==0){
                 return NSStringFromCGSize([(NSValue*)self CGSizeValue]);

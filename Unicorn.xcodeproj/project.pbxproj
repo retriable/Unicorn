@@ -191,13 +191,13 @@
 			isa = PBXGroup;
 			children = (
 				0A473BE320A1BACB0052412B /* Article.h */,
+				0A668D9620A30DFA009F29B8 /* article.json */,
 				0A473BE420A1BACB0052412B /* Article.m */,
+				0A668DC720A326EA009F29B8 /* Benchmark.h */,
 				0A473BE120A1BACB0052412B /* Comment.h */,
 				0A473BE020A1BACB0052412B /* Comment.m */,
 				0A473BE520A1BACB0052412B /* User.h */,
 				0A473BE220A1BACB0052412B /* User.m */,
-				0A668DC720A326EA009F29B8 /* Benchmark.h */,
-				0A668D9620A30DFA009F29B8 /* article.json */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
