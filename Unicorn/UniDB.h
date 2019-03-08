@@ -3,9 +3,8 @@
 //  Unicorn
 //
 
-
-#import <sqlite3.h>
 #import <Foundation/Foundation.h>
+#import <sqlite3.h>
 
 extern NSString *const UniDBErrorDomain;
 

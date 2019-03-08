@@ -313,6 +313,7 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
             break;
         case UniTypeEncodingNSDate:
         case UniTypeEncodingNSData:
+        case UniTypeEncodingNSOrderedSet:
         case UniTypeEncodingNSArray:
         case UniTypeEncodingNSSet:
         case UniTypeEncodingNSDictionary:
@@ -411,6 +412,7 @@ static __inline__ __attribute__((always_inline)) id uni_get_value(id target,UniP
         case UniTypeEncodingNSDate:
         case UniTypeEncodingNSData:
         case UniTypeEncodingNSMutableData:
+        case UniTypeEncodingNSOrderedSet:
         case UniTypeEncodingNSArray:
         case UniTypeEncodingNSMutableArray:
         case UniTypeEncodingNSSet:
@@ -545,9 +547,9 @@ static __inline__ __attribute__((always_inline)) void uni_bind_stmt_with_propert
     }
 }
 
-static __inline__ __attribute__((always_inline)) id forward_transform_primary_value(id value,UniTransformer *transformer,UniProperty * property){
+static __inline__ __attribute__((always_inline)) id forward_json_transform_primary_value(id value,UniProperty * property){
     //value class maybe NSString NSNumber
-    if (transformer) return [transformer transformedValue:value];
+    if (property.jsonTransformer) return [property.jsonTransformer transformedValue:value];
     switch (property.typeEncoding) {
         case UniTypeEncodingBool:
         case UniTypeEncodingInt8:
@@ -639,6 +641,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_obj(id targ
             case UniTypeEncodingNSDate:
             case UniTypeEncodingNSData:
             case UniTypeEncodingNSMutableData:
+            case UniTypeEncodingNSOrderedSet:
             case UniTypeEncodingNSArray:
             case UniTypeEncodingNSMutableArray:
             case UniTypeEncodingNSSet:
@@ -962,6 +965,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             primaryValue=uni_get_value_from_dict(dict, keyPath);
             if (primaryValue) break;
         }
+        primaryValue = forward_json_transform_primary_value(primaryValue,cls.primaryProperty);
         model = [self _uni_queryOne:primaryValue cls:cls];
         if (model) {
             [model _uni_mergeWithJsonDict:dict cls:cls];
@@ -1093,7 +1097,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             id m = [[self alloc]init];
             uni_merge_from_stmt(m, s, cls);
             if(cls.isConformingToUniMM){
-                id primaryValue=forward_transform_primary_value(uni_get_value(m, cls.primaryProperty), nil, cls.primaryProperty);
+                id primaryValue=uni_get_value(m, cls.primaryProperty);
                 if (!primaryValue) { NSAssert(0,@"can not find primary value in model %@",m); return; }
                 model=[cls.mm objectForKey:primaryValue];
                 if (!model) { model=m; [cls.mm setObject:model forKey:primaryValue]; }
@@ -1113,7 +1117,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         if (property) uni_set_value(model, property, [uni_get_value(model, property) uni_update]);
     }
     if (cls.isConformingToUniMM){
-        id primaryValue=forward_transform_primary_value(uni_get_value(model, cls.primaryProperty), nil, cls.primaryProperty);
+        id primaryValue=uni_get_value(model, cls.primaryProperty);
         if (!primaryValue) {
             NSAssert(0, @"can not find primary value in model %@",self);
             return model;
@@ -1207,6 +1211,8 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             return self;
         }else if([self isKindOfClass:NSSet.class]){
             return [[(NSSet*)self allObjects] uni_jsonObject];
+        }else if ([self isKindOfClass:NSOrderedSet.class]){
+            return [[(NSOrderedSet*)self array] uni_jsonObject];
         }else if([self isKindOfClass:NSArray.class]){
             NSMutableArray *array=[NSMutableArray array];
             [(NSArray*)self enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

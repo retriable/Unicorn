@@ -130,6 +130,7 @@ static __inline__ __attribute__((always_inline)) NSString * uni_encodingDesc(Uni
         case UniTypeEncodingNSDate: [type appendString:@"date"]; break;
         case UniTypeEncodingNSData: [type appendString:@"data"]; break;
         case UniTypeEncodingNSMutableData:[type appendString:@"mutable data"]; break;
+        case UniTypeEncodingNSOrderedSet:[type appendString:@"ordered set"];break;
         case UniTypeEncodingNSArray: [type appendString:@"array"]; break;
         case UniTypeEncodingNSMutableArray: [type appendString:@"mutable array"]; break;
         case UniTypeEncodingNSSet: [type appendString:@"set"]; break;
@@ -238,6 +239,7 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
     }
     return clz;
 }
+
 - (instancetype)initWithClass:(Class)cls{
     self=[self init];
     if (!self) return nil;
@@ -608,6 +610,7 @@ properties      : \n%@\n\
                         else if(cls==NSDate.class) self.typeEncoding=UniTypeEncodingNSDate;
                         else if(cls==NSData.class) self.typeEncoding=UniTypeEncodingNSData;
                         else if(cls==NSMutableData.class) self.typeEncoding=UniTypeEncodingNSMutableData;
+                        else if(cls==NSOrderedSet.class) self.typeEncoding=UniTypeEncodingNSOrderedSet;
                         else if(cls==NSArray.class) self.typeEncoding=UniTypeEncodingNSArray;
                         else if(cls==NSMutableArray.class) self.typeEncoding=UniTypeEncodingNSMutableArray;
                         else if(cls==NSSet.class) self.typeEncoding=UniTypeEncodingNSSet;

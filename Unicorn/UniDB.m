@@ -3,17 +3,20 @@
 //  Unicorn
 //
 
-
+#import <UIKit/UIKit.h>
 
 #import "UniDB.h"
 
 NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
 
+static __inline__ __attribute__((always_inline)) NSError * UniDBError(sqlite3* db){
+    if (!db) return nil;
+    return [NSError errorWithDomain:UniDBErrorDomain code:sqlite3_errcode(db) userInfo:@{NSLocalizedDescriptionKey:[[NSString alloc] initWithCString:sqlite3_errmsg(db) encoding:NSUTF8StringEncoding]}];
+}
+
 @interface UniStmt : NSObject
 
-@property (nonatomic, assign) BOOL         using;
 @property (nonatomic, assign) sqlite3_stmt *stmt;
-@property (nonatomic, copy  ) NSString     *sql;
 
 @end
 
@@ -25,11 +28,72 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
 
 @end
 
+@interface UniStmtPool : NSObject
+
+@property (nonatomic,strong)NSMutableDictionary<NSString*,NSMutableArray<UniStmt*>*> *stmts;
+@property (nonatomic,strong)dispatch_queue_t queue;
+
+@end
+
+@implementation UniStmtPool
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (instancetype)initWithSqlite3:(sqlite3*)db{
+    if (!db){
+        NSParameterAssert(0);
+        return nil;
+    }
+    self=[self init];
+    if (!self) return nil;
+    self.stmts=[NSMutableDictionary dictionary];
+    self.queue=dispatch_queue_create("com.retriable.pool", NULL);
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+    return self;
+}
+
+- (UniStmt*)popStmt:(NSString*)sql{
+    NSParameterAssert(sql);
+    __block UniStmt *s;
+    dispatch_sync(self.queue, ^{
+        NSMutableArray * arr=self.stmts[sql];
+        if (arr){
+            s=arr.firstObject;
+            if (s) [arr removeObjectAtIndex:0];
+        }
+    });
+    return s;
+}
+
+- (void)push:(UniStmt*)s sql:(NSString*)sql{
+    NSParameterAssert(s);
+    sqlite3_reset(s.stmt);
+    sqlite3_clear_bindings(s.stmt);
+    dispatch_sync(self.queue, ^{
+        NSMutableArray * arr=self.stmts[sql];
+        if (!arr){
+            arr=[NSMutableArray array];
+            self.stmts[sql]=arr;
+        }
+        [arr addObject:s];
+    });
+}
+
+- (void)applicationDidReceiveMemoryWarning:(NSNotification*)n{
+    dispatch_sync(self.queue, ^{
+        [self.stmts removeAllObjects];
+    });
+}
+   
+@end
+
 @interface UniDB ()
 
 @property (nonatomic, assign) sqlite3 *db;
+@property (nonatomic, strong) UniStmtPool *pool;
 @property (nonatomic, assign) UInt64 transactionReferenceCount;
-@property (nonatomic, strong) NSMutableDictionary *stmts;
 
 @end
 
@@ -43,7 +107,6 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
     self = [super init];
     if (!self) return nil;
     self.transactionReferenceCount = 0;
-    self.stmts = [NSMutableDictionary dictionary];
     return self;
 }
 
@@ -54,17 +117,18 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
     [self close];
     sqlite3 *db;
     if (sqlite3_open([file cStringUsingEncoding:NSUTF8StringEncoding], &db) != SQLITE_OK) {
-        if (error) *error = [self error];
+        if (error) *error = UniDBError(db);
         return NO;
     }
     self.db = db;
+    self.pool=[[UniStmtPool alloc]initWithSqlite3:db];
     return YES;
 }
 
 - (BOOL)close {
     if (self.db) {
-        [self.stmts removeAllObjects];
         if (sqlite3_close(self.db) != SQLITE_OK) return NO;
+        self.pool=nil;
         self.db = nil;
     }
     return YES;
@@ -74,32 +138,29 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
 #pragma mark-- stmt
 
 - (UniStmt *)getStmtForSql:(NSString *)sql error:(NSError **)error {
-    UniStmt *s = self.stmts[sql];
-    if (!s){
-        sqlite3_stmt *stmt;
-        if (sqlite3_prepare_v2(self.db, [sql UTF8String], -1, &stmt, 0) != SQLITE_OK) {
-            sqlite3_finalize(stmt);
-            if (error) *error = [self error];
-            return NULL;
-        }
-        s = [[UniStmt alloc] init];
-        s.stmt = stmt;
-        s.sql = sql;
-    }else{
-        self.stmts[sql]=nil;
+    UniStmt *s = [self.pool popStmt:sql];
+    if (s) return s;
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(self.db, [sql UTF8String], -1, &stmt, 0) != SQLITE_OK) {
+        sqlite3_finalize(stmt);
+        if (error) *error = UniDBError(self.db);
+        return nil;
     }
-    sqlite3_reset(s.stmt);
-    sqlite3_clear_bindings(s.stmt);
+    s = [[UniStmt alloc] init];
+    s.stmt = stmt;
     return s;
 }
 
 - (void)putStmt:(UniStmt*)s forSql:(NSString*)sql{
-    if (!s||!sql) return;
-    if(!self.stmts[sql])self.stmts[sql]=s;
-}
-
-- (void)removeAllStmt {
-    [self.stmts removeAllObjects];
+    if (!s){
+        NSParameterAssert(0);
+        return;
+    }
+    if (!s){
+        NSParameterAssert(0);
+        return;
+    }
+    [self.pool push:s sql:sql];
 }
 
 #pragma mark--
@@ -140,7 +201,7 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
         res=sqlite3_step(stmt.stmt);
         if(res==SQLITE_ROW) resultBlock(stmt.stmt, &stop);
         else if (res==SQLITE_ERROR){
-            if(error) *error=[self error];
+            if(error) *error=UniDBError(self.db);
         }
         if (stop) break;
     }
@@ -163,7 +224,7 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
     int count = sqlite3_bind_parameter_count(stmt.stmt);
     for (int i = 0; i < count; i++) stmtBlock(stmt.stmt, i + 1);
     if (sqlite3_step(stmt.stmt) != SQLITE_DONE) {
-        if (error) *error = [self error];
+        if (error) *error = UniDBError(self.db);
         [self putStmt:stmt forSql:sql];
         return NO;
     }
@@ -241,10 +302,6 @@ NSString *const UniDBErrorDomain = @"UniDBErrorDomain";
         if (value && value != (id)kCFNull) set[columnName] = value;
     }
     return set;
-}
-
-- (NSError *)error {
-    return [NSError errorWithDomain:NSStringFromClass(self.class) code:sqlite3_errcode(self.db) userInfo:@{NSLocalizedDescriptionKey:[[NSString alloc] initWithCString:sqlite3_errmsg(self.db) encoding:NSUTF8StringEncoding]}];
 }
 
 @end

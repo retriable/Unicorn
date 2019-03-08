@@ -46,6 +46,7 @@ typedef NS_ENUM(NSInteger,UniTypeEncoding){
     UniTypeEncodingNSDate,
     UniTypeEncodingNSData,
     UniTypeEncodingNSMutableData,
+    UniTypeEncodingNSOrderedSet,
     UniTypeEncodingNSArray,
     UniTypeEncodingNSMutableArray,
     UniTypeEncodingNSSet,
@@ -59,7 +60,6 @@ typedef NS_ENUM(NSInteger,UniTypeEncoding){
     UniTypeEncodingCArray,
     UniTypeEncodingNSObject
 };
-
 
 typedef NS_ENUM(NSInteger,UniMethodEncoding) {
     UniMethodEncodingUnknown     = 0,
@@ -106,6 +106,7 @@ typedef NS_ENUM(NSInteger,UniPropertyEncoding) {
 @property (nonatomic, strong) UniDB        *db;
 @property (nonatomic, strong) UniProperty  *primaryProperty;
 @property (nonatomic, strong) NSArray      *automaticallyUpdatedPropertynames;
+
 + (instancetype)classWithClass:(Class)cls;
 
 - (instancetype)initWithClass:(Class)cls;
