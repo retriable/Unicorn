@@ -2,8 +2,8 @@
 //  NSObject+Uni.m
 //  Unicorn
 //
-//  Created by emsihyo on 2018/2/24.
-//  Copyright © 2018年 emsihyo. All rights reserved.
+//  Created by retriable on 2018/2/24.
+//  Copyright © 2018年 retriable. All rights reserved.
 //
 
 #import <objc/message.h>

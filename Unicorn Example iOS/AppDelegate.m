@@ -2,8 +2,8 @@
 //  AppDelegate.m
 //  Unicorn Example iOS
 //
-//  Created by emsihyo on 2018/5/8.
-//  Copyright © 2018 emsihyo. All rights reserved.
+//  Created by retriable on 2018/5/8.
+//  Copyright © 2018 retriable. All rights reserved.
 //
 
 #import "AppDelegate.h"

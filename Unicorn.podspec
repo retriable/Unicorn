@@ -1,11 +1,11 @@
 Pod::Spec.new do |spec|
     spec.name     = 'Unicorn'
-    spec.version  = '3.1.5'
+    spec.version  = '3.1.6'
     spec.license  = 'MIT'
     spec.summary  = 'Json model,single model,db model'
-    spec.homepage = 'https://github.com/emsihyo/Unicorn'
-    spec.author   = { 'emsihyo' => 'emsihyo@gmail.com' }
-    spec.source   = { :git => 'https://github.com/emsihyo/Unicorn.git',:tag => "#{spec.version}" }
+    spec.homepage = 'https://github.com/retriable/Unicorn'
+    spec.author   = { 'retriable' => 'retriable@retriable.com' }
+    spec.source   = { :git => 'https://github.com/retriable/Unicorn.git',:tag => "#{spec.version}" }
     spec.description = 'Json model,single model,db model.'
     spec.requires_arc = true
     spec.source_files = 'Unicorn/*.{h,m}'
