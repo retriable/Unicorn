@@ -20,7 +20,7 @@ before_install:
 
 script:
     - set -o pipefail
-    - xcodebuild clean build -project Unicorn.xcodeproj -target 'Unicorn iOS' -sdk iphonesimulator -configuration Debug | xcpretty
-    - xcodebuild clean build -project Unicorn.xcodeproj -target 'Unicorn watchOS' -sdk watchsimulator -configuration Debug | xcpretty
-    - xcodebuild clean build -project Unicorn.xcodeproj -target 'Unicorn tvOS'  -sdk appletvsimulator -configuration Debug | xcpretty
-    - xcodebuild clean build -project Unicorn.xcodeproj -target 'Unicorn macOS' -sdk macosx -configuration Debug | xcpretty
+    - xcodebuild build -project Unicorn.xcodeproj -target 'Unicorn iOS' -sdk iphonesimulator -configuration Debug | xcpretty
+    - xcodebuild build -project Unicorn.xcodeproj -target 'Unicorn watchOS' -sdk watchsimulator -configuration Debug | xcpretty
+    - xcodebuild build -project Unicorn.xcodeproj -target 'Unicorn tvOS'  -sdk appletvsimulator -configuration Debug | xcpretty
+    - xcodebuild build -project Unicorn.xcodeproj -target 'Unicorn macOS' -sdk macosx -configuration Debug | xcpretty
