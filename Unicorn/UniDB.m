@@ -3,7 +3,7 @@
 //  Unicorn
 //
 
-#import <UIKit/UIKit.h>
+#import "UniCompat.h"
 
 #import "UniDB.h"
 
@@ -50,7 +50,9 @@ static __inline__ __attribute__((always_inline)) NSError * UniDBError(sqlite3* d
     if (!self) return nil;
     self.stmts=[NSMutableDictionary dictionary];
     self.queue=dispatch_queue_create("com.retriable.pool", NULL);
+#if TARGET_OS_IOS || TARGET_OS_TV
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+#endif
     return self;
 }
 
