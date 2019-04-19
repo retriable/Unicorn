@@ -92,13 +92,6 @@ NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string){
 }
 #endif
 
-static __inline__ __attribute__((always_inline)) NSNumberFormatter *UNI_NumberFormatter(){
-    static NSNumberFormatter *formatter;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{ formatter=[[NSNumberFormatter alloc]init]; });
-    return formatter;
-}
-
 static __inline__ __attribute__((always_inline)) void uni_set_value(id target,UniProperty *property,id value){
     if (!value) return;
     switch (property.typeEncoding) {
@@ -112,49 +105,49 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
         } break;
         case UniTypeEncodingInt8:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,int8_t))(void *) objc_msgSend)(target, property.setter,[value charValue]);
-            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,int8_t))(void *) objc_msgSend)(target, property.setter,[[UNI_NumberFormatter() numberFromString:value] charValue]);
+            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,int8_t))(void *) objc_msgSend)(target, property.setter,[@([value intValue]) charValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,int8_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
         case UniTypeEncodingUInt8:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,uint8_t))(void *) objc_msgSend)(target, property.setter,[value unsignedCharValue]);
-            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,uint8_t))(void *) objc_msgSend)(target, property.setter,[[UNI_NumberFormatter() numberFromString:value] unsignedCharValue]);
+            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,uint8_t))(void *) objc_msgSend)(target, property.setter,[@([value intValue]) unsignedCharValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,uint8_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
         case UniTypeEncodingInt16:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,int16_t))(void *) objc_msgSend)(target, property.setter,[value shortValue]);
-            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,int16_t))(void *) objc_msgSend)(target, property.setter,[[UNI_NumberFormatter() numberFromString:value] shortValue]);
+            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,int16_t))(void *) objc_msgSend)(target, property.setter,[@([value intValue]) shortValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,int16_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
         case UniTypeEncodingUInt16:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,uint16_t))(void *) objc_msgSend)(target, property.setter,[value unsignedShortValue]);
-            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,uint16_t))(void *) objc_msgSend)(target, property.setter,[[UNI_NumberFormatter() numberFromString:value] unsignedShortValue]);
+            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,uint16_t))(void *) objc_msgSend)(target, property.setter,[@([value intValue]) unsignedShortValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,uint16_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
         case UniTypeEncodingInt32:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,int32_t))(void *) objc_msgSend)(target, property.setter,[value intValue]);
-            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,int32_t))(void *) objc_msgSend)(target, property.setter,[[UNI_NumberFormatter() numberFromString:value] intValue]);
+            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,int32_t))(void *) objc_msgSend)(target, property.setter,[value intValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,int32_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
         case UniTypeEncodingUInt32:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,uint32_t))(void *) objc_msgSend)(target, property.setter,[value unsignedIntValue]);
-            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,uint32_t))(void *) objc_msgSend)(target, property.setter,[[UNI_NumberFormatter() numberFromString:value] unsignedIntValue]);
+            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,uint32_t))(void *) objc_msgSend)(target, property.setter,[@([value longLongValue]) unsignedIntValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,uint32_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
         case UniTypeEncodingInt64:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,int64_t))(void *) objc_msgSend)(target, property.setter,[value longLongValue]);
-            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,int64_t))(void *) objc_msgSend)(target, property.setter,[[UNI_NumberFormatter() numberFromString:value] longLongValue]);
+            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,int64_t))(void *) objc_msgSend)(target, property.setter,[value longLongValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,int64_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         }break;
         case UniTypeEncodingUInt64:{
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,uint64_t))(void *) objc_msgSend)(target, property.setter,[value unsignedLongLongValue]);
-            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,uint64_t))(void *) objc_msgSend)(target, property.setter,[[UNI_NumberFormatter() numberFromString:value] unsignedLongLongValue]);
+            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,uint64_t))(void *) objc_msgSend)(target, property.setter,[@([value longLongValue]) unsignedLongLongValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,uint64_t))(void *) objc_msgSend)(target, property.setter,0);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
         } break;
@@ -282,14 +275,14 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
 #endif
         case UniTypeEncodingNSString:
             if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
-            else if ([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[UNI_NumberFormatter() stringFromNumber:value]);
+            else if ([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[value stringValue]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
             else ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[value description]);
             break;
         case UniTypeEncodingNSMutableString:
             if([value isKindOfClass:NSMutableString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
             else if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[value mutableCopy]);
-            else if ([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[UNI_NumberFormatter() stringFromNumber:value] mutableCopy]);
+            else if ([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[value stringValue] mutableCopy]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
             else ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[[value description] mutableCopy]);
             break;
@@ -301,12 +294,12 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
             break;
         case UniTypeEncodingNSNumber:
             if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,value);
-            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[UNI_NumberFormatter() numberFromString:value]);
+            else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,@([value doubleValue]));
             else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
             break;
         case UniTypeEncodingNSDecimalNumber:
-            if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[NSDecimalNumber decimalNumberWithString:[UNI_NumberFormatter() stringFromNumber:value]]);
+            if([value isKindOfClass:NSNumber.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[NSDecimalNumber decimalNumberWithString:[value stringValue]]);
             else if ([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[NSDecimalNumber decimalNumberWithString:value]);
             else if(value==(id)kCFNull) ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,nil);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
@@ -517,7 +510,7 @@ static __inline__ __attribute__((always_inline)) void uni_bind_stmt_with_propert
         }break;
         case UniTypeEncodingNSNumber:{
             id value=((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter);
-            if (value&&[value isKindOfClass:NSNumber.class]) sqlite3_bind_text(stmt, idx, [[UNI_NumberFormatter() stringFromNumber:value] UTF8String], -1, SQLITE_STATIC);
+            if (value&&[value isKindOfClass:NSNumber.class]) sqlite3_bind_text(stmt, idx, [[value stringValue] UTF8String], -1, SQLITE_STATIC);
             else sqlite3_bind_null(stmt, idx);
         } break;
         case UniTypeEncodingNSDecimalNumber:{
@@ -552,19 +545,31 @@ static __inline__ __attribute__((always_inline)) id forward_json_transform_prima
     if (property.jsonTransformer) return [property.jsonTransformer transformedValue:value];
     switch (property.typeEncoding) {
         case UniTypeEncodingBool:
+            if([value isKindOfClass:NSNumber.class]) return value;
+            else if([value isKindOfClass:NSString.class]) return @([value boolValue]);
+            break;
         case UniTypeEncodingInt8:
         case UniTypeEncodingUInt8:
         case UniTypeEncodingInt16:
         case UniTypeEncodingUInt16:
         case UniTypeEncodingInt32:
         case UniTypeEncodingUInt32:
+            if([value isKindOfClass:NSNumber.class]) return value;
+            else if([value isKindOfClass:NSString.class]) return @([value intValue]);
+            break;
         case UniTypeEncodingInt64:
         case UniTypeEncodingUInt64:
+            if([value isKindOfClass:NSNumber.class]) return value;
+            else if([value isKindOfClass:NSString.class]) return @([value longLongValue]);
+            break;
         case UniTypeEncodingFloat:
+            if([value isKindOfClass:NSNumber.class]) return value;
+            else if([value isKindOfClass:NSString.class]) return @([value floatValue]);
+            break;
         case UniTypeEncodingDouble:
         case UniTypeEncodingLongDouble:
             if([value isKindOfClass:NSNumber.class]) return value;
-            else if([value isKindOfClass:NSString.class]) return [UNI_NumberFormatter() numberFromString:value];
+            else if([value isKindOfClass:NSString.class]) return @([value doubleValue]);
             break;
         case UniTypeEncodingClass:
             if([value isKindOfClass:NSString.class]) return NSClassFromString(value);
@@ -579,7 +584,7 @@ static __inline__ __attribute__((always_inline)) id forward_json_transform_prima
         case UniTypeEncodingNSString:
         case UniTypeEncodingNSMutableString:
                     if([value isKindOfClass:NSString.class]) return value;
-                    else if([value isKindOfClass:NSNumber.class]) return [UNI_NumberFormatter() stringFromNumber:value];
+                    else if([value isKindOfClass:NSNumber.class]) return [value description];
                     break;
         case UniTypeEncodingNSURL:if([value isKindOfClass:NSString.class]) return [NSURL URLWithString:value];break;
         default:break;
@@ -859,7 +864,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
                     } break;
                 case UniTypeEncodingNSNumber:
                     switch (type) {
-                        case SQLITE_TEXT: ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[UNI_NumberFormatter()  numberFromString:[[NSString alloc] initWithCString:(const char *)sqlite3_column_text(stmt, i) encoding:NSUTF8StringEncoding]]); break;
+                        case SQLITE_TEXT: ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,@([[[NSString alloc] initWithCString:(const char *)sqlite3_column_text(stmt, i) encoding:NSUTF8StringEncoding] doubleValue])); break;
                         default: break;
                     } break;
                 case UniTypeEncodingNSDecimalNumber:
