@@ -10,6 +10,8 @@
 #import "UniTransformer.h"
 #import "UniDB.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger,UniTypeEncoding){
     UniTypeEncodingUnknown,
     UniTypeEncodingVoid,
@@ -135,3 +137,4 @@ typedef NS_ENUM(NSInteger,UniPropertyEncoding) {
 @property (nonatomic,strong) UniTransformer      *jsonTransformer;
 
 @end
+NS_ASSUME_NONNULL_END

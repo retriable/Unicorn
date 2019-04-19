@@ -384,7 +384,7 @@ static __inline__ __attribute__((always_inline)) NSDictionary * uni_indexes_of_t
                 NSAssert(0, @"column: %@,old column type: %@,new column type: %@",property.name,type,uni_columnDesc(property.columnType));
         }
     }
-    if ([self.cls respondsToSelector:@selector(uni_automaticalUpdatedPropertynames)])  self.automaticallyUpdatedPropertynames=[self.cls uni_automaticalUpdatedPropertynames];
+//    if ([self.cls respondsToSelector:@selector(uni_automaticalUpdatedPropertynames)])  self.automaticallyUpdatedPropertynames=[self.cls uni_automaticalUpdatedPropertynames];
     //add necessary columns
     for (UniProperty *property in addPropertyArr){
         sql=[NSString stringWithFormat:add,self.name,property.name,uni_columnDesc(property.columnType)];

@@ -8,8 +8,6 @@
 
 @import Unicorn;
 
-#import <Foundation/Foundation.h>
-
 #import "User.h"
 
 @interface Comment : NSObject<UniJSON,UniMM,UniDB>

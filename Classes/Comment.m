@@ -30,7 +30,7 @@
                 id json=[comment uni_jsonObject];
                 if (json) [arr addObject:json];
             }
-            return (id)arr;
+            return (id)(arr.count>0?arr:nil);
         }];
     }
     return nil;
@@ -72,11 +72,11 @@
     return nil;
 }
 
-+ (NSString * _Nonnull)uni_primaryKey {
++ (NSString *)uni_primaryKey {
     return @"id";
 }
 
-+ (NSArray * _Nonnull)uni_synchronizedClasses{
++ (NSArray *)uni_synchronizedClasses{
     return @[User.class,Comment.class];
 }
 //

@@ -117,6 +117,7 @@ static __inline__ __attribute__((always_inline)) NSError * UniDBError(sqlite3* d
 
 - (BOOL)open:(NSString *)file error:(NSError **)error {
     [self close];
+    if (!file) return NO;
     sqlite3 *db;
     if (sqlite3_open([file cStringUsingEncoding:NSUTF8StringEncoding], &db) != SQLITE_OK) {
         if (error) *error = UniDBError(db);
@@ -158,10 +159,6 @@ static __inline__ __attribute__((always_inline)) NSError * UniDBError(sqlite3* d
         NSParameterAssert(0);
         return;
     }
-    if (!s){
-        NSParameterAssert(0);
-        return;
-    }
     [self.pool push:s sql:sql];
 }
 
@@ -193,6 +190,7 @@ static __inline__ __attribute__((always_inline)) NSError * UniDBError(sqlite3* d
 - (BOOL)executeQuery:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock resultBlock:(void (^)(sqlite3_stmt *stmt, bool *stop))resultBlock error:(NSError **)error {
     NSParameterAssert(stmtBlock);
     NSParameterAssert(resultBlock);
+    if (sql.length==0) return NO;
     UniStmt *stmt = [self getStmtForSql:sql error:error];
     if (!stmt) return NO;
     int count = sqlite3_bind_parameter_count(stmt.stmt);
@@ -221,6 +219,7 @@ static __inline__ __attribute__((always_inline)) NSError * UniDBError(sqlite3* d
 }
 
 - (BOOL)executeUpdate:(NSString *)sql stmtBlock:(void (^)(sqlite3_stmt *stmt, int idx))stmtBlock error:(NSError **)error {
+    if (sql.length==0) return NO;
     UniStmt *stmt = [self getStmtForSql:sql error:error];
     if (!stmt) return NO;
     int count = sqlite3_bind_parameter_count(stmt.stmt);

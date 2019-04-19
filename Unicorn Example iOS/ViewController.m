@@ -27,7 +27,7 @@
     }
     benchmark(^{
         [Article uni_parseJson:ss];
-//        NSLog(@"#####:::::%@",[[Article uni_parseJson:ss] uni_jsonObject]);
+        NSLog(@"#####:::::%@",[[Article uni_parseJson:ss] uni_jsonObject]);
     }, ^(int ms) {
         NSLog(@"%d ms",ms);
     });

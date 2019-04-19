@@ -10,6 +10,8 @@
 #import "UniCompat.h"
 #import "UniTransformer.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSUInteger,UniColumnType){
     UniColumnTypeAutomatically,
     UniColumnTypeInteger,
@@ -21,7 +23,7 @@ typedef NS_ENUM(NSUInteger,UniColumnType){
 #if TARGET_OS_IOS || TARGET_OS_TV
 
 
-NSString * _Nonnull UNI_NSStringFromCATransform3D(CATransform3D transform3D);
+NSString *UNI_NSStringFromCATransform3D(CATransform3D transform3D);
 
 CATransform3D UNI_CATransform3DFromNSString(NSString * _Nullable string);
 
@@ -29,50 +31,50 @@ CATransform3D UNI_CATransform3DFromNSString(NSString * _Nullable string);
 
 #if TARGET_OS_OSX
 
-NSString* _Nonnull UNI_NSStringFromNSEdgeInsets(NSEdgeInsets edgeInsets);
+NSString *UNI_NSStringFromNSEdgeInsets(NSEdgeInsets edgeInsets);
 NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
 
 #endif
 
 @protocol UniJSON<NSObject>
 
-+ (NSDictionary<NSString*,NSString*> *_Nonnull)uni_keyPaths;
++ (NSDictionary<NSString*,NSString*> *)uni_keyPaths;
 
 @optional
 
-+ (UniTransformer *_Nullable)uni_jsonTransformer:(NSString * _Nonnull)propertyName;
++ (UniTransformer *_Nullable)uni_jsonTransformer:(NSString *)propertyName;
 
 @end
 
 @protocol UniMM <NSObject>
 
-+ (NSString * _Nonnull)uni_primaryKey;
++ (NSString *)uni_primaryKey;
 
 @optional
 
-+ (NSArray<NSString*> * _Nonnull)uni_synchronizedClasses;
++ (NSArray<NSString*> *_Nullable)uni_synchronizedClasses;
 
 @end
 
 @protocol UniDB <NSObject>
 
-+ (NSString * _Nonnull)uni_primaryKey;
++ (NSString *)uni_primaryKey;
 
-+ (NSArray<NSString*> * _Nonnull)uni_columns;
++ (NSArray<NSString*> *)uni_columns;
 
 @optional
 
-+ (NSArray<Class> * _Nonnull)uni_synchronizedClasses;
++ (NSArray<Class>* _Nullable)uni_synchronizedClasses;
 
-+ (UniTransformer *_Nullable)uni_dbTransformer:(NSString * _Nonnull)propertyName;
++ (UniTransformer*_Nullable)uni_dbTransformer:(NSString *)propertyName;
 
-+ (UniColumnType)uni_columnType:(NSString * _Nonnull)propertyName;
++ (UniColumnType)uni_columnType:(NSString *)propertyName;
 
-+ (NSArray<NSString*>*_Nonnull)uni_indexes;
++ (NSArray<NSString*>* _Nullable)uni_indexes;
 
 - (BOOL) uni_nonPersistent;
 
-+ (NSArray<NSString*>*_Nonnull)uni_automaticalUpdatedPropertynames;
+//+ (NSArray<NSString*>* _Nullable)uni_automaticalUpdatedPropertynames;
 
 @end
 
@@ -95,7 +97,7 @@ NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
  @param models models
  @return array of json object
  */
-+ (NSArray* _Nullable)uni_jsonObjectsFromModels:(NSArray* _Nullable)models;
++ (NSArray* _Nullable)uni_jsonObjectsFromModels:(NSArray* _Nullable)models NS_SWIFT_NAME(uni_jsonObjects(models:));
 
 /**
  User *user = [User uni_parseJson:jsonString]
@@ -106,7 +108,7 @@ NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
  @param json NSString NSDictionary NSArray<NSString*>  NSArray<NSDictionary*>
  @return model or models or nil
  */
-+ (id _Nullable)uni_parseJson:(id _Nullable)json;
++ (id _Nullable)uni_parseJson:(id _Nullable)json NS_SWIFT_NAME(uni_parse(json:));
 
 /**
  query one by primary value
@@ -115,7 +117,7 @@ NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
  @param primary primary value.
  @return model or nil
  */
-+ (id _Nullable)uni_queryOne:(id _Nullable)primary;
++ (id _Nullable)uni_queryOne:(id _Nullable)primary NS_SWIFT_NAME(uni_queryOne(primary:));
 
 /**
  query models
@@ -125,7 +127,7 @@ NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
  @param args args
  @return models
  */
-+ (NSArray* _Nullable)uni_query:(NSString* _Nullable)sql args:(NSArray* _Nullable)args;
++ (NSArray* _Nullable)uni_query:(NSString* _Nullable)sql args:(NSArray* _Nullable)args NS_SWIFT_NAME(uni_query(sql:args:));
 
 /**
  update model
@@ -142,7 +144,7 @@ NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
  @param models models to update
  @return models updated
  */
-+ (NSArray* _Nullable)uni_update:(NSArray* _Nullable)models;
++ (NSArray* _Nullable)uni_update:(NSArray* _Nullable)models NS_SWIFT_NAME(uni_update(models:));
 
 /**
  delete models in database with sql
@@ -151,14 +153,14 @@ NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
  @param args args
  @return success or failure
  */
-+ (BOOL)uni_delete:(NSString* _Nullable)sql args:(NSArray* _Nullable)args;
++ (BOOL)uni_delete:(NSString* _Nullable)sql args:(NSArray* _Nullable)args NS_SWIFT_NAME(uni_delete(sql:args:));
 
 /**
  delete models updated before date
 
  @return success or failure
  */
-+ (BOOL)uni_deleteBeforeDate:(NSDate * _Nullable)date;
++ (BOOL)uni_deleteBeforeDate:(NSDate * _Nullable)date NS_SWIFT_NAME(uni_delete(date:));
 
 /**
  open a custom db file for current model class
@@ -169,7 +171,8 @@ NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
  @param error error
  @return success or not 
  */
-+ (BOOL)uni_open:(NSString* _Nullable)file error:(NSError* _Nullable * _Nullable )error;
++ (BOOL)uni_open:(NSString*)file error:(NSError* _Nullable * _Nullable )error NS_SWIFT_NAME(uni_open(file:error:));
 
 @end
 
+NS_ASSUME_NONNULL_END

@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UniTransformer : NSValueTransformer
 
-+ (instancetype)transformerWithForward:(id(^)(id value))forward backward:(id(^)(id value))backward;
++ (instancetype)transformerWithForward:(id _Nullable(^)(id _Nullable value))forward backward:(id _Nullable(^)(id _Nullable value))backward;
 
+NS_ASSUME_NONNULL_END
 @end

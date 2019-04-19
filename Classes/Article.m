@@ -10,7 +10,7 @@
 
 @implementation Article
 
-+ (NSDictionary * _Nonnull)uni_keyPaths{
++ (NSDictionary * )uni_keyPaths{
     return @{
              @"id":@"id",
              @"author":@[@"author",@"extra.author"],
@@ -20,7 +20,7 @@
              };
 }
 
-+ (UniTransformer *_Nullable)uni_jsonTransformer:(NSString* _Nonnull)propertyName{
++ (UniTransformer *)uni_jsonTransformer:(NSString* )propertyName{
     if ([propertyName isEqualToString:@"comments"]){
         return [UniTransformer transformerWithForward:^id(id value) {
             return [Comment uni_parseJson:value];
@@ -30,21 +30,21 @@
                 id json=[comment uni_jsonObject];
                 if (json) [arr addObject:json];
             }
-            return arr;
+            return arr.count>0?arr:nil;
         }];
     }
     return nil;
 }
 
-+ (NSString * _Nonnull)uni_primaryKey{
++ (NSString * )uni_primaryKey{
     return @"id";
 }
 
-+ (NSArray * _Nonnull)uni_synchronizedClasses{
++ (NSArray *)uni_synchronizedClasses{
     return @[Comment.class];
 }
 
-+ (NSArray * _Nonnull)uni_columns{
++ (NSArray * )uni_columns{
     return @[@"id",@"author",@"content",@"title",@"comments"];
 }
 
@@ -55,7 +55,7 @@
     return 0;
 }
 
-+ (UniTransformer *_Nullable)uni_dbTransformer:(NSString* _Nonnull)propertyName{
++ (UniTransformer *)uni_dbTransformer:(NSString* )propertyName{
     if ([propertyName isEqualToString:@"comments"]){
         return [UniTransformer transformerWithForward:^id(id value) {
             NSArray *comps=[value componentsSeparatedByString:@","];
@@ -67,7 +67,7 @@
             return (id)arr;
         } backward:^id(id value) {
             NSMutableArray *arr=[NSMutableArray array];
-            [value enumerateObjectsUsingBlock:^(Comment * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [value enumerateObjectsUsingBlock:^(Comment *  obj, NSUInteger idx, BOOL *  stop) {
                 [arr addObject:[NSString stringWithFormat:@"%llu",obj.id]];
             }];
             return (id)[arr componentsJoinedByString:@","];
