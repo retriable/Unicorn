@@ -593,7 +593,7 @@ static __inline__ __attribute__((always_inline)) id forward_json_transform_prima
     return nil;
 }
             
-static __inline__ __attribute__((always_inline)) void uni_merge_from_obj(id target,id source,UniClass *cls){
+static __inline__ __attribute__((always_inline)) void uni_merge_obj(id target,id source,UniClass *cls,BOOL force){
     for (UniProperty *property in cls.propertyArr){
         switch (property.typeEncoding) {
             case UniTypeEncodingBool: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,((bool (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
@@ -654,7 +654,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_obj(id targ
             case UniTypeEncodingNSDictionary:
             case UniTypeEncodingNSMutableDictionary:
             case UniTypeEncodingNSObject: {
-                ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+                ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,force?[((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter) uni_update:force]:((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
             } break;
             default: [target setValue:[source valueForKey:property.name] forKey:property.name]; break;
         }
@@ -1115,24 +1115,27 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     return arr;
 }
 
-- (id)_uni_update:(UniClass *)cls{
+- (id)_uni_update:(UniClass *)cls force:(BOOL)force{
     id model=self;
-    for (NSString *propertyname in cls.automaticallyUpdatedPropertynames){
-        UniProperty *property=cls.propertyDic[propertyname];
-        if (property) uni_set_value(model, property, [uni_get_value(model, property) uni_update]);
-    }
     if (cls.isConformingToUniMM){
-        id primaryValue=uni_get_value(model, cls.primaryProperty);
+        id primaryValue=uni_get_value(model,cls.primaryProperty);
         if (!primaryValue) {
             NSAssert(0, @"can not find primary value in model %@",self);
             return model;
         }
         id m=[cls.mm objectForKey:primaryValue];
         if (m) {
-            if (m!=model) uni_merge_from_obj(m,model,cls);
+            if (m!=model) uni_merge_obj(m,model,cls,force);
             model=m;
         }else{
             [cls.mm setObject:model forKey:primaryValue];
+            if (force){
+                for (UniProperty *property in cls.propertyArr){
+                    if (property.typeEncoding==UniTypeEncodingNSObject){
+                        uni_set_value(model, property,[uni_get_value(model, property) uni_update:force]);
+                    }
+                }
+            }
         }
     }
     if (cls.isConformingToUniDB){
@@ -1154,25 +1157,25 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     return model;
 }
 
-- (id)uni_update{
+- (id)uni_update:(BOOL)force{
     __block id model = self;
     UniClass *cls=[UniClass classWithClass:[model class]];
     if (cls.isConformingToUniMM||cls.isConformingToUniDB){
         [cls sync:^{
-            model=[model _uni_update:cls];
+            model=[model _uni_update:cls force:force];
         }];
     }else{
-        model=[model _uni_update:cls];
+        model=[model _uni_update:cls force:force];
     }
     return model;
 }
 
-+ (NSArray*)uni_update:(NSArray*)models{
++ (NSArray*)uni_update:(NSArray*)models force:(BOOL)force{
     if (models.count==0) return models;
     NSMutableArray *arr=[NSMutableArray array];
     UniClass *cls=[UniClass classWithClass:self];
     [cls sync:^{
-        for (id model in models) [arr addObject:[model _uni_update:cls]];
+        for (id model in models) [arr addObject:[model _uni_update:cls force:force]];
     }];
     return arr;
 }

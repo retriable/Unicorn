@@ -74,8 +74,6 @@ NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
 
 - (BOOL) uni_nonPersistent;
 
-//+ (NSArray<NSString*>* _Nullable)uni_automaticalUpdatedPropertynames;
-
 @end
 
 
@@ -132,19 +130,20 @@ NSEdgeInsets UNI_NSEdgeInsetsFromNSString(NSString * _Nullable string);
 /**
  update model
  user = [user uni_update]
-
+ @param force force to update property object.
  @return model updated
  */
-- (id _Nullable)uni_update;
+- (id _Nullable)uni_update:(BOOL)force;
 
 /**
  update models
  users = [User uni_update:users]
  
  @param models models to update
+ @param force force to update property object.
  @return models updated
  */
-+ (NSArray* _Nullable)uni_update:(NSArray* _Nullable)models NS_SWIFT_NAME(uni_update(models:));
++ (NSArray* _Nullable)uni_update:(NSArray* _Nullable)models force:(BOOL)force NS_SWIFT_NAME(uni_update(models:force:));
 
 /**
  delete models in database with sql
