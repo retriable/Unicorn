@@ -40,7 +40,7 @@ static __inline__ __attribute__((always_inline)) CATransform3D uni_CATransform3D
     dispatch_once(&onceToken, ^{
         regex=[[NSRegularExpression alloc]initWithPattern:uni_regexPattern(count) options:0 error:nil];
     });
-    CATransform3D transform3D=(CATransform3D){0};
+    CATransform3D transform3D=(CATransform3D){0,0,0,0,0,0,0,0,0,0,0,0};
     if (string.length==0) return transform3D;
     NSTextCheckingResult *result = [regex firstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
     if (!result) return transform3D;
@@ -176,7 +176,7 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
             break;
         case UniTypeEncodingSEL:
             if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,SEL))(void *) objc_msgSend)(target, property.setter,NSSelectorFromString(value));
-            else if(value==(id)kCFNull) ((void (*)(id, SEL,Class))(void *) objc_msgSend)(target, property.setter,nil);
+            else if(value==(id)kCFNull) ((void (*)(id, SEL,SEL))(void *) objc_msgSend)(target, property.setter,nil);
             else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
             break;
         case UniTypeEncodingNSRange:
@@ -267,8 +267,8 @@ static __inline__ __attribute__((always_inline)) void uni_set_value(id target,Un
                     if (@available(watchOS 4.0, *)) {
 #endif
                         if([value isKindOfClass:NSValue.class]) ((void (*)(id, SEL,NSDirectionalEdgeInsets))(void *) objc_msgSend)(target, property.setter,[value directionalEdgeInsetsValue]);
-                        else if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,UIOffset))(void *) objc_msgSend)(target, property.setter,UIOffsetFromString(value));
-                        else if(value==(id)kCFNull) ((void (*)(id, SEL,NSDirectionalEdgeInsets))(void *) objc_msgSend)(target, property.setter,(NSDirectionalEdgeInsets){0});
+                        else if([value isKindOfClass:NSString.class]) ((void (*)(id, SEL,NSDirectionalEdgeInsets))(void *) objc_msgSend)(target, property.setter,NSDirectionalEdgeInsetsFromString(value));
+                        else if(value==(id)kCFNull) ((void (*)(id, SEL,NSDirectionalEdgeInsets))(void *) objc_msgSend)(target, property.setter,(NSDirectionalEdgeInsets){0,0,0,0});
                         else NSCAssert(0,@"unsupported value'class %@ for property %@",NSStringFromClass([value class]),property.name);
                     }
             break;
@@ -593,7 +593,7 @@ static __inline__ __attribute__((always_inline)) id forward_json_transform_prima
     return nil;
 }
             
-static __inline__ __attribute__((always_inline)) void uni_merge_obj(id target,id source,UniClass *cls,BOOL force){
+static __inline__ __attribute__((always_inline)) void uni_merge_obj(id target,id source,UniClass *cls){
     for (UniProperty *property in cls.propertyArr){
         switch (property.typeEncoding) {
             case UniTypeEncodingBool: ((void (*)(id, SEL,bool))(void *) objc_msgSend)(target, property.setter,((bool (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
@@ -654,7 +654,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_obj(id target,id
             case UniTypeEncodingNSDictionary:
             case UniTypeEncodingNSMutableDictionary:
             case UniTypeEncodingNSObject: {
-                ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,force?[((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter) uni_update:force]:((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter)); break;
+                ((void (*)(id, SEL,id))(void *) objc_msgSend)(target, property.setter,[((id (*)(id, SEL))(void *) objc_msgSend)(target, property.getter) uni_update]); break;
             } break;
             default: [target setValue:[source valueForKey:property.name] forKey:property.name]; break;
         }
@@ -975,7 +975,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         if (model) {
             [model _uni_mergeWithJsonDict:dict cls:cls];
             if(cls.isConformingToUniDB){
-                if (![model respondsToSelector:@selector(uni_nonPersistent)] ||![model uni_nonPersistent]){
+                if (![model respondsToSelector:@selector(uni_shouldPersist)] ||[model uni_shouldPersist]){
                     if(![cls.db executeUpdate:cls.dbUpdateSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
                         if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
                         else if (idx == count+2) uni_bind_stmt_with_property(model, cls.primaryProperty, stmt, idx);
@@ -993,7 +993,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             [model _uni_mergeWithJsonDict:dict cls:cls];
             [cls.mm setObject:model forKey:primaryValue];
             if(cls.isConformingToUniDB){
-                if (![model respondsToSelector:@selector(uni_nonPersistent)] ||![model uni_nonPersistent]){
+                if (![model respondsToSelector:@selector(uni_shouldPersist)] ||[model uni_shouldPersist]){
                     if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
                         if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
                         else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
@@ -1011,7 +1011,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         model=[[self alloc]init];
         [model _uni_mergeWithJsonDict:dict cls:cls];
         if(cls.isConformingToUniDB){
-            if (![model respondsToSelector:@selector(uni_nonPersistent)] ||![model uni_nonPersistent]){
+            if (![model respondsToSelector:@selector(uni_shouldPersist)] ||[model uni_shouldPersist]){
                 if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
                     if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
                     else uni_bind_stmt_with_property(model, cls.dbPropertyArr[idx-1], stmt, idx);
@@ -1115,7 +1115,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     return arr;
 }
 
-- (id)_uni_update:(UniClass *)cls force:(BOOL)force{
+- (id)_uni_update:(UniClass *)cls{
     id model=self;
     if (cls.isConformingToUniMM){
         id primaryValue=uni_get_value(model,cls.primaryProperty);
@@ -1125,22 +1125,15 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
         }
         id m=[cls.mm objectForKey:primaryValue];
         if (m) {
-            if (m!=model) uni_merge_obj(m,model,cls,force);
+            if (m!=model) uni_merge_obj(m,model,cls);
             model=m;
         }else{
             [cls.mm setObject:model forKey:primaryValue];
-            if (force){
-                for (UniProperty *property in cls.propertyArr){
-                    if (property.typeEncoding==UniTypeEncodingNSObject){
-                        uni_set_value(model, property,[uni_get_value(model, property) uni_update:force]);
-                    }
-                }
-            }
         }
     }
     if (cls.isConformingToUniDB){
         NSError *err;
-        if (![model respondsToSelector:@selector(uni_nonPersistent)] ||![model uni_nonPersistent]){
+        if (![model respondsToSelector:@selector(uni_shouldPersist)] ||[model uni_shouldPersist]){
             int count=(int)cls.dbPropertyArr.count;
             if (![cls.db executeUpdate:cls.dbInsertSql stmtBlock:^(sqlite3_stmt *stmt, int idx) {
                 if (idx == count+1) sqlite3_bind_double(stmt, idx, [[NSDate date] timeIntervalSince1970]);
@@ -1154,28 +1147,33 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
             }
         }
     }
-    return model;
-}
-
-- (id)uni_update:(BOOL)force{
-    __block id model = self;
-    UniClass *cls=[UniClass classWithClass:[model class]];
-    if (cls.isConformingToUniMM||cls.isConformingToUniDB){
-        [cls sync:^{
-            model=[model _uni_update:cls force:force];
-        }];
-    }else{
-        model=[model _uni_update:cls force:force];
+    for (UniProperty *property in cls.propertyArr){
+        if (property.typeEncoding==UniTypeEncodingNSObject){
+            uni_set_value(model, property,[uni_get_value(model, property) uni_update]);
+        }
     }
     return model;
 }
 
-+ (NSArray*)uni_update:(NSArray*)models force:(BOOL)force{
+- (id)uni_update{
+    __block id model = self;
+    UniClass *cls=[UniClass classWithClass:[model class]];
+    if (cls.isConformingToUniMM||cls.isConformingToUniDB){
+        [cls sync:^{
+            model=[model _uni_update:cls];
+        }];
+    }else{
+        model=[model _uni_update:cls];
+    }
+    return model;
+}
+
++ (NSArray*)uni_update:(NSArray*)models{
     if (models.count==0) return models;
     NSMutableArray *arr=[NSMutableArray array];
     UniClass *cls=[UniClass classWithClass:self];
     [cls sync:^{
-        for (id model in models) [arr addObject:[model _uni_update:cls force:force]];
+        for (id model in models) [arr addObject:[model _uni_update:cls]];
     }];
     return arr;
 }
@@ -1193,6 +1191,7 @@ static __inline__ __attribute__((always_inline)) void uni_merge_from_stmt(id tar
     }];
     return res;
 }
+
 + (BOOL)uni_deleteBeforeDate:(NSDate *)date{
     __block BOOL res;
     UniClass *cls=[UniClass classWithClass:self];
